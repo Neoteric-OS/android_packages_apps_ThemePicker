@@ -60,6 +60,9 @@ android_app {
         "SettingsLibSettingsTheme",
         "SystemUI-statsd",
         "styleprotoslite",
+        "androidx.lifecycle_lifecycle-runtime-ktx",
+        "kotlinx_coroutines_android",
+        "kotlinx_coroutines",
     ],
 
     jni_libs: [

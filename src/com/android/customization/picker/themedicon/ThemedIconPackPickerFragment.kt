@@ -117,7 +117,7 @@ class ThemedIconPackPickerFragment : AppbarFragment() {
     private suspend fun refreshList() {
         val list = withContext(Dispatchers.Default) {
             pm.getInstalledPackages(PackageManager.MATCH_ALL).filter {
-                !it.applicationInfo.isSystemApp() && hasIconResourceMap(it)
+                hasIconResourceMap(it)
             }.map {
                 AppInfo(
                     it.packageName,

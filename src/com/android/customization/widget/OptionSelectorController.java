@@ -44,8 +44,6 @@ import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate;
 import com.android.customization.model.CustomizationManager;
 import com.android.customization.model.CustomizationOption;
 import com.android.wallpaper.R;
-import com.android.wallpaper.widget.GridPaddingDecoration;
-import com.android.wallpaper.widget.GridRowSpacerDecoration;
 
 import java.util.HashSet;
 import java.util.List;
@@ -80,7 +78,7 @@ public class OptionSelectorController<T extends CustomizationOption<T>> {
         int CENTER_CHANGE_COLOR_WHEN_NOT_SELECTED = 3;
     }
 
-    private float mLinearLayoutHorizontalDisplayOptionsMax;
+    private final float mLinearLayoutHorizontalDisplayOptionsMax;
 
     private final RecyclerView mContainer;
     private final List<T> mOptions;
@@ -185,6 +183,16 @@ public class OptionSelectorController<T extends CustomizationOption<T>> {
             @Override
             public TileViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+                // Provide width constraint when a grid layout manager is not use and width is set
+                // to match parent
+                if (!mUseGrid
+                        && v.getLayoutParams().width == RecyclerView.LayoutParams.MATCH_PARENT) {
+                    Resources res = mContainer.getContext().getResources();
+                    RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(
+                            res.getDimensionPixelSize(R.dimen.option_tile_width),
+                            RecyclerView.LayoutParams.WRAP_CONTENT);
+                    v.setLayoutParams(layoutParams);
+                }
                 return new TileViewHolder(v);
             }
 
@@ -288,16 +296,9 @@ public class OptionSelectorController<T extends CustomizationOption<T>> {
         mContainer.setAdapter(mAdapter);
 	mContainer.setItemAnimator(null);
 
-        final int padding = res.getDimensionPixelSize(
-                R.dimen.option_tile_grid_padding_horizontal);
-        final int fixWidth = res.getDimensionPixelSize(R.dimen.options_container_width);
         final DisplayMetrics metrics = new DisplayMetrics();
         mContainer.getContext().getSystemService(WindowManager.class)
                 .getDefaultDisplay().getMetrics(metrics);
-        // This is based on the assumption that the parent view is the same width as the screen.
-        final int availableDynamicWidth = metrics.widthPixels - 2 * res.getDimensionPixelSize(
-                R.dimen.section_horizontal_padding);
-        final int availableWidth = (fixWidth != 0) ? fixWidth : availableDynamicWidth;
         final boolean hasDecoration = mContainer.getItemDecorationCount() != 0;
 
         if (mUseGrid) {
@@ -305,24 +306,15 @@ public class OptionSelectorController<T extends CustomizationOption<T>> {
             GridLayoutManager gridLayoutManager = new GridLayoutManager(mContainer.getContext(),
                     numColumns);
             mContainer.setLayoutManager(gridLayoutManager);
-            if (!hasDecoration) {
-                mContainer.addItemDecoration(new GridPaddingDecoration(padding, 0));
-            }
-            // Measure RecyclerView to get to the total amount of space used by all options.
-            mContainer.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            while (mContainer.getMeasuredWidth() > availableWidth && numColumns > 1) {
-                numColumns -= 1;
-                gridLayoutManager.setSpanCount(numColumns);
-                mContainer.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            }
-            if (!hasDecoration && numColumns > 1) {
-                mContainer.addItemDecoration(new GridRowSpacerDecoration(2 * padding));
-            }
         } else {
+            final int padding = res.getDimensionPixelSize(
+                    R.dimen.option_tile_linear_padding_horizontal);
             final int widthPerItem = res.getDimensionPixelSize(R.dimen.option_tile_width) + (
                     hasDecoration ? 0 : 2 * padding);
             mContainer.setLayoutManager(new LinearLayoutManager(mContainer.getContext(),
                     LinearLayoutManager.HORIZONTAL, false));
+            mContainer.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            int availableWidth = metrics.widthPixels;
             int extraSpace = availableWidth - mContainer.getMeasuredWidth();
             if (extraSpace >= 0) {
                 mContainer.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -334,10 +326,8 @@ public class OptionSelectorController<T extends CustomizationOption<T>> {
                         - mContainer.getPaddingLeft();
                 int itemEndMargin =
                         spaceBetweenItems / (int) mLinearLayoutHorizontalDisplayOptionsMax;
-                if (itemEndMargin <= 0) {
-                    itemEndMargin = res.getDimensionPixelOffset(
-                            R.dimen.option_tile_margin_horizontal);
-                }
+                itemEndMargin = Math.max(itemEndMargin, res.getDimensionPixelOffset(
+                        R.dimen.option_tile_margin_horizontal));
                 mContainer.addItemDecoration(new ItemEndHorizontalSpaceItemDecoration(
                         mContainer.getContext(), itemEndMargin));
                 return;

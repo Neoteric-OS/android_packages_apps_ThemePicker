@@ -144,7 +144,7 @@ public class StatsLogUserEventLogger extends NoOpUserEventLogger implements Them
         final boolean isLockWallpaperSet = mWallpaperStatusChecker.isLockWallpaperSet(mContext);
         final String homeCollectionId = mPreferences.getHomeWallpaperCollectionId();
         final String homeRemoteId = mPreferences.getHomeWallpaperRemoteId();
-        final String effects = mPreferences.getWallpaperEffects();
+        final String effects = mPreferences.getHomeWallpaperEffects();
         String homeWallpaperId = TextUtils.isEmpty(homeRemoteId)
                 ? mPreferences.getHomeWallpaperServiceName() : homeRemoteId;
         String lockCollectionId = isLockWallpaperSet ? mPreferences.getLockWallpaperCollectionId()
@@ -177,9 +177,21 @@ public class StatsLogUserEventLogger extends NoOpUserEventLogger implements Them
     }
 
     @Override
-    public void logEffectApply(String effect, @EffectStatus int status) {
+    public void logEffectApply(String effect, @EffectStatus int status, long timeElapsedMillis,
+            int resultCode) {
         new SysUiStatsLogger()
                 .setAction(StyleEnums.WALLPAPER_EFFECT_APPLIED)
+                .setEffectPreference(status)
+                .setEffectIdHash(getIdHashCode(effect))
+                .setTimeElapsed(timeElapsedMillis)
+                .setEffectResultCode(resultCode)
+                .log();
+    }
+
+    @Override
+    public void logEffectProbe(String effect, @EffectStatus int status) {
+        new SysUiStatsLogger()
+                .setAction(StyleEnums.WALLPAPER_EFFECT_PROBE)
                 .setEffectPreference(status)
                 .setEffectIdHash(getIdHashCode(effect))
                 .log();

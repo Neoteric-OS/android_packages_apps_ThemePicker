@@ -16,6 +16,8 @@
 package com.android.customization.picker.mode;
 
 import android.content.Context;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.widget.Switch;
@@ -28,6 +30,8 @@ import com.android.wallpaper.picker.SectionView;
 /** The view of section in the customization picker fragment. */
 public final class DarkModeSectionView extends SectionView {
 
+    private final Vibrator mVibrator;
+
     private boolean mIsDarkModeActivated;
 
     public DarkModeSectionView(Context context, @Nullable AttributeSet attrs) {
@@ -35,6 +39,7 @@ public final class DarkModeSectionView extends SectionView {
         setTitle(context.getString(R.string.mode_title));
         mIsDarkModeActivated = (context.getResources().getConfiguration().uiMode
                 & Configuration.UI_MODE_NIGHT_YES) != 0;
+        mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     @Override
@@ -51,6 +56,7 @@ public final class DarkModeSectionView extends SectionView {
     private void modeToggleClicked() {
         mIsDarkModeActivated = !mIsDarkModeActivated;
         viewActivated(mIsDarkModeActivated);
+        mVibrator.vibrate(VibrationEffect.get(VibrationEffect.EFFECT_CLICK));
     }
 
     private void viewActivated(boolean isChecked) {

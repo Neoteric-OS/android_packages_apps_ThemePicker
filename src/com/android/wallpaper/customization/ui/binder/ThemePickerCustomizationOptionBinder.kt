@@ -21,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
@@ -41,6 +42,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         view: View,
         lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
+        customizationOptionFloatingSheetViewMap: Map<CustomizationOption, View>?,
         viewModel: CustomizationOptionsViewModel,
         lifecycleOwner: LifecycleOwner
     ) {
@@ -48,6 +50,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             view,
             lockScreenCustomizationOptionEntries,
             homeScreenCustomizationOptionEntries,
+            customizationOptionFloatingSheetViewMap,
             viewModel,
             lifecycleOwner
         )
@@ -59,6 +62,10 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         val optionShortcut =
             lockScreenCustomizationOptionEntries
                 .find { it.first == ThemePickerLockCustomizationOption.SHORTCUTS }
+                ?.second
+        val optionColors =
+            homeScreenCustomizationOptionEntries
+                .find { it.first == ThemePickerHomeCustomizationOption.COLORS }
                 ?.second
         viewModel as ThemePickerCustomizationOptionsViewModel
 
@@ -75,7 +82,43 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                         optionShortcut?.setOnClickListener { _ -> it?.invoke() }
                     }
                 }
+
+                launch {
+                    viewModel.onCustomizeColorsClicked.collect {
+                        optionColors?.setOnClickListener { _ -> it?.invoke() }
+                    }
+                }
             }
         }
+
+        customizationOptionFloatingSheetViewMap
+            ?.get(ThemePickerLockCustomizationOption.CLOCK)
+            ?.let {
+                ClockFloatingSheetBinder.bind(
+                    it,
+                    viewModel.clockPickerViewModel,
+                    lifecycleOwner,
+                )
+            }
+
+        customizationOptionFloatingSheetViewMap
+            ?.get(ThemePickerLockCustomizationOption.SHORTCUTS)
+            ?.let {
+                ShortcutFloatingSheetBinder.bind(
+                    it,
+                    viewModel.keyguardQuickAffordancePickerViewModel2,
+                    lifecycleOwner,
+                )
+            }
+
+        customizationOptionFloatingSheetViewMap
+            ?.get(ThemePickerHomeCustomizationOption.COLORS)
+            ?.let {
+                ColorsFloatingSheetBinder.bind(
+                    it,
+                    viewModel.colorPickerViewModel2,
+                    lifecycleOwner,
+                )
+            }
     }
 }

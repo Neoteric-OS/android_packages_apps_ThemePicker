@@ -47,7 +47,6 @@ import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
-import com.android.wallpaper.picker.di.modules.EffectsModule
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
@@ -66,58 +65,20 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 
 @Module
-@TestInstallIn(
-    components = [SingletonComponent::class],
-    replaces = [EffectsModule::class, ThemePickerAppModule::class]
-)
+@TestInstallIn(components = [SingletonComponent::class], replaces = [ThemePickerAppModule::class])
 abstract class ThemePickerTestModule {
-    //// WallpaperPicker2 prod
-
-    @Binds @Singleton abstract fun bindInjector(impl: TestCustomizationInjector): Injector
-
-    @Binds @Singleton abstract fun bindUserEventLogger(impl: TestUserEventLogger): UserEventLogger
-
-    @Binds @Singleton abstract fun bindFakeRequester(impl: FakeDefaultRequester): Requester
 
     @Binds
     @Singleton
-    abstract fun bindThemesUserEventLogger(impl: TestThemesUserEventLogger): ThemesUserEventLogger
+    abstract fun bindClockPickerRepository(impl: ClockPickerRepositoryImpl): ClockPickerRepository
 
     @Binds
     @Singleton
-    abstract fun bindWallpaperPrefs(impl: TestDefaultCustomizationPreferences): WallpaperPreferences
-
-    //// ThemePicker prod
+    abstract fun bindColorPickerRepository(impl: ColorPickerRepositoryImpl): ColorPickerRepository
 
     @Binds
     @Singleton
     abstract fun bindCustomizationInjector(impl: TestCustomizationInjector): CustomizationInjector
-
-    @Binds
-    @Singleton
-    abstract fun bindCustomizationPrefs(
-        impl: TestDefaultCustomizationPreferences
-    ): CustomizationPreferences
-
-    @Binds
-    @Singleton
-    abstract fun bindWallpaperModelFactory(
-        impl: DefaultWallpaperModelFactory
-    ): WallpaperModelFactory
-
-    @Binds
-    @Singleton
-    abstract fun providePartnerProvider(impl: TestPartnerProvider): PartnerProvider
-
-    @Binds
-    @Singleton
-    abstract fun bindEffectsWallpaperDialogUtil(
-        impl: DefaultImageEffectDialogUtil
-    ): ImageEffectDialogUtil
-
-    @Binds
-    @Singleton
-    abstract fun bindEffectsController(impl: FakeEffectsController): EffectsController
 
     @Binds
     @Singleton
@@ -127,13 +88,65 @@ abstract class ThemePickerTestModule {
 
     @Binds
     @Singleton
-    abstract fun bindColorPickerRepository(impl: ColorPickerRepositoryImpl): ColorPickerRepository
+    abstract fun bindCustomizationPreferences(
+        impl: TestDefaultCustomizationPreferences
+    ): CustomizationPreferences
 
     @Binds
     @Singleton
-    abstract fun bindClockPickerRepository(impl: ClockPickerRepositoryImpl): ClockPickerRepository
+    abstract fun bindEffectsController(impl: FakeEffectsController): EffectsController
+
+    @Binds
+    @Singleton
+    abstract fun bindImageEffectDialogUtil(
+        impl: DefaultImageEffectDialogUtil
+    ): ImageEffectDialogUtil
+
+    @Binds @Singleton abstract fun bindInjector(impl: TestCustomizationInjector): Injector
+
+    @Binds
+    @Singleton
+    abstract fun providePartnerProvider(impl: TestPartnerProvider): PartnerProvider
+
+    @Binds @Singleton abstract fun bindRequester(impl: FakeDefaultRequester): Requester
+
+    @Binds
+    @Singleton
+    abstract fun bindThemesUserEventLogger(impl: TestThemesUserEventLogger): ThemesUserEventLogger
+
+    @Binds @Singleton abstract fun bindUserEventLogger(impl: TestUserEventLogger): UserEventLogger
+
+    @Binds
+    @Singleton
+    abstract fun bindWallpaperModelFactory(
+        impl: DefaultWallpaperModelFactory
+    ): WallpaperModelFactory
+
+    @Binds
+    @Singleton
+    abstract fun bindWallpaperPreferences(
+        impl: TestDefaultCustomizationPreferences
+    ): WallpaperPreferences
 
     companion object {
+
+        @Provides
+        @Singleton
+        fun provideClockRegistry(
+            @ApplicationContext context: Context,
+            @MainDispatcher mainScope: CoroutineScope,
+            @MainDispatcher mainDispatcher: CoroutineDispatcher,
+            @BackgroundDispatcher bgDispatcher: CoroutineDispatcher,
+        ): ClockRegistry {
+            return ClockRegistryProvider(
+                    context = context,
+                    coroutineScope = mainScope,
+                    mainDispatcher = mainDispatcher,
+                    backgroundDispatcher = bgDispatcher,
+                )
+                .get()
+        }
+
         @Provides
         @Singleton
         fun provideColorCustomizationManager(): ColorCustomizationManager {
@@ -159,23 +172,6 @@ abstract class ThemePickerTestModule {
             @BackgroundDispatcher bgDispatcher: CoroutineDispatcher,
         ): SecureSettingsRepository {
             return SecureSettingsRepositoryImpl(context.contentResolver, bgDispatcher)
-        }
-
-        @Provides
-        @Singleton
-        fun provideClockRegistry(
-            @ApplicationContext context: Context,
-            @MainDispatcher mainScope: CoroutineScope,
-            @MainDispatcher mainDispatcher: CoroutineDispatcher,
-            @BackgroundDispatcher bgDispatcher: CoroutineDispatcher,
-        ): ClockRegistry {
-            return ClockRegistryProvider(
-                    context = context,
-                    coroutineScope = mainScope,
-                    mainDispatcher = mainDispatcher,
-                    backgroundDispatcher = bgDispatcher,
-                )
-                .get()
         }
     }
 }

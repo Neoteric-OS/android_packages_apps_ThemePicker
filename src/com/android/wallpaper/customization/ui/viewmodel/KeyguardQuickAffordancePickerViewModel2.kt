@@ -32,6 +32,7 @@ import com.android.wallpaper.picker.common.button.ui.viewmodel.ButtonViewModel
 import com.android.wallpaper.picker.common.dialog.ui.viewmodel.DialogViewModel
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
+import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -59,7 +60,6 @@ constructor(
     private val logger: ThemesUserEventLogger,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
-
     /** A locally-selected slot, if the user ever switched from the original one. */
     private val _selectedSlotId = MutableStateFlow<String?>(null)
     /** The ID of the selected slot. */
@@ -83,7 +83,7 @@ constructor(
             )
 
     /** View-models for each slot, keyed by slot ID. */
-    val slots: Flow<Map<String, KeyguardQuickAffordanceSlotViewModel>> =
+    private val slots: Flow<Map<String, KeyguardQuickAffordanceSlotViewModel>> =
         combine(
             quickAffordanceInteractor.slots,
             quickAffordanceInteractor.affordances,
@@ -133,6 +133,18 @@ constructor(
                                 { _selectedSlotId.tryEmit(slot.id) }
                             },
                     )
+            }
+        }
+
+    val tabs: Flow<List<FloatingToolbarTabViewModel>> =
+        slots.map { slotById ->
+            slotById.values.map {
+                FloatingToolbarTabViewModel(
+                    it.getIcon(),
+                    it.name,
+                    it.isSelected,
+                    it.onClicked,
+                )
             }
         }
 
@@ -244,36 +256,6 @@ constructor(
                         isEnabled = affordance.isEnabled,
                     )
                 }
-        }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    val summary: Flow<KeyguardQuickAffordanceSummaryViewModel> =
-        slots.map { slots ->
-            val icon2 =
-                (slots[KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END]
-                        ?.selectedQuickAffordances
-                        ?.firstOrNull())
-                    ?.payload
-            val icon1 =
-                (slots[KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START]
-                        ?.selectedQuickAffordances
-                        ?.firstOrNull())
-                    ?.payload
-
-            KeyguardQuickAffordanceSummaryViewModel(
-                description = toDescriptionText(applicationContext, slots),
-                icon1 =
-                    icon1
-                        ?: if (icon2 == null) {
-                            Icon.Resource(
-                                res = R.drawable.link_off,
-                                contentDescription = null,
-                            )
-                        } else {
-                            null
-                        },
-                icon2 = icon2,
-            )
         }
 
     private val _dialog = MutableStateFlow<DialogViewModel?>(null)
@@ -408,6 +390,35 @@ constructor(
         return quickAffordanceInteractor.getAffordanceIcon(iconResourceId)
     }
 
+    val summary: Flow<KeyguardQuickAffordanceSummaryViewModel> =
+        slots.map { slots ->
+            val icon2 =
+                (slots[KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END]
+                        ?.selectedQuickAffordances
+                        ?.firstOrNull())
+                    ?.payload
+            val icon1 =
+                (slots[KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START]
+                        ?.selectedQuickAffordances
+                        ?.firstOrNull())
+                    ?.payload
+
+            KeyguardQuickAffordanceSummaryViewModel(
+                description = toDescriptionText(applicationContext, slots),
+                icon1 =
+                    icon1
+                        ?: if (icon2 == null) {
+                            Icon.Resource(
+                                res = R.drawable.link_off,
+                                contentDescription = null,
+                            )
+                        } else {
+                            null
+                        },
+                icon2 = icon2,
+            )
+        }
+
     private fun toDescriptionText(
         context: Context,
         slots: Map<String, KeyguardQuickAffordanceSlotViewModel>,
@@ -437,6 +448,12 @@ constructor(
             bottomEndAffordanceName != null -> bottomEndAffordanceName
             else -> Text.Resource(R.string.keyguard_quick_affordance_none_selected)
         }
+    }
+
+    companion object {
+        private fun KeyguardQuickAffordanceSlotViewModel.getIcon(): Icon =
+            selectedQuickAffordances.firstOrNull()?.payload
+                ?: Icon.Resource(res = R.drawable.link_off, contentDescription = null)
     }
 
     @ViewModelScoped

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,10 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-/** Item spacing used by the horizontal RecyclerView with 2 rows. */
-class DoubleRowListItemSpacing(
+/** Item spacing used by the horizontal RecyclerView with only 1 row. */
+class SingleRowListItemSpacing(
     private val edgeItemSpacePx: Int,
     private val itemHorizontalSpacePx: Int,
-    private val itemVerticalSpacePx: Int,
 ) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(
         outRect: Rect,
@@ -32,32 +31,21 @@ class DoubleRowListItemSpacing(
         state: RecyclerView.State,
     ) {
         val itemIndex = parent.getChildAdapterPosition(view)
-        val columnIndex = itemIndex / 2
-        val isRtl = parent.layoutManager?.layoutDirection == View.LAYOUT_DIRECTION_RTL
-
         val itemCount = parent.adapter?.itemCount ?: 0
-        val columnCount = (itemCount + 1) / 2
-        when {
-            columnCount == 1 -> {
-                outRect.left = edgeItemSpacePx
-                outRect.right = edgeItemSpacePx
-            }
-            columnIndex > 0 && columnIndex < columnCount - 1 -> {
-                outRect.left = itemHorizontalSpacePx
-                outRect.right = itemHorizontalSpacePx
-            }
-            columnIndex == 0 -> {
+        val isRtl = parent.layoutManager?.layoutDirection == View.LAYOUT_DIRECTION_RTL
+        when (itemIndex) {
+            0 -> {
                 outRect.left = if (!isRtl) edgeItemSpacePx else itemHorizontalSpacePx
                 outRect.right = if (isRtl) edgeItemSpacePx else itemHorizontalSpacePx
             }
-            columnIndex == columnCount - 1 -> {
+            itemCount - 1 -> {
                 outRect.right = if (!isRtl) edgeItemSpacePx else itemHorizontalSpacePx
                 outRect.left = if (isRtl) edgeItemSpacePx else itemHorizontalSpacePx
             }
-        }
-
-        if (itemIndex % 2 == 0) {
-            outRect.bottom = itemVerticalSpacePx
+            else -> {
+                outRect.left = itemHorizontalSpacePx
+                outRect.right = itemHorizontalSpacePx
+            }
         }
     }
 }

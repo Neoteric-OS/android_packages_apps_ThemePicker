@@ -176,7 +176,7 @@ class ShapeAndGridPickerViewModelTest {
             )
         }
 
-    private fun assertOptionItem(
+    private fun TestScope.assertOptionItem(
         optionItem: OptionItemViewModel<GridIconViewModel>?,
         key: String,
         payload: GridIconViewModel?,
@@ -186,11 +186,11 @@ class ShapeAndGridPickerViewModelTest {
         isEnabled: Boolean,
     ) {
         checkNotNull(optionItem)
-        assertThat(optionItem.key.value).isEqualTo(key)
+        assertThat(collectLastValue(optionItem.key)()).isEqualTo(key)
         assertThat(optionItem.text).isEqualTo(text)
         assertThat(optionItem.payload).isEqualTo(payload)
         assertThat(optionItem.isTextUserVisible).isEqualTo(isTextUserVisible)
-        assertThat(optionItem.isSelected.value).isEqualTo(isSelected)
+        assertThat(collectLastValue(optionItem.isSelected)()).isEqualTo(isSelected)
         assertThat(optionItem.isEnabled).isEqualTo(isEnabled)
     }
 }

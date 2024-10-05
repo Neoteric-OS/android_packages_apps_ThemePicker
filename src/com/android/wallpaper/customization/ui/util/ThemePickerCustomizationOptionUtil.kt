@@ -18,6 +18,7 @@ package com.android.wallpaper.customization.ui.util
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.android.themepicker.R
@@ -44,8 +45,7 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
 
     enum class ThemePickerHomeCustomizationOption : CustomizationOptionUtil.CustomizationOption {
         COLORS,
-        APP_GRID,
-        APP_SHAPE,
+        APP_SHAPE_AND_GRID,
         THEMED_ICONS,
     }
 
@@ -55,11 +55,7 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
         layoutInflater: LayoutInflater,
     ): List<Pair<CustomizationOptionUtil.CustomizationOption, View>> {
         val defaultOptionEntries =
-            defaultCustomizationOptionUtil.getOptionEntries(
-                screen,
-                optionContainer,
-                layoutInflater,
-            )
+            defaultCustomizationOptionUtil.getOptionEntries(screen, optionContainer, layoutInflater)
         return when (screen) {
             LOCK_SCREEN ->
                 buildList {
@@ -77,7 +73,7 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
                             layoutInflater.inflate(
                                 R.layout.customization_option_entry_keyguard_quick_affordance,
                                 optionContainer,
-                                false
+                                false,
                             )
                     )
                     add(
@@ -109,17 +105,9 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
                             )
                     )
                     add(
-                        ThemePickerHomeCustomizationOption.APP_GRID to
+                        ThemePickerHomeCustomizationOption.APP_SHAPE_AND_GRID to
                             layoutInflater.inflate(
-                                R.layout.customization_option_entry_app_grid,
-                                optionContainer,
-                                false,
-                            )
-                    )
-                    add(
-                        ThemePickerHomeCustomizationOption.APP_SHAPE to
-                            layoutInflater.inflate(
-                                R.layout.customization_option_entry_app_shape,
+                                R.layout.customization_option_entry_app_shape_and_grid,
                                 optionContainer,
                                 false,
                             )
@@ -138,7 +126,7 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
 
     override fun initFloatingSheet(
         bottomSheetContainer: FrameLayout,
-        layoutInflater: LayoutInflater
+        layoutInflater: LayoutInflater,
     ): Map<CustomizationOptionUtil.CustomizationOption, View> {
         val map =
             defaultCustomizationOptionUtil.initFloatingSheet(bottomSheetContainer, layoutInflater)
@@ -151,7 +139,7 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
                         bottomSheetContainer,
                         layoutInflater,
                     )
-                    .also { bottomSheetContainer.addView(it) }
+                    .also { bottomSheetContainer.addView(it) },
             )
             put(
                 ThemePickerLockCustomizationOption.SHORTCUTS,
@@ -160,7 +148,7 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
                         bottomSheetContainer,
                         layoutInflater,
                     )
-                    .also { bottomSheetContainer.addView(it) }
+                    .also { bottomSheetContainer.addView(it) },
             )
             put(
                 ThemePickerHomeCustomizationOption.COLORS,
@@ -169,18 +157,27 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
                         bottomSheetContainer,
                         layoutInflater,
                     )
-                    .also { bottomSheetContainer.addView(it) }
+                    .also { bottomSheetContainer.addView(it) },
             )
             put(
-                ThemePickerHomeCustomizationOption.APP_GRID,
+                ThemePickerHomeCustomizationOption.APP_SHAPE_AND_GRID,
                 inflateFloatingSheet(
-                        ThemePickerHomeCustomizationOption.APP_GRID,
+                        ThemePickerHomeCustomizationOption.APP_SHAPE_AND_GRID,
                         bottomSheetContainer,
                         layoutInflater,
                     )
-                    .also { bottomSheetContainer.addView(it) }
+                    .also { bottomSheetContainer.addView(it) },
             )
         }
+    }
+
+    override fun createClockPreviewAndAddToParent(
+        parentView: ViewGroup,
+        layoutInflater: LayoutInflater,
+    ): View? {
+        val clockHostView = layoutInflater.inflate(R.layout.clock_host_view, parentView, false)
+        parentView.addView(clockHostView)
+        return clockHostView
     }
 
     private fun inflateFloatingSheet(
@@ -192,7 +189,8 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
             ThemePickerLockCustomizationOption.CLOCK -> R.layout.floating_sheet_clock
             ThemePickerLockCustomizationOption.SHORTCUTS -> R.layout.floating_sheet_shortcut
             ThemePickerHomeCustomizationOption.COLORS -> R.layout.floating_sheet_colors
-            ThemePickerHomeCustomizationOption.APP_GRID -> R.layout.floating_sheet_shape_and_grid
+            ThemePickerHomeCustomizationOption.APP_SHAPE_AND_GRID ->
+                R.layout.floating_sheet_shape_and_grid
             else ->
                 throw IllegalStateException(
                     "Customization option $option does not have a bottom sheet view"

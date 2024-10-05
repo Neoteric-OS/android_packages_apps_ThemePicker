@@ -37,7 +37,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 class ShapeAndGridPickerViewModel
 @AssistedInject
@@ -49,29 +48,37 @@ constructor(
     // The currently-set system grid option
     val selectedGridOption =
         interactor.selectedGridOption.filterNotNull().map { toOptionItemViewModel(it) }
+    private val _previewingGridOptionKey = MutableStateFlow<String?>(null)
+    // If the previewing key is null, use the currently-set system grid option
+    val previewingGridOptionKey =
+        combine(selectedGridOption, _previewingGridOptionKey) {
+            currentlySetGridOption,
+            previewingGridOptionKey ->
+            previewingGridOptionKey ?: currentlySetGridOption.key.value
+        }
 
-    private val overrideGridOptionKey = MutableStateFlow<String?>(null)
+    fun resetPreview() {
+        _previewingGridOptionKey.tryEmit(null)
+    }
 
     val optionItems: Flow<List<OptionItemViewModel<GridIconViewModel>>> =
         interactor.gridOptions.filterNotNull().map { gridOptions ->
             gridOptions.map { toOptionItemViewModel(it) }
         }
 
-    val onApply: Flow<(() -> Unit)?> =
-        combine(selectedGridOption, overrideGridOptionKey) {
+    val onApply: Flow<(suspend () -> Unit)?> =
+        combine(selectedGridOption, _previewingGridOptionKey) {
             selectedGridOption,
-            overrideGridOptionKey ->
+            previewingGridOptionKey ->
             if (
-                overrideGridOptionKey == null ||
-                    overrideGridOptionKey == selectedGridOption.key.value
+                previewingGridOptionKey == null ||
+                    previewingGridOptionKey == selectedGridOption.key.value
             ) {
                 null
             } else {
-                { viewModelScope.launch { interactor.applySelectedOption(overrideGridOptionKey) } }
+                { interactor.applySelectedOption(previewingGridOptionKey) }
             }
         }
-
-    val isOnApplyEnabled: Flow<Boolean> = onApply.map { it != null }
 
     private fun toOptionItemViewModel(
         option: GridOptionModel
@@ -86,7 +93,7 @@ constructor(
                     )
             )
         val isSelected =
-            overrideGridOptionKey
+            _previewingGridOptionKey
                 .map {
                     if (it == null) {
                         option.isCurrent
@@ -103,17 +110,13 @@ constructor(
         return OptionItemViewModel(
             key = MutableStateFlow(option.key),
             payload =
-                GridIconViewModel(
-                    columns = option.cols,
-                    rows = option.rows,
-                    path = iconShapePath,
-                ),
+                GridIconViewModel(columns = option.cols, rows = option.rows, path = iconShapePath),
             text = Text.Loaded(option.title),
             isSelected = isSelected,
             onClicked =
                 isSelected.map {
                     if (!it) {
-                        { overrideGridOptionKey.value = option.key }
+                        { _previewingGridOptionKey.value = option.key }
                     } else {
                         null
                     }

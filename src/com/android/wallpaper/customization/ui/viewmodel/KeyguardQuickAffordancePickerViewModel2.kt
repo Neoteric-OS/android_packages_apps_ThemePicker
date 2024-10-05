@@ -52,7 +52,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 class KeyguardQuickAffordancePickerViewModel2
 @AssistedInject
@@ -66,10 +65,7 @@ constructor(
     private val _selectedSlotId = MutableStateFlow<String?>(null)
     /** The ID of the selected slot. */
     val selectedSlotId: StateFlow<String> =
-        combine(
-                quickAffordanceInteractor.slots,
-                _selectedSlotId,
-            ) { slots, selectedSlotIdOrNull ->
+        combine(quickAffordanceInteractor.slots, _selectedSlotId) { slots, selectedSlotIdOrNull ->
                 if (selectedSlotIdOrNull != null) {
                     slots.first { slot -> slot.id == selectedSlotIdOrNull }
                 } else {
@@ -83,12 +79,12 @@ constructor(
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = "",
             )
-    private val _selectedQuickAffordances = MutableStateFlow<Map<String, String>>(emptyMap())
-    val selectedQuickAffordances: Flow<Map<String, String>> =
-        _selectedQuickAffordances.asStateFlow()
+    private val _previewingQuickAffordances = MutableStateFlow<Map<String, String>>(emptyMap())
+    val previewingQuickAffordances: Flow<Map<String, String>> =
+        _previewingQuickAffordances.asStateFlow()
 
     fun resetPreview() {
-        _selectedQuickAffordances.tryEmit(emptyMap())
+        _previewingQuickAffordances.tryEmit(emptyMap())
         _selectedSlotId.tryEmit(SLOT_ID_BOTTOM_START)
     }
 
@@ -98,7 +94,7 @@ constructor(
                 quickAffordanceInteractor.slots,
                 quickAffordanceInteractor.affordances,
                 quickAffordanceInteractor.selections,
-                selectedQuickAffordances,
+                previewingQuickAffordances,
                 selectedSlotId,
             ) { slots, affordances, selections, selectedQuickAffordances, selectedSlotId ->
                 slots.associate { slot ->
@@ -159,12 +155,7 @@ constructor(
     val tabs: Flow<List<FloatingToolbarTabViewModel>> =
         slots.map { slotById ->
             slotById.values.map {
-                FloatingToolbarTabViewModel(
-                    it.getIcon(),
-                    it.name,
-                    it.isSelected,
-                    it.onClicked,
-                )
+                FloatingToolbarTabViewModel(it.getIcon(), it.name, it.isSelected, it.onClicked)
             }
         }
 
@@ -173,30 +164,23 @@ constructor(
      * or different affordances in the currently-selected slot or when slot selection changes.
      */
     private val selectedAffordanceIds: Flow<Set<String>> =
-        combine(
-                quickAffordanceInteractor.selections,
-                selectedSlotId,
-            ) { selections, selectedSlotId ->
+        combine(quickAffordanceInteractor.selections, selectedSlotId) { selections, selectedSlotId
+                ->
                 selections
                     .filter { selection -> selection.slotId == selectedSlotId }
                     .map { selection -> selection.affordanceId }
                     .toSet()
             }
-            .shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1,
-            )
+            .shareIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(), replay = 1)
 
     /** The list of all available quick affordances for the selected slot. */
     val quickAffordances: Flow<List<OptionItemViewModel<Icon>>> =
         quickAffordanceInteractor.affordances.map { affordances ->
             val isNoneSelected =
-                combine(
+                combine(selectedSlotId, previewingQuickAffordances, selectedAffordanceIds) {
                         selectedSlotId,
                         selectedQuickAffordances,
-                        selectedAffordanceIds,
-                    ) { selectedSlotId, selectedQuickAffordances, selectedAffordanceIds ->
+                        selectedAffordanceIds ->
                         selectedQuickAffordances[selectedSlotId]?.let {
                             it == KEYGUARD_QUICK_AFFORDANCE_ID_NONE
                         } ?: selectedAffordanceIds.isEmpty()
@@ -207,22 +191,19 @@ constructor(
                     slotId = selectedSlotId,
                     isSelected = isNoneSelected,
                     onSelected =
-                        combine(
-                            isNoneSelected,
-                            selectedSlotId,
-                        ) { isSelected, selectedSlotId ->
+                        combine(isNoneSelected, selectedSlotId) { isSelected, selectedSlotId ->
                             if (!isSelected) {
                                 {
                                     val newMap =
-                                        _selectedQuickAffordances.value.toMutableMap().apply {
+                                        _previewingQuickAffordances.value.toMutableMap().apply {
                                             put(selectedSlotId, KEYGUARD_QUICK_AFFORDANCE_ID_NONE)
                                         }
-                                    _selectedQuickAffordances.tryEmit(newMap)
+                                    _previewingQuickAffordances.tryEmit(newMap)
                                 }
                             } else {
                                 null
                             }
-                        }
+                        },
                 )
             ) +
                 affordances.map { affordance ->
@@ -230,7 +211,7 @@ constructor(
                     val isSelectedFlow: StateFlow<Boolean> =
                         combine(
                                 selectedSlotId,
-                                selectedQuickAffordances,
+                                previewingQuickAffordances,
                                 selectedAffordanceIds,
                             ) { selectedSlotId, selectedQuickAffordances, selectedAffordanceIds ->
                                 selectedQuickAffordances[selectedSlotId]?.let {
@@ -248,17 +229,15 @@ constructor(
                         isSelected = isSelectedFlow,
                         onClicked =
                             if (affordance.isEnabled) {
-                                combine(
-                                    isSelectedFlow,
-                                    selectedSlotId,
-                                ) { isSelected, selectedSlotId ->
+                                combine(isSelectedFlow, selectedSlotId) { isSelected, selectedSlotId
+                                    ->
                                     if (!isSelected) {
                                         {
                                             val newMap =
-                                                _selectedQuickAffordances.value
+                                                _previewingQuickAffordances.value
                                                     .toMutableMap()
                                                     .apply { put(selectedSlotId, affordance.id) }
-                                            _selectedQuickAffordances.tryEmit(newMap)
+                                            _previewingQuickAffordances.tryEmit(newMap)
                                         }
                                     } else {
                                         null
@@ -286,8 +265,8 @@ constructor(
                 }
         }
 
-    val onApply: Flow<(() -> Unit)?> =
-        selectedQuickAffordances.map {
+    val onApply: Flow<(suspend () -> Unit)?> =
+        previewingQuickAffordances.map {
             if (it.isEmpty()) {
                 null
             } else {
@@ -295,20 +274,15 @@ constructor(
                     it.forEach { entry ->
                         val slotId = entry.key
                         val affordanceId = entry.value
-                        viewModelScope.launch {
-                            if (slotId == KEYGUARD_QUICK_AFFORDANCE_ID_NONE) {
-                                quickAffordanceInteractor.unselectAllFromSlot(slotId)
-                            } else {
-                                quickAffordanceInteractor.select(
-                                    slotId = slotId,
-                                    affordanceId = affordanceId
-                                )
-                            }
-                            logger.logShortcutApplied(
-                                shortcut = affordanceId,
-                                shortcutSlotId = slotId,
+                        if (slotId == KEYGUARD_QUICK_AFFORDANCE_ID_NONE) {
+                            quickAffordanceInteractor.unselectAllFromSlot(slotId)
+                        } else {
+                            quickAffordanceInteractor.select(
+                                slotId = slotId,
+                                affordanceId = affordanceId,
                             )
                         }
+                        logger.logShortcutApplied(shortcut = affordanceId, shortcutSlotId = slotId)
                     }
                 }
             }
@@ -344,9 +318,7 @@ constructor(
         _activityStartRequests.value = null
     }
 
-    private fun requestActivityStart(
-        intent: Intent,
-    ) {
+    private fun requestActivityStart(intent: Intent) {
         _activityStartRequests.value = intent
     }
 
@@ -359,11 +331,7 @@ constructor(
     ) {
         _dialog.value =
             DialogViewModel(
-                icon =
-                    Icon.Loaded(
-                        drawable = icon,
-                        contentDescription = null,
-                    ),
+                icon = Icon.Loaded(drawable = icon, contentDescription = null),
                 headline = Text.Resource(R.string.keyguard_affordance_enablement_dialog_headline),
                 message = Text.Loaded(explanation),
                 buttons =
@@ -382,7 +350,7 @@ constructor(
                                         }
                                     ),
                                 style = ButtonStyle.Secondary,
-                            ),
+                            )
                         )
 
                         if (actionText != null) {
@@ -392,8 +360,8 @@ constructor(
                                     style = ButtonStyle.Primary,
                                     onClicked = {
                                         actionIntent?.let { intent -> requestActivityStart(intent) }
-                                    }
-                                ),
+                                    },
+                                )
                             )
                         }
                     },
@@ -454,10 +422,7 @@ constructor(
                 icon1 =
                     icon1
                         ?: if (icon2 == null) {
-                            Icon.Resource(
-                                res = R.drawable.link_off,
-                                contentDescription = null,
-                            )
+                            Icon.Resource(res = R.drawable.link_off, contentDescription = null)
                         } else {
                             null
                         },

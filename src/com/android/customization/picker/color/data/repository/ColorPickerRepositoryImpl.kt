@@ -24,6 +24,7 @@ import com.android.customization.model.color.ColorOptionImpl
 import com.android.customization.picker.color.shared.model.ColorOptionModel
 import com.android.customization.picker.color.shared.model.ColorType
 import com.android.systemui.monet.Style
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import javax.inject.Inject
@@ -46,6 +47,8 @@ constructor(
     private val colorManager: ColorCustomizationManager,
 ) : ColorPickerRepository {
 
+    private val isNewPickerUi = BaseFlags.get().isNewPickerUi()
+
     private val homeWallpaperColors: StateFlow<WallpaperColorsModel?> =
         wallpaperColorsRepository.homeWallpaperColors
     private val lockWallpaperColors: StateFlow<WallpaperColorsModel?> =
@@ -56,8 +59,7 @@ constructor(
     private val _isApplyingSystemColor = MutableStateFlow(false)
     override val isApplyingSystemColor = _isApplyingSystemColor.asStateFlow()
 
-    // TODO (b/299510645): update color options on selected option change after restart is disabled
-    override val colorOptions: Flow<Map<ColorType, List<ColorOptionModel>>> =
+    private val generatedColorOptions: Flow<Map<ColorType, List<ColorOptionImpl>>> =
         combine(homeWallpaperColors, lockWallpaperColors) { homeColors, lockColors ->
                 homeColors to lockColors
             }
@@ -71,7 +73,7 @@ constructor(
                             Result.success(
                                 mapOf(
                                     ColorType.WALLPAPER_COLOR to listOf(),
-                                    ColorType.PRESET_COLOR to listOf()
+                                    ColorType.PRESET_COLOR to listOf(),
                                 )
                             )
                         )
@@ -81,28 +83,27 @@ constructor(
                     val lockColorsLoaded = lockColors as WallpaperColorsModel.Loaded
                     colorManager.setWallpaperColors(
                         homeColorsLoaded.colors,
-                        lockColorsLoaded.colors
+                        lockColorsLoaded.colors,
                     )
                     colorManager.fetchOptions(
                         object : CustomizationManager.OptionsFetchedListener<ColorOption?> {
                             override fun onOptionsLoaded(options: MutableList<ColorOption?>?) {
-                                val wallpaperColorOptions: MutableList<ColorOptionModel> =
+                                val wallpaperColorOptions: MutableList<ColorOptionImpl> =
                                     mutableListOf()
-                                val presetColorOptions: MutableList<ColorOptionModel> =
+                                val presetColorOptions: MutableList<ColorOptionImpl> =
                                     mutableListOf()
                                 options?.forEach { option ->
                                     when ((option as ColorOptionImpl).type) {
                                         ColorType.WALLPAPER_COLOR ->
-                                            wallpaperColorOptions.add(option.toModel())
-                                        ColorType.PRESET_COLOR ->
-                                            presetColorOptions.add(option.toModel())
+                                            wallpaperColorOptions.add(option)
+                                        ColorType.PRESET_COLOR -> presetColorOptions.add(option)
                                     }
                                 }
                                 continuation.resumeWith(
                                     Result.success(
                                         mapOf(
                                             ColorType.WALLPAPER_COLOR to wallpaperColorOptions,
-                                            ColorType.PRESET_COLOR to presetColorOptions
+                                            ColorType.PRESET_COLOR to presetColorOptions,
                                         )
                                     )
                                 )
@@ -117,10 +118,87 @@ constructor(
                                 )
                             }
                         },
-                        /* reload= */ false
+                        /* reload= */ false,
                     )
                 }
             }
+
+    override val colorOptions: Flow<Map<ColorType, List<ColorOptionModel>>> =
+        if (isNewPickerUi) {
+            // Convert to ColorOptionModel. When the selected color option changes, update each
+            // ColorOptionModel's isSelected by calling toModel again.
+            combine(generatedColorOptions, selectedColorOption) { generatedColorOptions, _ ->
+                generatedColorOptions
+                    .map { entry ->
+                        entry.key to entry.value.map { colorOption -> colorOption.toModel() }
+                    }
+                    .toMap()
+            }
+        } else {
+            combine(homeWallpaperColors, lockWallpaperColors) { homeColors, lockColors ->
+                    homeColors to lockColors
+                }
+                .map { (homeColors, lockColors) ->
+                    suspendCancellableCoroutine { continuation ->
+                        if (
+                            homeColors is WallpaperColorsModel.Loading ||
+                                lockColors is WallpaperColorsModel.Loading
+                        ) {
+                            continuation.resumeWith(
+                                Result.success(
+                                    mapOf(
+                                        ColorType.WALLPAPER_COLOR to listOf(),
+                                        ColorType.PRESET_COLOR to listOf(),
+                                    )
+                                )
+                            )
+                            return@suspendCancellableCoroutine
+                        }
+                        val homeColorsLoaded = homeColors as WallpaperColorsModel.Loaded
+                        val lockColorsLoaded = lockColors as WallpaperColorsModel.Loaded
+                        colorManager.setWallpaperColors(
+                            homeColorsLoaded.colors,
+                            lockColorsLoaded.colors,
+                        )
+                        colorManager.fetchOptions(
+                            object : CustomizationManager.OptionsFetchedListener<ColorOption?> {
+                                override fun onOptionsLoaded(options: MutableList<ColorOption?>?) {
+                                    val wallpaperColorOptions: MutableList<ColorOptionModel> =
+                                        mutableListOf()
+                                    val presetColorOptions: MutableList<ColorOptionModel> =
+                                        mutableListOf()
+                                    options?.forEach { option ->
+                                        when ((option as ColorOptionImpl).type) {
+                                            ColorType.WALLPAPER_COLOR ->
+                                                wallpaperColorOptions.add(option.toModel())
+                                            ColorType.PRESET_COLOR ->
+                                                presetColorOptions.add(option.toModel())
+                                        }
+                                    }
+                                    continuation.resumeWith(
+                                        Result.success(
+                                            mapOf(
+                                                ColorType.WALLPAPER_COLOR to wallpaperColorOptions,
+                                                ColorType.PRESET_COLOR to presetColorOptions,
+                                            )
+                                        )
+                                    )
+                                }
+
+                                override fun onError(throwable: Throwable?) {
+                                    Log.e(TAG, "Error loading theme bundles", throwable)
+                                    continuation.resumeWith(
+                                        Result.failure(
+                                            throwable ?: Throwable("Error loading theme bundles")
+                                        )
+                                    )
+                                }
+                            },
+                            /* reload= */ false,
+                        )
+                    }
+                }
+        }
 
     override suspend fun select(colorOptionModel: ColorOptionModel) {
         _isApplyingSystemColor.value = true
@@ -141,7 +219,7 @@ constructor(
                             Result.failure(throwable ?: Throwable("Error loading theme bundles"))
                         )
                     }
-                }
+                },
             )
         }
     }
@@ -158,11 +236,7 @@ constructor(
             colorOptionBuilder.addOverlayPackage(overlay.key, overlay.value)
         }
         val colorOption = colorOptionBuilder.build()
-        return ColorOptionModel(
-            key = "",
-            colorOption = colorOption,
-            isSelected = false,
-        )
+        return ColorOptionModel(key = "", colorOption = colorOption, isSelected = false)
     }
 
     override fun getCurrentColorSource(): String? {
@@ -173,6 +247,8 @@ constructor(
         return ColorOptionModel(
             key = "${this.type}::${this.style}::${this.serializedPackages}",
             colorOption = this,
+            // Instead of using the selectedColorOption flow to determine isSelected, we check the
+            // source of truth, which is the settings, using ColorOption::isActive
             isSelected = isActive(colorManager),
         )
     }

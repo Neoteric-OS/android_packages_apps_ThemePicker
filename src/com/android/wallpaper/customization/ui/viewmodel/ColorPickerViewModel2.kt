@@ -20,6 +20,7 @@ import android.content.Context
 import com.android.customization.model.color.ColorOptionImpl
 import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor
+import com.android.customization.picker.color.shared.model.ColorOptionModel
 import com.android.customization.picker.color.shared.model.ColorType
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.themepicker.R
@@ -36,6 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -51,14 +53,16 @@ constructor(
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
 
+    private val overridingColorOption = MutableStateFlow<ColorOptionModel?>(null)
+    val previewingColorOption = overridingColorOption.asStateFlow()
+
     private val selectedColorTypeTabId = MutableStateFlow<ColorType?>(null)
 
     /** View-models for each color tab. */
     val colorTypeTabs: Flow<List<FloatingToolbarTabViewModel>> =
-        combine(
-            interactor.colorOptions,
-            selectedColorTypeTabId,
-        ) { colorOptions, selectedColorTypeIdOrNull ->
+        combine(interactor.colorOptions, selectedColorTypeTabId) {
+            colorOptions,
+            selectedColorTypeIdOrNull ->
             colorOptions.keys.mapIndexed { index, colorType ->
                 val isSelected =
                     (selectedColorTypeIdOrNull == null && index == 0) ||
@@ -118,7 +122,7 @@ constructor(
                             val darkThemeColors =
                                 colorOption.previewInfo.resolveColors(/* darkTheme= */ true)
                             val isSelectedFlow: StateFlow<Boolean> =
-                                interactor.selectingColorOption
+                                previewingColorOption
                                     .map {
                                         it?.colorOption?.isEquivalent(colorOptionModel.colorOption)
                                             ?: colorOptionModel.isSelected
@@ -150,15 +154,7 @@ constructor(
                                         } else {
                                             {
                                                 viewModelScope.launch {
-                                                    interactor.select(colorOptionModel)
-                                                    logger.logThemeColorApplied(
-                                                        colorOptionModel.colorOption
-                                                            .sourceForLogging,
-                                                        colorOptionModel.colorOption
-                                                            .styleForLogging,
-                                                        colorOptionModel.colorOption
-                                                            .seedColorForLogging,
-                                                    )
+                                                    overridingColorOption.value = colorOptionModel
                                                 }
                                             }
                                         }
@@ -168,6 +164,28 @@ constructor(
                 }
                 .toMap()
         }
+
+    val onApply: Flow<(suspend () -> Unit)?> =
+        previewingColorOption.map { previewingColorOption ->
+            previewingColorOption?.let {
+                if (it.isSelected) {
+                    null
+                } else {
+                    {
+                        interactor.select(it)
+                        logger.logThemeColorApplied(
+                            previewingColorOption.colorOption.sourceForLogging,
+                            previewingColorOption.colorOption.styleForLogging,
+                            previewingColorOption.colorOption.seedColorForLogging,
+                        )
+                    }
+                }
+            }
+        }
+
+    fun resetPreview() {
+        overridingColorOption.value = null
+    }
 
     /** The list of all available color options for the selected Color Type. */
     val colorOptions: Flow<List<OptionItemViewModel<ColorOptionIconViewModel>>> =

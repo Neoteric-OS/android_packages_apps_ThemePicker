@@ -35,6 +35,7 @@ import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.common.icon.ui.viewbinder.IconViewBinder
 import com.android.wallpaper.picker.common.text.ui.viewbinder.TextViewBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
@@ -63,6 +64,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         viewModel: CustomizationPickerViewModel2,
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
+        navigateToWallpaperCategoriesScreen: (screen: Screen) -> Unit,
     ) {
         defaultCustomizationOptionsBinder.bind(
             view,
@@ -72,6 +74,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             viewModel,
             colorUpdateViewModel,
             lifecycleOwner,
+            navigateToWallpaperCategoriesScreen,
         )
 
         val optionClock =

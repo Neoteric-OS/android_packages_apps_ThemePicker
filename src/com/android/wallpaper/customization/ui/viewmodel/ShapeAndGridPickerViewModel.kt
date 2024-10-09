@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 
 class ShapeAndGridPickerViewModel
@@ -47,33 +48,34 @@ constructor(
 ) {
     // The currently-set system grid option
     val selectedGridOption =
-        interactor.selectedGridOption.filterNotNull().map { toOptionItemViewModel(it) }
-    private val _previewingGridOptionKey = MutableStateFlow<String?>(null)
+        interactor.selectedGridOption
+            .filterNotNull()
+            .map { toOptionItemViewModel(it) }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+    private val overridingGridOptionKey = MutableStateFlow<String?>(null)
     // If the previewing key is null, use the currently-set system grid option
     val previewingGridOptionKey =
-        combine(selectedGridOption, _previewingGridOptionKey) {
-            currentlySetGridOption,
-            previewingGridOptionKey ->
-            previewingGridOptionKey ?: currentlySetGridOption.key.value
+        combine(overridingGridOptionKey, selectedGridOption) {
+            overridingGridOptionKey,
+            selectedGridOption ->
+            overridingGridOptionKey ?: selectedGridOption.key.value
         }
 
     fun resetPreview() {
-        _previewingGridOptionKey.tryEmit(null)
+        overridingGridOptionKey.value = null
     }
 
     val optionItems: Flow<List<OptionItemViewModel<GridIconViewModel>>> =
-        interactor.gridOptions.filterNotNull().map { gridOptions ->
-            gridOptions.map { toOptionItemViewModel(it) }
-        }
+        interactor.gridOptions
+            .filterNotNull()
+            .map { gridOptions -> gridOptions.map { toOptionItemViewModel(it) } }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     val onApply: Flow<(suspend () -> Unit)?> =
-        combine(selectedGridOption, _previewingGridOptionKey) {
-            selectedGridOption,
-            previewingGridOptionKey ->
-            if (
-                previewingGridOptionKey == null ||
-                    previewingGridOptionKey == selectedGridOption.key.value
-            ) {
+        combine(previewingGridOptionKey, selectedGridOption) {
+            previewingGridOptionKey,
+            selectedGridOption ->
+            if (previewingGridOptionKey == selectedGridOption.key.value) {
                 null
             } else {
                 { interactor.applySelectedOption(previewingGridOptionKey) }
@@ -93,17 +95,11 @@ constructor(
                     )
             )
         val isSelected =
-            _previewingGridOptionKey
-                .map {
-                    if (it == null) {
-                        option.isCurrent
-                    } else {
-                        it == option.key
-                    }
-                }
+            previewingGridOptionKey
+                .map { it == option.key }
                 .stateIn(
                     scope = viewModelScope,
-                    started = SharingStarted.Eagerly,
+                    started = SharingStarted.Lazily,
                     initialValue = false,
                 )
 
@@ -116,7 +112,7 @@ constructor(
             onClicked =
                 isSelected.map {
                     if (!it) {
-                        { _previewingGridOptionKey.value = option.key }
+                        { overridingGridOptionKey.value = option.key }
                     } else {
                         null
                     }

@@ -212,7 +212,7 @@ constructor(
         combine(overridingClockColorId, clockPickerInteractor.selectedColorId) {
             overridingClockColorId,
             selectedColorId ->
-            overridingClockColorId ?: selectedColorId
+            overridingClockColorId ?: selectedColorId ?: DEFAULT_CLOCK_COLOR_ID
         }
 
     private val overridingSliderProgress = MutableStateFlow<Int?>(null)
@@ -224,8 +224,7 @@ constructor(
         }
     val isSliderEnabled: Flow<Boolean> =
         combine(previewingClock, previewingClockColorId) { clock, clockColorId ->
-                // clockColorId null means clock color is the system theme color, thus no slider
-                clock.isReactiveToTone && clockColorId != null
+                clock.isReactiveToTone && clockColorId != DEFAULT_CLOCK_COLOR_ID
             }
             .distinctUntilChanged()
 
@@ -235,7 +234,8 @@ constructor(
 
     val previewingSeedColor: Flow<Int?> =
         combine(previewingClockColorId, previewingSliderProgress) { clockColorId, sliderProgress ->
-            val clockColorViewModel = if (clockColorId == null) null else colorMap[clockColorId]
+            val clockColorViewModel =
+                if (clockColorId == DEFAULT_CLOCK_COLOR_ID) null else colorMap[clockColorId]
             if (clockColorViewModel == null) {
                 null
             } else {
@@ -322,7 +322,8 @@ constructor(
                 /** darkTheme= */
                 true
             )
-        val isSelectedFlow = previewingClockColorId.map { it == null }.stateIn(viewModelScope)
+        val isSelectedFlow =
+            previewingClockColorId.map { it == DEFAULT_CLOCK_COLOR_ID }.stateIn(viewModelScope)
         return OptionItemViewModel<ColorOptionIconViewModel>(
             key = MutableStateFlow(key) as StateFlow<String>,
             payload =
@@ -345,7 +346,7 @@ constructor(
                         null
                     } else {
                         {
-                            overridingClockColorId.value = null
+                            overridingClockColorId.value = DEFAULT_CLOCK_COLOR_ID
                             overridingSliderProgress.value =
                                 ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS
                         }
@@ -375,7 +376,7 @@ constructor(
                 clockPickerInteractor.applyClock(
                     clockId = clock.clockId,
                     size = size,
-                    selectedColorId = colorId,
+                    selectedColorId = if (colorId == DEFAULT_CLOCK_COLOR_ID) null else colorId,
                     colorToneProgress = progress,
                     seedColor = seedColor,
                 )
@@ -391,6 +392,7 @@ constructor(
     }
 
     companion object {
+        private const val DEFAULT_CLOCK_COLOR_ID = "DEFAULT"
         private val helperColorLab: DoubleArray by lazy { DoubleArray(3) }
 
         fun blendColorWithTone(color: Int, colorTone: Double): Int {

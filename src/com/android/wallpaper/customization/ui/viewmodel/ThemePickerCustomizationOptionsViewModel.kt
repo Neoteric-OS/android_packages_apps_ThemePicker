@@ -61,6 +61,7 @@ constructor(
         keyguardQuickAffordancePickerViewModel2.resetPreview()
         shapeAndGridPickerViewModel.resetPreview()
         clockPickerViewModel.resetPreview()
+        colorPickerViewModel2.resetPreview()
         return defaultCustomizationOptionsViewModel.deselectOption()
     }
 
@@ -129,6 +130,8 @@ constructor(
                         .SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
                         .APP_SHAPE_AND_GRID -> shapeAndGridPickerViewModel.onApply
+                    ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS ->
+                        colorPickerViewModel2.onApply
                     else -> flow { emit(null) }
                 }
             }

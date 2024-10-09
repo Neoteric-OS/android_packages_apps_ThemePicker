@@ -27,5 +27,5 @@ data class ColorOptionModel(
     val colorOption: ColorOption,
 
     /** Whether this color option is selected. */
-    var isSelected: Boolean,
+    val isSelected: Boolean,
 )

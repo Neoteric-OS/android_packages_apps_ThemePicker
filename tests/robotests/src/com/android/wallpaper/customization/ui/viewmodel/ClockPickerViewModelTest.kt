@@ -124,10 +124,6 @@ class ClockPickerViewModelTest {
         tabs()?.get(1)?.onClick?.invoke()
 
         assertThat(selectedTab()).isEqualTo(Tab.COLOR)
-
-        tabs()?.get(2)?.onClick?.invoke()
-
-        assertThat(selectedTab()).isEqualTo(Tab.SIZE)
     }
 
     @Test
@@ -139,10 +135,6 @@ class ClockPickerViewModelTest {
         tabs()?.get(1)?.onClick?.invoke()
 
         assertThat(tabs()?.get(1)?.isSelected).isTrue()
-
-        tabs()?.get(2)?.onClick?.invoke()
-
-        assertThat(tabs()?.get(2)?.isSelected).isTrue()
     }
 
     @Test
@@ -185,36 +177,16 @@ class ClockPickerViewModelTest {
     }
 
     @Test
-    fun previewingClockSize_whenClickOnSizeOptions() = runTest {
+    fun previewingClockSize_whenCallingOnClockSizeSwitchChecked() = runTest {
         val previewingClockSize = collectLastValue(underTest.previewingClockSize)
-        val sizeOptions = collectLastValue(underTest.sizeOptions)
 
         assertThat(previewingClockSize()).isEqualTo(ClockSize.DYNAMIC)
 
-        val option1OnClicked = collectLastValue(sizeOptions()!![1].onClicked)
-        option1OnClicked()?.invoke()
+        val onClockSizeSwitchCheckedChange =
+            collectLastValue(underTest.onClockSizeSwitchCheckedChange)
+        onClockSizeSwitchCheckedChange()?.invoke()
 
         assertThat(previewingClockSize()).isEqualTo(ClockSize.SMALL)
-    }
-
-    @Test
-    fun sizeOptions_whenClickOnSizeOptions() = runTest {
-        val sizeOptions = collectLastValue(underTest.sizeOptions)
-        val option0IsSelected = collectLastValue(sizeOptions()!![0].isSelected)
-        val option0OnClicked = collectLastValue(sizeOptions()!![0].onClicked)
-        val option1IsSelected = collectLastValue(sizeOptions()!![1].isSelected)
-        val option1OnClicked = collectLastValue(sizeOptions()!![1].onClicked)
-
-        assertThat(sizeOptions()!![0].size).isEqualTo(ClockSize.DYNAMIC)
-        assertThat(sizeOptions()!![1].size).isEqualTo(ClockSize.SMALL)
-        assertThat(option0IsSelected()).isTrue()
-        assertThat(option0OnClicked()).isNull()
-
-        option1OnClicked()?.invoke()
-
-        assertThat(option0IsSelected()).isFalse()
-        assertThat(option1IsSelected()).isTrue()
-        assertThat(option1OnClicked()).isNull()
     }
 
     @Test

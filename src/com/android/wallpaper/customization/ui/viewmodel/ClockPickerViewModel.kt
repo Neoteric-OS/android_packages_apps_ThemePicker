@@ -51,7 +51,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
@@ -73,7 +72,6 @@ constructor(
     enum class Tab {
         STYLE,
         COLOR,
-        SIZE,
     }
 
     private val colorMap = ClockColorViewModel.getPresetColorMap(context.resources)
@@ -104,16 +102,6 @@ constructor(
                 ) {
                     _selectedTab.value = Tab.COLOR
                 },
-                FloatingToolbarTabViewModel(
-                    Icon.Resource(
-                        res = R.drawable.ic_open_in_full_24px,
-                        contentDescription = Text.Resource(R.string.clock_size),
-                    ),
-                    context.getString(R.string.clock_size),
-                    it == Tab.SIZE,
-                ) {
-                    _selectedTab.value = Tab.SIZE
-                },
             )
         }
 
@@ -125,6 +113,7 @@ constructor(
             selectedClock ->
             overridingClock ?: selectedClock
         }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val clockStyleOptions: StateFlow<List<OptionItemViewModel<Drawable>>> =
         clockPickerInteractor.allClocks
@@ -172,38 +161,15 @@ constructor(
             selectedClockSize ->
             overridingClockSize ?: selectedClockSize
         }
-    val sizeOptions = flow {
-        emit(
-            listOf(
-                ClockSizeOptionViewModel(
-                    ClockSize.DYNAMIC,
-                    previewingClockSize.map { it == ClockSize.DYNAMIC }.stateIn(viewModelScope),
-                    previewingClockSize
-                        .map {
-                            if (it == ClockSize.DYNAMIC) {
-                                null
-                            } else {
-                                { overridingClockSize.value = ClockSize.DYNAMIC }
-                            }
-                        }
-                        .stateIn(viewModelScope),
-                ),
-                ClockSizeOptionViewModel(
-                    ClockSize.SMALL,
-                    previewingClockSize.map { it == ClockSize.SMALL }.stateIn(viewModelScope),
-                    previewingClockSize
-                        .map {
-                            if (it == ClockSize.SMALL) {
-                                null
-                            } else {
-                                { overridingClockSize.value = ClockSize.SMALL }
-                            }
-                        }
-                        .stateIn(viewModelScope),
-                ),
-            )
-        )
-    }
+    val onClockSizeSwitchCheckedChange: Flow<(() -> Unit)> =
+        previewingClockSize.map {
+            {
+                when (it) {
+                    ClockSize.DYNAMIC -> overridingClockSize.value = ClockSize.SMALL
+                    ClockSize.SMALL -> overridingClockSize.value = ClockSize.DYNAMIC
+                }
+            }
+        }
 
     // Clock color
     // 0 - 100

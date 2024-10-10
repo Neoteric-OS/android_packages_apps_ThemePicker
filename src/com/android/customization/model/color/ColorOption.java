@@ -103,6 +103,23 @@ public abstract class ColorOption implements CustomizationOption<ColorOption> {
     }
 
     /**
+     * Gets the seed color from the overlay packages in hex string.
+     *
+     * @return a string representing the seed color, or null if the color option is generated from
+     * the default seed.
+     */
+    public Integer getSeedColor() {
+        String seedColor = mPackagesByCategory.get(OVERLAY_CATEGORY_SYSTEM_PALETTE);
+        if (TextUtils.isEmpty(seedColor)) {
+            return null;
+        }
+        if (!seedColor.startsWith("#")) {
+            seedColor = "#" + seedColor;
+        }
+        return Color.parseColor(seedColor);
+    }
+
+    /**
      * Gets the seed color from the overlay packages for logging.
      *
      * @return an int representing the seed color, or NULL_SEED_COLOR

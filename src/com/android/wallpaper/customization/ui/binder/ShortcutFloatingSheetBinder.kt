@@ -37,7 +37,7 @@ import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
-import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter
+import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectIndexed
@@ -67,7 +67,7 @@ object ShortcutFloatingSheetBinder {
         val tabAdapter =
             FloatingToolbarTabAdapter(
                     colorUpdateViewModel = WeakReference(colorUpdateViewModel),
-                    shouldAnimateColor = { optionsViewModel.selectedOption.value == SHORTCUTS }
+                    shouldAnimateColor = { optionsViewModel.selectedOption.value == SHORTCUTS },
                 )
                 .also { tabs.setAdapter(it) }
 
@@ -116,7 +116,7 @@ object ShortcutFloatingSheetBinder {
                                 showDialog(
                                     context = view.context,
                                     request = dialogRequest,
-                                    onDismissed = viewModel::onDialogDismissed
+                                    onDismissed = viewModel::onDialogDismissed,
                                 )
                             } else {
                                 null
@@ -148,9 +148,9 @@ object ShortcutFloatingSheetBinder {
         )
     }
 
-    private fun createOptionItemAdapter(lifecycleOwner: LifecycleOwner): OptionItemAdapter<Icon> =
-        OptionItemAdapter(
-            layoutResourceId = R.layout.quick_affordance_list_item,
+    private fun createOptionItemAdapter(lifecycleOwner: LifecycleOwner): OptionItemAdapter2<Icon> =
+        OptionItemAdapter2(
+            layoutResourceId = R.layout.quick_affordance_list_item2,
             lifecycleOwner = lifecycleOwner,
             bindIcon = { foregroundView: View, gridIcon: Icon ->
                 val imageView = foregroundView as? ImageView
@@ -160,17 +160,11 @@ object ShortcutFloatingSheetBinder {
 
     private fun RecyclerView.initQuickAffordanceList(
         context: Context,
-        adapter: OptionItemAdapter<Icon>
+        adapter: OptionItemAdapter2<Icon>,
     ) {
         apply {
             this.adapter = adapter
-            layoutManager =
-                GridLayoutManager(
-                    context,
-                    2,
-                    GridLayoutManager.HORIZONTAL,
-                    false,
-                )
+            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
             addItemDecoration(
                 DoubleRowListItemSpacing(
                     context.resources.getDimensionPixelSize(

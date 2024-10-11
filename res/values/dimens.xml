@@ -159,6 +159,8 @@
     <dimen name="keyguard_quick_affordance_icon_container_size">74dp</dimen>
     <!-- Size for the icon of a quick affordance for the lock screen in the picker experience. -->
     <dimen name="keyguard_quick_affordance_icon_size">24dp</dimen>
+    <dimen name="keyguard_quick_affordance_background_size">64dp</dimen>
+    <dimen name="keyguard_quick_affordance_background_margin_bottom">8dp</dimen>
 
     <dimen name="clock_carousel_item_width">190dp</dimen>
     <dimen name="clock_carousel_item_margin">16dp</dimen>

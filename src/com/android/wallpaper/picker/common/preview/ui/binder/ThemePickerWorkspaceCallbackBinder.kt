@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.picker.common.preview.ui.binder
 
+import android.app.WallpaperManager
 import android.os.Bundle
 import android.os.Message
 import androidx.core.os.bundleOf
@@ -23,6 +24,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.customization.model.color.ColorOptionsProvider
+import com.android.customization.picker.color.data.util.MaterialColorsGenerator
+import com.android.systemui.monet.ColorScheme
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_INITIALLY_SELECTED_SLOT_ID
@@ -44,8 +48,11 @@ import kotlinx.coroutines.launch
 @Singleton
 class ThemePickerWorkspaceCallbackBinder
 @Inject
-constructor(private val defaultWorkspaceCallbackBinder: DefaultWorkspaceCallbackBinder) :
-    WorkspaceCallbackBinder {
+constructor(
+    private val wallpaperManager: WallpaperManager,
+    private val defaultWorkspaceCallbackBinder: DefaultWorkspaceCallbackBinder,
+    private val materialColorsGenerator: MaterialColorsGenerator,
+) : WorkspaceCallbackBinder {
 
     override fun bind(
         workspaceCallback: Message,
@@ -81,7 +88,7 @@ constructor(private val defaultWorkspaceCallbackBinder: DefaultWorkspaceCallback
                                                     KEY_INITIALLY_SELECTED_SLOT_ID,
                                                     SLOT_ID_BOTTOM_START,
                                                 )
-                                            }
+                                            },
                                         )
                                     else ->
                                         workspaceCallback.sendMessage(
@@ -135,7 +142,32 @@ constructor(private val defaultWorkspaceCallbackBinder: DefaultWorkspaceCallback
                             viewModel.shapeAndGridPickerViewModel.previewingGridOptionKey.collect {
                                 workspaceCallback.sendMessage(
                                     MESSAGE_ID_UPDATE_GRID,
-                                    bundleOf(KEY_GRID_NAME to it)
+                                    bundleOf(KEY_GRID_NAME to it),
+                                )
+                            }
+                        }
+
+                        launch {
+                            viewModel.colorPickerViewModel2.previewingColorOption.collect {
+                                if (it == null) {
+                                    workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, Bundle())
+                                    return@collect
+                                }
+                                val seedColor =
+                                    it.colorOption.seedColor
+                                        ?: getSeedColorFromSource(it.colorOption.source)
+                                        ?: return@collect
+                                val (ids, colors) =
+                                    materialColorsGenerator.generate(
+                                        seedColor,
+                                        it.colorOption.style,
+                                    )
+                                workspaceCallback.sendMessage(
+                                    MESSAGE_ID_UPDATE_COLOR,
+                                    Bundle().apply {
+                                        putIntArray(KEY_COLOR_RESOURCE_IDS, ids)
+                                        putIntArray(KEY_COLOR_VALUES, colors)
+                                    },
                                 )
                             }
                         }
@@ -144,8 +176,22 @@ constructor(private val defaultWorkspaceCallbackBinder: DefaultWorkspaceCallback
         }
     }
 
+    private fun getSeedColorFromSource(source: String?): Int? {
+        return when (source) {
+                ColorOptionsProvider.COLOR_SOURCE_HOME -> WallpaperManager.FLAG_SYSTEM
+                ColorOptionsProvider.COLOR_SOURCE_LOCK -> WallpaperManager.FLAG_LOCK
+                else -> null
+            }
+            ?.let { wallpaperManager.getWallpaperColors(it) }
+            ?.let { ColorScheme.getSeedColor(it) }
+    }
+
     companion object {
         const val MESSAGE_ID_UPDATE_GRID = 7414
         const val KEY_GRID_NAME = "grid_name"
+
+        const val MESSAGE_ID_UPDATE_COLOR = 856
+        const val KEY_COLOR_RESOURCE_IDS: String = "color_resource_ids"
+        const val KEY_COLOR_VALUES: String = "color_values"
     }
 }

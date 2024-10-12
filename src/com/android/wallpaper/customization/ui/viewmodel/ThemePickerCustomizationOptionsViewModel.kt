@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.customization.ui.viewmodel
 
+import com.android.customization.picker.mode.ui.viewmodel.DarkModeViewModel
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModelFactory
@@ -28,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -42,6 +44,7 @@ constructor(
     colorPickerViewModel2Factory: ColorPickerViewModel2.Factory,
     clockPickerViewModelFactory: ClockPickerViewModel.Factory,
     shapeAndGridPickerViewModelFactory: ShapeAndGridPickerViewModel.Factory,
+    val darkModeViewModel: DarkModeViewModel,
     @Assisted private val viewModelScope: CoroutineScope,
 ) : CustomizationOptionsViewModel {
 
@@ -62,6 +65,7 @@ constructor(
         shapeAndGridPickerViewModel.resetPreview()
         clockPickerViewModel.resetPreview()
         colorPickerViewModel2.resetPreview()
+        darkModeViewModel.resetPreview()
         return defaultCustomizationOptionsViewModel.deselectOption()
     }
 
@@ -131,7 +135,14 @@ constructor(
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
                         .APP_SHAPE_AND_GRID -> shapeAndGridPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS ->
-                        colorPickerViewModel2.onApply
+                        combine(colorPickerViewModel2.onApply, darkModeViewModel.onApply) {
+                            colorOnApply,
+                            darkModeOnApply ->
+                            {
+                                colorOnApply?.invoke()
+                                darkModeOnApply?.invoke()
+                            }
+                        }
                     else -> flow { emit(null) }
                 }
             }

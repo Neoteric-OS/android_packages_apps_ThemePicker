@@ -159,6 +159,8 @@
     <dimen name="keyguard_quick_affordance_icon_container_size">74dp</dimen>
     <!-- Size for the icon of a quick affordance for the lock screen in the picker experience. -->
     <dimen name="keyguard_quick_affordance_icon_size">24dp</dimen>
+    <dimen name="keyguard_quick_affordance_background_size">64dp</dimen>
+    <dimen name="keyguard_quick_affordance_background_margin_bottom">8dp</dimen>
 
     <dimen name="clock_carousel_item_width">190dp</dimen>
     <dimen name="clock_carousel_item_margin">16dp</dimen>
@@ -185,9 +187,8 @@
     <dimen name="floating_sheet_tab_toolbar_vertical_margin">8dp</dimen>
     <dimen name="floating_sheet_list_item_horizontal_space">4dp</dimen>
     <dimen name="floating_sheet_list_item_vertical_space">4dp</dimen>
-    <dimen name="floating_sheet_clock_size_icon_size">80dp</dimen>
-    <dimen name="floating_sheet_clock_size_icon_margin_bottom">8dp</dimen>
     <dimen name="floating_sheet_clock_style_option_size">82dp</dimen>
     <dimen name="floating_sheet_clock_style_thumbnail_margin">12dp</dimen>
+    <dimen name="floating_sheet_clock_style_clock_size_text_margin_end">16dp</dimen>
     <dimen name="customization_option_entry_shortcut_icon_size">20dp</dimen>
 </resources>

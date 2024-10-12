@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.customization.ui.viewmodel
+package com.android.customization.picker.mode.domain.interactor
 
-data class ClockFloatingSheetHeightsViewModel(
-    val clockStyleContentHeight: Int,
-    val clockColorContentHeight: Int,
-)
+import com.android.customization.picker.mode.data.repository.DarkModeRepository
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class DarkModeInteractor @Inject constructor(private val repository: DarkModeRepository) {
+    val isEnabled = repository.isEnabled
+    val isDarkMode = repository.isDarkMode
+
+    fun setDarkModeActivated(isActive: Boolean) = repository.setDarkModeActivated(isActive)
+}

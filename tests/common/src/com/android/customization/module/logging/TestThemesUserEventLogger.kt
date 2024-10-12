@@ -40,6 +40,9 @@ class TestThemesUserEventLogger @Inject constructor() :
 
     var shortcutLogs: List<Pair<String, String>> = emptyList()
 
+    var useDarkTheme: Boolean = false
+        private set
+
     override fun logThemeColorApplied(@ColorSource source: Int, style: Int, seedColor: Int) {
         this.themeColorSource = source
         this.themeColorStyle = style
@@ -64,7 +67,9 @@ class TestThemesUserEventLogger @Inject constructor() :
         shortcutLogs = shortcutLogs.toMutableList().apply { add(shortcut to shortcutSlotId) }
     }
 
-    override fun logDarkThemeApplied(useDarkTheme: Boolean) {}
+    override fun logDarkThemeApplied(useDarkTheme: Boolean) {
+        this.useDarkTheme = useDarkTheme
+    }
 
     @ClockSize
     fun getLoggedClockSize(): Int {

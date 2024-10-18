@@ -32,6 +32,7 @@ import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder
 import com.android.customization.picker.color.ui.view.ColorOptionIconView
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.common.ui.view.DoubleRowListItemSpacing
+import com.android.customization.picker.mode.ui.binder.DarkModeBinder
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
@@ -65,9 +66,15 @@ object ColorsFloatingSheetBinder {
         val tabAdapter =
             FloatingToolbarTabAdapter(
                     colorUpdateViewModel = WeakReference(colorUpdateViewModel),
-                    shouldAnimateColor = { optionsViewModel.selectedOption.value == COLORS }
+                    shouldAnimateColor = { optionsViewModel.selectedOption.value == COLORS },
                 )
                 .also { tabs.setAdapter(it) }
+
+        DarkModeBinder.bind(
+            darkModeToggle = view.findViewById(R.id.dark_mode_toggle),
+            viewModel = optionsViewModel.darkModeViewModel,
+            lifecycleOwner = lifecycleOwner,
+        )
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -91,7 +98,7 @@ object ColorsFloatingSheetBinder {
 
     private fun createOptionItemAdapter(
         uiMode: Int,
-        lifecycleOwner: LifecycleOwner
+        lifecycleOwner: LifecycleOwner,
     ): OptionItemAdapter<ColorOptionIconViewModel> =
         OptionItemAdapter(
             layoutResourceId = R.layout.color_option,
@@ -100,7 +107,7 @@ object ColorsFloatingSheetBinder {
                 val colorOptionIconView = foregroundView as? ColorOptionIconView
                 val night = uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
                 colorOptionIconView?.let { ColorOptionIconBinder.bind(it, colorIcon, night) }
-            }
+            },
         )
 
     private fun RecyclerView.initColorsList(
@@ -109,13 +116,7 @@ object ColorsFloatingSheetBinder {
     ) {
         apply {
             this.adapter = adapter
-            layoutManager =
-                GridLayoutManager(
-                    context,
-                    2,
-                    GridLayoutManager.HORIZONTAL,
-                    false,
-                )
+            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
             addItemDecoration(
                 DoubleRowListItemSpacing(
                     context.resources.getDimensionPixelSize(

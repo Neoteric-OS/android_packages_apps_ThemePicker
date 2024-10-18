@@ -18,6 +18,8 @@ package com.android.wallpaper.di.modules
 
 import com.android.customization.model.grid.FakeGridOptionsManager
 import com.android.customization.model.grid.GridOptionsManager2
+import com.android.customization.picker.mode.shared.util.DarkModeUtil
+import com.android.customization.picker.mode.shared.util.FakeDarkModeUtil
 import com.android.wallpaper.picker.di.modules.ThemePickerSharedAppModule
 import dagger.Binds
 import dagger.Module
@@ -28,11 +30,13 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [ThemePickerSharedAppModule::class]
+    replaces = [ThemePickerSharedAppModule::class],
 )
 abstract class ThemePickerSharedAppTestModule {
 
     @Binds
     @Singleton
     abstract fun bindGridOptionsManager2(impl: FakeGridOptionsManager): GridOptionsManager2
+
+    @Binds @Singleton abstract fun bindDarkModeUtil(impl: FakeDarkModeUtil): DarkModeUtil
 }

@@ -21,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import com.android.customization.picker.mode.shared.util.DarkModeLifecycleUtil
 import com.android.themepicker.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
@@ -35,6 +36,9 @@ class ThemePickerCustomizationOptionUtil
 @Inject
 constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOptionUtil) :
     CustomizationOptionUtil {
+
+    // Instantiate DarkModeLifecycleUtil for it to observe lifecycle and update DarkModeRepository
+    @Inject lateinit var darkModeLifecycleUtil: DarkModeLifecycleUtil
 
     enum class ThemePickerLockCustomizationOption : CustomizationOptionUtil.CustomizationOption {
         CLOCK,

@@ -28,12 +28,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 @Singleton
-class DefaultGridOptionsManager
+class DefaultShapeGridManager
 @Inject
 constructor(
     @ApplicationContext private val context: Context,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
-) : GridOptionsManager2 {
+) : ShapeGridManager {
 
     private val authorityMetadataKey: String =
         context.getString(R.string.grid_control_metadata_name)
@@ -59,7 +59,7 @@ constructor(
                                         context.getString(
                                             com.android.themepicker.R.string.grid_title_pattern,
                                             cols,
-                                            rows
+                                            rows,
                                         ),
                                     isCurrent =
                                         cursor

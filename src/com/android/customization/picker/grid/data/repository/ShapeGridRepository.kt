@@ -18,7 +18,7 @@
 package com.android.customization.picker.grid.data.repository
 
 import com.android.customization.model.grid.GridOptionModel
-import com.android.customization.model.grid.GridOptionsManager2
+import com.android.customization.model.grid.ShapeGridManager
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,10 +33,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Singleton
-class GridRepository2
+class ShapeGridRepository
 @Inject
 constructor(
-    private val manager: GridOptionsManager2,
+    private val manager: ShapeGridManager,
     @BackgroundDispatcher private val bgScope: CoroutineScope,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {

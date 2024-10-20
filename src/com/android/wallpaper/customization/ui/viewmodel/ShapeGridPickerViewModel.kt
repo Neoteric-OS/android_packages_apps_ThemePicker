@@ -22,7 +22,11 @@ import com.android.customization.model.ResourceConstants
 import com.android.customization.model.grid.GridOptionModel
 import com.android.customization.picker.grid.domain.interactor.GridInteractor2
 import com.android.customization.picker.grid.ui.viewmodel.GridIconViewModel
+import com.android.themepicker.R
+import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.Tab
+import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
+import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -33,19 +37,56 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 
-class ShapeAndGridPickerViewModel
+class ShapeGridPickerViewModel
 @AssistedInject
 constructor(
     @ApplicationContext private val context: Context,
     interactor: GridInteractor2,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
+
+    enum class Tab {
+        SHAPE,
+        GRID,
+    }
+
+    // Tabs
+    private val _selectedTab = MutableStateFlow(Tab.SHAPE)
+    val selectedTab: StateFlow<Tab> = _selectedTab.asStateFlow()
+    val tabs: Flow<List<FloatingToolbarTabViewModel>> =
+        _selectedTab.map {
+            listOf(
+                FloatingToolbarTabViewModel(
+                    Icon.Resource(
+                        res = R.drawable.ic_category_filled_24px,
+                        contentDescription = Text.Resource(R.string.preview_name_shape),
+                    ),
+                    context.getString(R.string.preview_name_shape),
+                    it == Tab.SHAPE,
+                ) {
+                    _selectedTab.value = Tab.SHAPE
+                },
+                FloatingToolbarTabViewModel(
+                    Icon.Resource(
+                        res = R.drawable.ic_apps_filled_24px,
+                        contentDescription = Text.Resource(R.string.grid_layout),
+                    ),
+                    context.getString(R.string.grid_layout),
+                    it == Tab.GRID,
+                ) {
+                    _selectedTab.value = Tab.GRID
+                },
+            )
+        }
+
     // The currently-set system grid option
     val selectedGridOption =
         interactor.selectedGridOption
@@ -63,6 +104,7 @@ constructor(
 
     fun resetPreview() {
         overridingGridOptionKey.value = null
+        _selectedTab.value = Tab.SHAPE
     }
 
     val optionItems: Flow<List<OptionItemViewModel<GridIconViewModel>>> =
@@ -123,6 +165,6 @@ constructor(
     @ViewModelScoped
     @AssistedFactory
     interface Factory {
-        fun create(viewModelScope: CoroutineScope): ShapeAndGridPickerViewModel
+        fun create(viewModelScope: CoroutineScope): ShapeGridPickerViewModel
     }
 }

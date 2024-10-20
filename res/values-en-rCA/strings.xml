@@ -44,6 +44,8 @@
     <string name="clock_size_small" msgid="2280449912094164133">"Small"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"A small clock shows in the corner of your screen"</string>
     <string name="grid_title" msgid="1688173478777254123">"App grid"</string>
+    <string name="shape_and_grid_title" msgid="9092477491363761054">"App shape &amp; layout"</string>
+    <string name="grid_layout" msgid="370175667652663686">"Layout"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Apply"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Tap to edit"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Keep current wallpaper"</string>

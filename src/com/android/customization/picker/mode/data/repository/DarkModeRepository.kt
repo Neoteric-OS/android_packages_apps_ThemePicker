@@ -16,7 +16,6 @@
 
 package com.android.customization.picker.mode.data.repository
 
-import com.android.app.tracing.coroutines.flow.map
 import com.android.customization.picker.mode.shared.util.DarkModeUtil
 import com.android.wallpaper.system.PowerManagerWrapper
 import com.android.wallpaper.system.UiModeManagerWrapper
@@ -25,6 +24,7 @@ import javax.inject.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 
 @Singleton
 class DarkModeRepository

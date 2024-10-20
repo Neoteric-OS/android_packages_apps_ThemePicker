@@ -43,7 +43,7 @@ constructor(
     keyguardQuickAffordancePickerViewModel2Factory: KeyguardQuickAffordancePickerViewModel2.Factory,
     colorPickerViewModel2Factory: ColorPickerViewModel2.Factory,
     clockPickerViewModelFactory: ClockPickerViewModel.Factory,
-    shapeAndGridPickerViewModelFactory: ShapeAndGridPickerViewModel.Factory,
+    shapeGridPickerViewModelFactory: ShapeGridPickerViewModel.Factory,
     val darkModeViewModel: DarkModeViewModel,
     @Assisted private val viewModelScope: CoroutineScope,
 ) : CustomizationOptionsViewModel {
@@ -55,14 +55,14 @@ constructor(
     val keyguardQuickAffordancePickerViewModel2 =
         keyguardQuickAffordancePickerViewModel2Factory.create(viewModelScope = viewModelScope)
     val colorPickerViewModel2 = colorPickerViewModel2Factory.create(viewModelScope = viewModelScope)
-    val shapeAndGridPickerViewModel =
-        shapeAndGridPickerViewModelFactory.create(viewModelScope = viewModelScope)
+    val shapeGridPickerViewModel =
+        shapeGridPickerViewModelFactory.create(viewModelScope = viewModelScope)
 
     override val selectedOption = defaultCustomizationOptionsViewModel.selectedOption
 
     override fun deselectOption(): Boolean {
         keyguardQuickAffordancePickerViewModel2.resetPreview()
-        shapeAndGridPickerViewModel.resetPreview()
+        shapeGridPickerViewModel.resetPreview()
         clockPickerViewModel.resetPreview()
         colorPickerViewModel2.resetPreview()
         darkModeViewModel.resetPreview()
@@ -109,13 +109,13 @@ constructor(
             }
         }
 
-    val onCustomizeShapeAndGridClicked: Flow<(() -> Unit)?> =
+    val onCustomizeShapeGridClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
                 {
                     defaultCustomizationOptionsViewModel.selectOption(
                         ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
-                            .APP_SHAPE_AND_GRID
+                            .APP_SHAPE_GRID
                     )
                 }
             } else {
@@ -133,7 +133,7 @@ constructor(
                     ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
                         .SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
-                        .APP_SHAPE_AND_GRID -> shapeAndGridPickerViewModel.onApply
+                        .APP_SHAPE_GRID -> shapeGridPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS ->
                         combine(colorPickerViewModel2.onApply, darkModeViewModel.onApply) {
                             colorOnApply,

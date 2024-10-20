@@ -139,7 +139,7 @@ constructor(
                 lifecycleOwner.lifecycleScope.launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         launch {
-                            viewModel.shapeAndGridPickerViewModel.previewingGridOptionKey.collect {
+                            viewModel.shapeGridPickerViewModel.previewingGridOptionKey.collect {
                                 workspaceCallback.sendMessage(
                                     MESSAGE_ID_UPDATE_GRID,
                                     bundleOf(KEY_GRID_NAME to it),

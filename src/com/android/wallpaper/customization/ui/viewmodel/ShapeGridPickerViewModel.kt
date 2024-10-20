@@ -39,7 +39,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 
-class ShapeAndGridPickerViewModel
+class ShapeGridPickerViewModel
 @AssistedInject
 constructor(
     @ApplicationContext private val context: Context,
@@ -123,6 +123,6 @@ constructor(
     @ViewModelScoped
     @AssistedFactory
     interface Factory {
-        fun create(viewModelScope: CoroutineScope): ShapeAndGridPickerViewModel
+        fun create(viewModelScope: CoroutineScope): ShapeGridPickerViewModel
     }
 }

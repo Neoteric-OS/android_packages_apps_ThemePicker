@@ -100,6 +100,10 @@
         the home screen. [CHAR LIMIT=15] -->
     <string name="grid_title">App grid</string>
 
+    <!-- Title of a section of the customization picker where the user can select app shapes and
+        grid layouts for the home screen. [CHAR LIMIT=15] -->
+    <string name="shape_and_grid_title">App shape &amp; layout</string>
+
     <!-- Label for a button that allows the user to apply the currently selected Theme.
         [CHAR LIMIT=20] -->
     <string name="apply_theme_btn">Apply</string>

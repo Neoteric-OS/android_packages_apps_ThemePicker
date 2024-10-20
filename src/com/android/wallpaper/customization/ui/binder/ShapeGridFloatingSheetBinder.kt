@@ -29,17 +29,17 @@ import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.customization.picker.grid.ui.binder.GridIconViewBinder
 import com.android.customization.picker.grid.ui.viewmodel.GridIconViewModel
 import com.android.wallpaper.R
-import com.android.wallpaper.customization.ui.viewmodel.ShapeAndGridPickerViewModel
+import com.android.wallpaper.customization.ui.viewmodel.ShapeGridPickerViewModel
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter
 import com.android.wallpaper.picker.option.ui.binder.OptionItemBinder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
-object ShapeAndGridFloatingSheetBinder {
+object ShapeGridFloatingSheetBinder {
 
     fun bind(
         view: View,
-        viewModel: ShapeAndGridPickerViewModel,
+        viewModel: ShapeGridPickerViewModel,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
     ) {
@@ -83,7 +83,7 @@ object ShapeAndGridFloatingSheetBinder {
             bindIcon = { foregroundView: View, gridIcon: GridIconViewModel ->
                 val imageView = foregroundView as? ImageView
                 imageView?.let { GridIconViewBinder.bind(imageView, gridIcon) }
-            }
+            },
         )
 
     private fun RecyclerView.initGridOptionList(
@@ -91,12 +91,7 @@ object ShapeAndGridFloatingSheetBinder {
         adapter: OptionItemAdapter<GridIconViewModel>,
     ) {
         apply {
-            this.layoutManager =
-                LinearLayoutManager(
-                    context,
-                    RecyclerView.HORIZONTAL,
-                    false,
-                )
+            this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             addItemDecoration(
                 SingleRowListItemSpacing(
                     edgeItemSpacePx =

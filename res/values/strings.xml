@@ -104,6 +104,10 @@
         grid layouts for the home screen. [CHAR LIMIT=15] -->
     <string name="shape_and_grid_title">App shape &amp; layout</string>
 
+    <!-- Tab title that switch to app grid customization section, where people can customization
+        the grid layout of the apps -->
+    <string name="grid_layout">Layout</string>
+
     <!-- Label for a button that allows the user to apply the currently selected Theme.
         [CHAR LIMIT=20] -->
     <string name="apply_theme_btn">Apply</string>

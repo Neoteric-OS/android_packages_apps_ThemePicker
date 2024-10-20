@@ -222,7 +222,8 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             ?.let {
                 ShapeGridFloatingSheetBinder.bind(
                     it,
-                    optionsViewModel.shapeGridPickerViewModel,
+                    optionsViewModel,
+                    colorUpdateViewModel,
                     lifecycleOwner,
                     Dispatchers.IO,
                 )

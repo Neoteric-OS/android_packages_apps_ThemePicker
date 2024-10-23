@@ -104,14 +104,14 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 .find { it.first == ThemePickerHomeCustomizationOption.COLORS }
                 ?.second
 
-        val optionShapeAndGrid =
+        val optionShapeGrid =
             homeScreenCustomizationOptionEntries
-                .find { it.first == ThemePickerHomeCustomizationOption.APP_SHAPE_AND_GRID }
+                .find { it.first == ThemePickerHomeCustomizationOption.APP_SHAPE_GRID }
                 ?.second
-        val optionShapeAndGridDescription =
-            optionShapeAndGrid?.findViewById<TextView>(R.id.option_entry_app_grid_description)
-        val optionShapeAndGridIcon =
-            optionShapeAndGrid?.findViewById<ImageView>(R.id.option_entry_app_grid_icon)
+        val optionShapeGridDescription =
+            optionShapeGrid?.findViewById<TextView>(R.id.option_entry_app_shape_grid_description)
+        val optionShapeGridIcon =
+            optionShapeGrid?.findViewById<ImageView>(R.id.option_entry_app_shape_grid_icon)
 
         val optionsViewModel =
             viewModel.customizationOptionsViewModel as ThemePickerCustomizationOptionsViewModel
@@ -158,23 +158,21 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
 
                 launch {
-                    optionsViewModel.onCustomizeShapeAndGridClicked.collect {
-                        optionShapeAndGrid?.setOnClickListener { _ -> it?.invoke() }
+                    optionsViewModel.onCustomizeShapeGridClicked.collect {
+                        optionShapeGrid?.setOnClickListener { _ -> it?.invoke() }
                     }
                 }
 
                 launch {
-                    optionsViewModel.shapeAndGridPickerViewModel.selectedGridOption.collect {
+                    optionsViewModel.shapeGridPickerViewModel.selectedGridOption.collect {
                         gridOption ->
-                        optionShapeAndGridDescription?.let {
-                            TextViewBinder.bind(it, gridOption.text)
-                        }
+                        optionShapeGridDescription?.let { TextViewBinder.bind(it, gridOption.text) }
                         gridOption.payload?.let { gridIconViewModel ->
-                            optionShapeAndGridIcon?.let {
+                            optionShapeGridIcon?.let {
                                 GridIconViewBinder.bind(view = it, viewModel = gridIconViewModel)
                             }
                             // TODO(b/363018910): Use ColorUpdateBinder to update color
-                            optionShapeAndGridIcon?.setColorFilter(
+                            optionShapeGridIcon?.setColorFilter(
                                 ContextCompat.getColor(
                                     view.context,
                                     com.android.wallpaper.R.color.system_on_surface_variant,
@@ -220,11 +218,12 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             }
 
         customizationOptionFloatingSheetViewMap
-            ?.get(ThemePickerHomeCustomizationOption.APP_SHAPE_AND_GRID)
+            ?.get(ThemePickerHomeCustomizationOption.APP_SHAPE_GRID)
             ?.let {
-                ShapeAndGridFloatingSheetBinder.bind(
+                ShapeGridFloatingSheetBinder.bind(
                     it,
-                    optionsViewModel.shapeAndGridPickerViewModel,
+                    optionsViewModel,
+                    colorUpdateViewModel,
                     lifecycleOwner,
                     Dispatchers.IO,
                 )

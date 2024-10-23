@@ -24,20 +24,20 @@
     android:clickable="true">
 
     <TextView
-        android:id="@+id/option_entry_app_grid_title"
+        android:id="@+id/option_entry_app_shape_grid_title"
         style="@style/CustomizationOptionEntryTitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/grid_title"
+        android:text="@string/shape_and_grid_title"
         android:layout_marginEnd="@dimen/customization_option_entry_text_margin_end"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/option_entry_app_grid_icon_container"
-        app:layout_constraintBottom_toTopOf="@+id/option_entry_app_grid_description"
+        app:layout_constraintBottom_toTopOf="@+id/option_entry_app_shape_grid_description"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/option_entry_app_grid_description"
+        android:id="@+id/option_entry_app_shape_grid_description"
         style="@style/CustomizationOptionEntrySubtitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/option_entry_app_grid_icon_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/option_entry_app_grid_title" />
+        app:layout_constraintTop_toBottomOf="@+id/option_entry_app_shape_grid_title" />
 
     <FrameLayout
         android:id="@+id/option_entry_app_grid_icon_container"
@@ -58,7 +58,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
-            android:id="@+id/option_entry_app_grid_icon"
+            android:id="@+id/option_entry_app_shape_grid_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/grid_preview_card_content_description" />

@@ -44,6 +44,10 @@
     <string name="clock_size_small" msgid="2280449912094164133">"کوچک"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"ساعت کوچکی در گوشه صفحه‌نمایش شما نشان داده می‌شود"</string>
     <string name="grid_title" msgid="1688173478777254123">"شبکه برنامه‌ها"</string>
+    <!-- no translation found for shape_and_grid_title (9092477491363761054) -->
+    <skip />
+    <!-- no translation found for grid_layout (370175667652663686) -->
+    <skip />
     <string name="apply_theme_btn" msgid="6293081192321303991">"اعمال"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"برای ویرایش تک‌ضرب بزنید"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"حفظ کاغذدیواری فعلی"</string>

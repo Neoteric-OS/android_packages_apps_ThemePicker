@@ -48,7 +48,7 @@ import org.robolectric.RobolectricTestRunner
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
 @RunWith(RobolectricTestRunner::class)
-class ShapeAndGridPickerViewModelTest {
+class ShapeGridPickerViewModelTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var testScope: TestScope
@@ -68,12 +68,12 @@ class ShapeAndGridPickerViewModelTest {
                     )
             )
 
-    private lateinit var underTest: ShapeAndGridPickerViewModel
+    private lateinit var underTest: ShapeGridPickerViewModel
 
     @Before
     fun setUp() {
         hiltRule.inject()
-        underTest = ShapeAndGridPickerViewModel(appContext, interactor, testScope.backgroundScope)
+        underTest = ShapeGridPickerViewModel(appContext, interactor, testScope.backgroundScope)
     }
 
     @After

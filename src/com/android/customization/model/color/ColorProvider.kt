@@ -100,10 +100,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
             this.homeWallpaperColors != homeWallpaperColors ||
                 this.lockWallpaperColors != lockWallpaperColors
         if (wallpaperColorsChanged || reload) {
-            loadSeedColors(
-                homeWallpaperColors,
-                lockWallpaperColors,
-            )
+            loadSeedColors(homeWallpaperColors, lockWallpaperColors)
             this.homeWallpaperColors = homeWallpaperColors
             this.lockWallpaperColors = lockWallpaperColors
         }
@@ -166,13 +163,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                 bundles,
             )
         } else {
-            buildColorSeeds(
-                homeWallpaperColors,
-                colorsPerSource,
-                COLOR_SOURCE_HOME,
-                true,
-                bundles,
-            )
+            buildColorSeeds(homeWallpaperColors, colorsPerSource, COLOR_SOURCE_HOME, true, bundles)
         }
         wallpaperColorBundles = bundles
     }
@@ -206,9 +197,10 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
             val builder = ColorOptionImpl.Builder()
             builder.lightColors = getLightColorPreview(lightColorScheme)
             builder.darkColors = getDarkColorPreview(darkColorScheme)
+            builder.seedColor = colorInt
             builder.addOverlayPackage(
                 OVERLAY_CATEGORY_SYSTEM_PALETTE,
-                if (isDefault) "" else toColorString(colorInt)
+                if (isDefault) "" else toColorString(colorInt),
             )
             builder.title =
                 when (style) {
@@ -312,12 +304,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                 Style.RAINBOW -> intArrayOf(colorScheme.accent1.s200, colorScheme.accent1.s200)
                 else -> intArrayOf(colorScheme.accent1.s100, colorScheme.accent1.s100)
             }
-        return intArrayOf(
-            colors[0],
-            colors[1],
-            colors[0],
-            colors[1],
-        )
+        return intArrayOf(colors[0], colors[1], colors[0], colors[1])
     }
 
     private suspend fun loadPreset() =
@@ -392,6 +379,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
         val darkColor = darkColorScheme.accentColor
         var lightColors = intArrayOf(lightColor, lightColor, lightColor, lightColor)
         var darkColors = intArrayOf(darkColor, darkColor, darkColor, darkColor)
+        builder.seedColor = colorFromStub
         builder.addOverlayPackage(OVERLAY_CATEGORY_COLOR, toColorString(colorFromStub))
         builder.addOverlayPackage(OVERLAY_CATEGORY_SYSTEM_PALETTE, toColorString(colorFromStub))
         if (style != null) {
@@ -426,7 +414,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                 if (wallpaperColors.isNotEmpty()) {
                     wallpaperColors.add(
                         1,
-                        buildPreset(it, -1, Style.MONOCHROMATIC, ColorType.WALLPAPER_COLOR)
+                        buildPreset(it, -1, Style.MONOCHROMATIC, ColorType.WALLPAPER_COLOR),
                     )
                 }
             }

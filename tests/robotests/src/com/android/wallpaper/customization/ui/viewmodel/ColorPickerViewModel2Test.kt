@@ -17,7 +17,6 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
-import android.graphics.Color
 import android.stats.style.StyleEnums
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
@@ -104,10 +103,10 @@ class ColorPickerViewModel2Test {
                     repository.buildWallpaperOption(
                         ColorOptionsProvider.COLOR_SOURCE_LOCK,
                         Style.EXPRESSIVE,
-                        "121212",
+                        121212,
                     )
                 ),
-                listOf(repository.buildPresetOption(Style.FRUIT_SALAD, "#ABCDEF")),
+                listOf(repository.buildPresetOption(Style.FRUIT_SALAD, -54321)),
                 ColorType.PRESET_COLOR,
                 0,
             )
@@ -125,7 +124,7 @@ class ColorPickerViewModel2Test {
             assertThat(logger.themeColorSource)
                 .isEqualTo(StyleEnums.COLOR_SOURCE_LOCK_SCREEN_WALLPAPER)
             assertThat(logger.themeColorStyle).isEqualTo(Style.EXPRESSIVE.toString().hashCode())
-            assertThat(logger.themeSeedColor).isEqualTo(Color.parseColor("#121212"))
+            assertThat(logger.themeSeedColor).isEqualTo(121212)
         }
 
     @Test
@@ -136,10 +135,10 @@ class ColorPickerViewModel2Test {
                     repository.buildWallpaperOption(
                         ColorOptionsProvider.COLOR_SOURCE_LOCK,
                         Style.EXPRESSIVE,
-                        "121212",
+                        121212,
                     )
                 ),
-                listOf(repository.buildPresetOption(Style.FRUIT_SALAD, "#ABCDEF")),
+                listOf(repository.buildPresetOption(Style.FRUIT_SALAD, -54321)),
                 ColorType.WALLPAPER_COLOR,
                 0,
             )
@@ -156,7 +155,7 @@ class ColorPickerViewModel2Test {
 
             assertThat(logger.themeColorSource).isEqualTo(StyleEnums.COLOR_SOURCE_PRESET_COLOR)
             assertThat(logger.themeColorStyle).isEqualTo(Style.FRUIT_SALAD.toString().hashCode())
-            assertThat(logger.themeSeedColor).isEqualTo(Color.parseColor("#ABCDEF"))
+            assertThat(logger.themeSeedColor).isEqualTo(-54321)
         }
 
     @Test

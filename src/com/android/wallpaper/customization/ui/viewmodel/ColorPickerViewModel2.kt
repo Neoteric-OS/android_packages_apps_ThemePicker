@@ -176,7 +176,7 @@ constructor(
                         logger.logThemeColorApplied(
                             previewingColorOption.colorOption.sourceForLogging,
                             previewingColorOption.colorOption.styleForLogging,
-                            previewingColorOption.colorOption.seedColorForLogging,
+                            previewingColorOption.colorOption.seedColor,
                         )
                     }
                 }

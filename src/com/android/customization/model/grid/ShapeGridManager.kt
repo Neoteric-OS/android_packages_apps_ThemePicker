@@ -16,7 +16,7 @@
 
 package com.android.customization.model.grid
 
-interface GridOptionsManager2 {
+interface ShapeGridManager {
 
     suspend fun isGridOptionAvailable(): Boolean
 

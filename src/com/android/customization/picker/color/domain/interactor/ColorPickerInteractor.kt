@@ -60,6 +60,4 @@ constructor(
             _selectingColorOption.value = null
         }
     }
-
-    fun getCurrentColorOption(): ColorOptionModel = repository.getCurrentColorOption()
 }

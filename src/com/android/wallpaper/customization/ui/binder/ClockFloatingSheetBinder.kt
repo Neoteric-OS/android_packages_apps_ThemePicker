@@ -19,7 +19,6 @@ package com.android.wallpaper.customization.ui.binder
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Configuration
-import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -41,6 +40,7 @@ import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
 import com.android.wallpaper.customization.ui.viewmodel.ClockFloatingSheetHeightsViewModel
+import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.ClockStyleModel
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.Tab.COLOR
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.Tab.STYLE
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
@@ -223,30 +223,34 @@ object ClockFloatingSheetBinder {
 
     private fun createClockStyleOptionItemAdapter(
         lifecycleOwner: LifecycleOwner
-    ): OptionItemAdapter<Drawable> =
+    ): OptionItemAdapter<ClockStyleModel> =
         OptionItemAdapter(
             layoutResourceId = R.layout.clock_style_option,
             lifecycleOwner = lifecycleOwner,
-            bindIcon = { foregroundView: View, drawable: Drawable ->
-                (foregroundView as ImageView).setImageDrawable(drawable)
+            bindIcon = { view: View, style: ClockStyleModel ->
+                (view.findViewById(R.id.clock_icon) as ImageView).setImageDrawable(style.thumbnail)
+                (view.findViewById(R.id.edit_icon) as ImageView).setVisibility(
+                    if (style.isEditable) View.VISIBLE else View.GONE
+                )
             },
         )
 
-    private fun RecyclerView.initStyleList(context: Context, adapter: OptionItemAdapter<Drawable>) {
-        apply {
-            this.adapter = adapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            addItemDecoration(
-                SingleRowListItemSpacing(
-                    context.resources.getDimensionPixelSize(
-                        R.dimen.floating_sheet_content_horizontal_padding
-                    ),
-                    context.resources.getDimensionPixelSize(
-                        R.dimen.floating_sheet_list_item_horizontal_space
-                    ),
-                )
+    private fun RecyclerView.initStyleList(
+        context: Context,
+        adapter: OptionItemAdapter<ClockStyleModel>,
+    ) {
+        this.adapter = adapter
+        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        addItemDecoration(
+            SingleRowListItemSpacing(
+                context.resources.getDimensionPixelSize(
+                    R.dimen.floating_sheet_content_horizontal_padding
+                ),
+                context.resources.getDimensionPixelSize(
+                    R.dimen.floating_sheet_list_item_horizontal_space
+                ),
             )
-        }
+        )
     }
 
     private fun createClockColorOptionItemAdapter(

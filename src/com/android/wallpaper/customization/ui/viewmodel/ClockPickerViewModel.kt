@@ -114,8 +114,10 @@ constructor(
             overridingClock ?: selectedClock
         }
 
+    data class ClockStyleModel(val thumbnail: Drawable, val isEditable: Boolean)
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    val clockStyleOptions: StateFlow<List<OptionItemViewModel<Drawable>>> =
+    val clockStyleOptions: StateFlow<List<OptionItemViewModel<ClockStyleModel>>> =
         clockPickerInteractor.allClocks
             .mapLatest { allClocks ->
                 // Delay to avoid the case that the full list of clocks is not initiated.
@@ -130,9 +132,13 @@ constructor(
                             R.string.select_clock_action_description,
                             clockModel.description,
                         )
-                    OptionItemViewModel<Drawable>(
+                    OptionItemViewModel<ClockStyleModel>(
                         key = MutableStateFlow(clockModel.clockId) as StateFlow<String>,
-                        payload = clockModel.thumbnail,
+                        payload =
+                            ClockStyleModel(
+                                clockModel.thumbnail,
+                                isEditable = clockModel.hasReactiveAxes,
+                            ),
                         text = Text.Loaded(contentDescription),
                         isTextUserVisible = false,
                         isSelected = isSelectedFlow,

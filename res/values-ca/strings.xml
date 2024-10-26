@@ -44,10 +44,8 @@
     <string name="clock_size_small" msgid="2280449912094164133">"Petit"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Es mostra un rellotge petit a l\'extrem de la pantalla"</string>
     <string name="grid_title" msgid="1688173478777254123">"Quadrícula d\'apps"</string>
-    <!-- no translation found for shape_and_grid_title (9092477491363761054) -->
-    <skip />
-    <!-- no translation found for grid_layout (370175667652663686) -->
-    <skip />
+    <string name="shape_and_grid_title" msgid="9092477491363761054">"Forma i disseny d\'app"</string>
+    <string name="grid_layout" msgid="370175667652663686">"Disseny"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Aplica"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Toca per editar"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Mantén el fons de pantalla actual"</string>
@@ -78,7 +76,7 @@
     <string name="applied_theme_msg" msgid="3749018706366796244">"L\'estil s\'ha definit correctament"</string>
     <string name="applied_clock_msg" msgid="1303338016701443767">"El rellotge s\'ha definit correctament"</string>
     <string name="applied_grid_msg" msgid="3250499654436933034">"La quadrícula s\'ha definit correctament"</string>
-    <string name="apply_theme_error_msg" msgid="791364062636538317">"S\'ha produït un error en aplicar l\'estil"</string>
+    <string name="apply_theme_error_msg" msgid="791364062636538317">"Hi ha hagut un error en aplicar l\'estil"</string>
     <string name="custom_theme_next" msgid="6235420097213197301">"Següent"</string>
     <string name="custom_theme_previous" msgid="4941132112640503022">"Anterior"</string>
     <string name="custom_theme" msgid="1618351922263478163">"Personalitzat"</string>

@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.android.customization.picker.grid.data.repository
+package com.android.customization.picker.grid.domain.interactor
 
 import androidx.test.filters.SmallTest
-import com.android.customization.model.grid.FakeGridOptionsManager
-import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
+import com.android.customization.model.grid.FakeShapeGridManager
+import com.android.customization.picker.grid.data.repository.ShapeGridRepository
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -42,25 +40,19 @@ import org.robolectric.RobolectricTestRunner
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
 @RunWith(RobolectricTestRunner::class)
-class GridRepository2Test {
+class ShapeGridInteractorTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
-    @Inject lateinit var gridOptionsManager: FakeGridOptionsManager
+    @Inject lateinit var gridOptionsManager: FakeShapeGridManager
+    @Inject lateinit var repository: ShapeGridRepository
     @Inject lateinit var testScope: TestScope
-    @BackgroundDispatcher @Inject lateinit var bgScope: CoroutineScope
-    @BackgroundDispatcher @Inject lateinit var bgDispatcher: CoroutineDispatcher
 
-    private lateinit var underTest: GridRepository2
+    private lateinit var underTest: ShapeGridInteractor
 
     @Before
     fun setUp() {
         hiltRule.inject()
-        underTest =
-            GridRepository2(
-                manager = gridOptionsManager,
-                bgScope = bgScope,
-                bgDispatcher = bgDispatcher,
-            )
+        underTest = ShapeGridInteractor(repository)
     }
 
     @After
@@ -86,7 +78,7 @@ class GridRepository2Test {
     fun gridOptions_default() =
         testScope.runTest {
             val gridOptions = collectLastValue(underTest.gridOptions)
-            assertThat(gridOptions()).isEqualTo(FakeGridOptionsManager.DEFAULT_GRID_OPTION_LIST)
+            assertThat(gridOptions()).isEqualTo(FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST)
         }
 
     @Test
@@ -94,7 +86,7 @@ class GridRepository2Test {
         testScope.runTest {
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
             assertThat(selectedGridOption())
-                .isEqualTo(FakeGridOptionsManager.DEFAULT_GRID_OPTION_LIST[0])
+                .isEqualTo(FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST[0])
         }
 
     @Test
@@ -104,7 +96,7 @@ class GridRepository2Test {
             underTest.applySelectedOption("practical")
             assertThat(gridOptions())
                 .isEqualTo(
-                    FakeGridOptionsManager.DEFAULT_GRID_OPTION_LIST.map {
+                    FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST.map {
                         it.copy(isCurrent = it.key == "practical")
                     }
                 )
@@ -116,8 +108,6 @@ class GridRepository2Test {
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
             underTest.applySelectedOption("practical")
             assertThat(selectedGridOption())
-                .isEqualTo(
-                    FakeGridOptionsManager.DEFAULT_GRID_OPTION_LIST[1].copy(isCurrent = true)
-                )
+                .isEqualTo(FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST[1].copy(isCurrent = true))
         }
 }

@@ -92,6 +92,17 @@ object ColorsFloatingSheetBinder {
                         }
                     }
                 }
+
+                launch {
+                    viewModel.previewingColorOption.collect { colorModel ->
+                        if (colorModel != null) {
+                            colorUpdateViewModel.previewColors(
+                                colorModel.colorOption.seedColor,
+                                colorModel.colorOption.style,
+                            )
+                        } else colorUpdateViewModel.resetPreview()
+                    }
+                }
             }
         }
     }

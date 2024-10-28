@@ -101,7 +101,7 @@
     <string name="grid_title">App grid</string>
 
     <!-- Title of a section of the customization picker where the user can select app shapes and
-        grid layouts for the home screen. [CHAR LIMIT=15] -->
+        grid layouts for the home screen. [CHAR LIMIT=32] -->
     <string name="shape_and_grid_title">App shape &amp; layout</string>
 
     <!-- Tab title that switch to app grid customization section, where people can customization

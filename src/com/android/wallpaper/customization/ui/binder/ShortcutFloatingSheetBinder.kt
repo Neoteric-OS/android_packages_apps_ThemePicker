@@ -152,9 +152,10 @@ object ShortcutFloatingSheetBinder {
         OptionItemAdapter2(
             layoutResourceId = R.layout.quick_affordance_list_item2,
             lifecycleOwner = lifecycleOwner,
-            bindIcon = { foregroundView: View, gridIcon: Icon ->
-                val imageView = foregroundView as? ImageView
-                imageView?.let { IconViewBinder.bind(imageView, gridIcon) }
+            bindPayload = { itemView: View, gridIcon: Icon ->
+                val imageView =
+                    itemView.requireViewById<ImageView>(com.android.wallpaper.R.id.foreground)
+                IconViewBinder.bind(imageView, gridIcon)
             },
         )
 

@@ -138,6 +138,22 @@ class ClockPickerViewModelTest {
     }
 
     @Test
+    fun selectedTab_fontEditorWhenClickSelectedClock() = runTest {
+        val clockStyleOptions = collectLastValue(underTest.clockStyleOptions)
+        val selectedTab = collectLastValue(underTest.selectedTab)
+        // Advance CLOCKS_EVENT_UPDATE_DELAY_MILLIS since there is a delay from clockStyleOptions
+        advanceTimeBy(ClockPickerViewModel.CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
+        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
+
+        val firstClock = clockStyleOptions()!![0]
+        val onClicked = collectLastValue(firstClock.onClicked)
+        if (!firstClock.isSelected.value) onClicked()?.invoke()
+        onClicked()?.invoke()
+
+        assertThat(selectedTab()).isEqualTo(Tab.FONT)
+    }
+
+    @Test
     fun previewingClock_whenClickOnStyleOptions() = runTest {
         val previewingClock = collectLastValue(underTest.previewingClock)
         val clockStyleOptions = collectLastValue(underTest.clockStyleOptions)
@@ -165,7 +181,7 @@ class ClockPickerViewModelTest {
         val option1OnClicked = collectLastValue(clockStyleOptions()!![1].onClicked)
 
         assertThat(option0IsSelected()).isTrue()
-        assertThat(option0OnClicked()).isNull()
+        assertThat(option0OnClicked()).isNotNull()
 
         option1OnClicked()?.invoke()
         // Advance CLOCKS_EVENT_UPDATE_DELAY_MILLIS since there is a delay from clockColorOptions
@@ -173,7 +189,7 @@ class ClockPickerViewModelTest {
 
         assertThat(option0IsSelected()).isFalse()
         assertThat(option1IsSelected()).isTrue()
-        assertThat(option1OnClicked()).isNull()
+        assertThat(option1OnClicked()).isNotNull()
     }
 
     @Test
@@ -187,6 +203,76 @@ class ClockPickerViewModelTest {
         onClockSizeSwitchCheckedChange()?.invoke()
 
         assertThat(previewingClockSize()).isEqualTo(ClockSize.SMALL)
+    }
+
+    @Test
+    fun previewingFontAxes_defaultWhenNoOverrides() = runTest {
+        val previewingFontAxes = collectLastValue(underTest.previewingFontAxisMap)
+        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
+    }
+
+    @Test
+    fun previewingFontAxes_updateAxisChangesSetting() = runTest {
+        val previewingFontAxes = collectLastValue(underTest.previewingFontAxisMap)
+        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
+
+        underTest.updatePreviewFontAxis("key", 100f)
+        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f))
+
+        underTest.updatePreviewFontAxis("extra", 10f)
+        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f, "extra" to 10f))
+    }
+
+    @Test
+    fun previewingFontAxes_applyFontEditorExitsTab_keepsPreviewAxis() = runTest {
+        val previewingFontAxes = collectLastValue(underTest.previewingFontAxisMap)
+        val clockStyleOptions = collectLastValue(underTest.clockStyleOptions)
+        val selectedTab = collectLastValue(underTest.selectedTab)
+        // Advance CLOCKS_EVENT_UPDATE_DELAY_MILLIS since there is a delay from clockStyleOptions
+        advanceTimeBy(ClockPickerViewModel.CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
+
+        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
+        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
+
+        val firstClock = clockStyleOptions()!![0]
+        val onClicked = collectLastValue(firstClock.onClicked)
+        if (!firstClock.isSelected.value) onClicked()?.invoke()
+        onClicked()?.invoke()
+        underTest.updatePreviewFontAxis("key", 100f)
+
+        assertThat(selectedTab()).isEqualTo(Tab.FONT)
+        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f))
+
+        underTest.applyFontAxes()
+
+        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
+        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f))
+    }
+
+    @Test
+    fun previewingFontAxes_revertFontEditorExitsTab_revertsPreviewAxis() = runTest {
+        val previewingFontAxes = collectLastValue(underTest.previewingFontAxisMap)
+        val clockStyleOptions = collectLastValue(underTest.clockStyleOptions)
+        val selectedTab = collectLastValue(underTest.selectedTab)
+        // Advance CLOCKS_EVENT_UPDATE_DELAY_MILLIS since there is a delay from clockStyleOptions
+        advanceTimeBy(ClockPickerViewModel.CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
+
+        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
+        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
+
+        val firstClock = clockStyleOptions()!![0]
+        val onClicked = collectLastValue(firstClock.onClicked)
+        if (!firstClock.isSelected.value) onClicked()?.invoke()
+        onClicked()?.invoke()
+        underTest.updatePreviewFontAxis("key", 100f)
+
+        assertThat(selectedTab()).isEqualTo(Tab.FONT)
+        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f))
+
+        underTest.revertFontAxes()
+
+        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
+        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
     }
 
     @Test

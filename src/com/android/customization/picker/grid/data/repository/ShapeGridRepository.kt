@@ -19,6 +19,7 @@ package com.android.customization.picker.grid.data.repository
 
 import com.android.customization.model.grid.GridOptionModel
 import com.android.customization.model.grid.ShapeGridManager
+import com.android.customization.model.grid.ShapeOptionModel
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,27 +42,31 @@ constructor(
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {
 
-    suspend fun isGridOptionAvailable(): Boolean =
-        withContext(bgDispatcher) { manager.isGridOptionAvailable() }
-
+    private val _shapeOptions = MutableStateFlow<List<ShapeOptionModel>?>(null)
     private val _gridOptions = MutableStateFlow<List<GridOptionModel>?>(null)
 
     init {
         bgScope.launch {
-            val options = manager.getGridOptions()
-            _gridOptions.value = options
+            _gridOptions.value = manager.getGridOptions()
+            _shapeOptions.value = manager.getShapeOptions()
         }
     }
+
+    val shapeOptions: StateFlow<List<ShapeOptionModel>?> = _shapeOptions.asStateFlow()
+
+    val selectedShapeOption: Flow<ShapeOptionModel?> =
+        shapeOptions.map { shapeOptions -> shapeOptions?.firstOrNull { it.isCurrent } }
 
     val gridOptions: StateFlow<List<GridOptionModel>?> = _gridOptions.asStateFlow()
 
     val selectedGridOption: Flow<GridOptionModel?> =
         gridOptions.map { gridOptions -> gridOptions?.firstOrNull { it.isCurrent } }
 
-    suspend fun applySelectedOption(key: String) =
+    suspend fun applySelectedOption(shapeKey: String, gridKey: String) =
         withContext(bgDispatcher) {
-            manager.applyGridOption(key)
-            // After applying new grid option, we should query and update the grid options again.
+            manager.applyShapeGridOption(shapeKey, gridKey)
+            // After applying, we should query and update shape and grid options again.
             _gridOptions.value = manager.getGridOptions()
+            _shapeOptions.value = manager.getShapeOptions()
         }
 }

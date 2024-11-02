@@ -8,6 +8,7 @@ import com.android.systemui.plugins.clocks.ClockConfig
 import com.android.systemui.plugins.clocks.ClockController
 import com.android.systemui.plugins.clocks.ClockEvents
 import com.android.systemui.plugins.clocks.ClockFaceController
+import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import java.io.PrintWriter
 import javax.inject.Inject
 
@@ -53,6 +54,10 @@ class FakeClockViewFactory @Inject constructor() : ClockViewFactory {
     }
 
     override fun updateColor(clockId: String, seedColor: Int?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateFontAxes(clockId: String, settings: List<ClockFontAxisSetting>) {
         TODO("Not yet implemented")
     }
 

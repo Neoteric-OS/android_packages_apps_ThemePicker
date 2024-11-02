@@ -20,6 +20,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
+import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -49,4 +50,6 @@ interface ClockPickerRepository {
     )
 
     suspend fun setClockSize(size: ClockSize)
+
+    suspend fun setClockFontAxes(axisSettings: List<ClockFontAxisSetting>)
 }

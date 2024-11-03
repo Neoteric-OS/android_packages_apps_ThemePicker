@@ -64,7 +64,7 @@ class ColorCustomizationManagerTest {
                 provider,
                 application.contentResolver,
                 mockOM,
-                MoreExecutors.newDirectExecutorService()
+                MoreExecutors.newDirectExecutorService(),
             )
     }
 
@@ -80,7 +80,7 @@ class ColorCustomizationManagerTest {
                 OVERLAY_CATEGORY_COLOR to someOtherColor,
                 OVERLAY_COLOR_SOURCE to source,
                 OVERLAY_THEME_STYLE to style.toString(),
-                ColorOption.TIMESTAMP_FIELD to "12345"
+                ColorOption.TIMESTAMP_FIELD to "12345",
             )
         val json = JSONObject(settings).toString()
 
@@ -106,14 +106,16 @@ class ColorCustomizationManagerTest {
             getPresetColorOption(index),
             object : CustomizationManager.Callback {
                 override fun onSuccess() {}
+
                 override fun onError(throwable: Throwable?) {}
-            }
+            },
         )
 
         val overlaysJson = JSONObject(manager.storedOverlays)
 
         assertThat(overlaysJson.getString(OVERLAY_COLOR_INDEX)).isEqualTo(value)
     }
+
     @Test
     fun apply_WallpaperColorOption_index() {
         testApplyWallpaperColorOption(1, "1")
@@ -127,8 +129,9 @@ class ColorCustomizationManagerTest {
             getWallpaperColorOption(index),
             object : CustomizationManager.Callback {
                 override fun onSuccess() {}
+
                 override fun onError(throwable: Throwable?) {}
-            }
+            },
         )
 
         val overlaysJson = JSONObject(manager.storedOverlays)
@@ -141,10 +144,11 @@ class ColorCustomizationManagerTest {
             mapOf("fake_package" to "fake_color"),
             /* isDefault= */ false,
             COLOR_SOURCE_PRESET,
+            12345,
             Style.TONAL_SPOT,
             index,
             ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
-            ColorType.PRESET_COLOR
+            ColorType.PRESET_COLOR,
         )
     }
 
@@ -154,10 +158,11 @@ class ColorCustomizationManagerTest {
             mapOf("fake_package" to "fake_color"),
             /* isDefault= */ false,
             COLOR_SOURCE_HOME,
+            12345,
             Style.TONAL_SPOT,
             index,
             ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
-            ColorType.WALLPAPER_COLOR
+            ColorType.WALLPAPER_COLOR,
         )
     }
 
@@ -170,8 +175,9 @@ class ColorCustomizationManagerTest {
             getWallpaperColorOption(0),
             object : CustomizationManager.Callback {
                 override fun onSuccess() {}
+
                 override fun onError(throwable: Throwable?) {}
-            }
+            },
         )
 
         val overlaysJson = JSONObject(manager.storedOverlays)
@@ -188,8 +194,9 @@ class ColorCustomizationManagerTest {
             getWallpaperColorOption(0),
             object : CustomizationManager.Callback {
                 override fun onSuccess() {}
+
                 override fun onError(throwable: Throwable?) {}
-            }
+            },
         )
 
         val overlaysJson = JSONObject(manager.storedOverlays)

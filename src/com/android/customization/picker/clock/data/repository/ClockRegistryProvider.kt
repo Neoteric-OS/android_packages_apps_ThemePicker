@@ -19,6 +19,7 @@ import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.view.LayoutInflater
+import com.android.systemui.Flags
 import com.android.systemui.plugins.Plugin
 import com.android.systemui.plugins.PluginManager
 import com.android.systemui.shared.clocks.ClockRegistry
@@ -52,7 +53,12 @@ class ClockRegistryProvider(
             backgroundDispatcher,
             isEnabled = true,
             handleAllUsers = false,
-            DefaultClockProvider(context, LayoutInflater.from(context), context.resources),
+            DefaultClockProvider(
+                ctx = context,
+                layoutInflater = LayoutInflater.from(context),
+                resources = context.resources,
+                isClockReactiveVariantsEnabled = Flags.clockReactiveVariants(),
+            ),
             keepAllLoaded = true,
             subTag = "Picker",
         )

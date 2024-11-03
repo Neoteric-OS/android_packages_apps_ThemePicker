@@ -70,6 +70,7 @@ constructor(
                                     description = clockConfig.description,
                                     thumbnail = clockConfig.thumbnail,
                                     isReactiveToTone = clockConfig.isReactiveToTone,
+                                    hasReactiveAxes = !clockConfig.axes.isEmpty(),
                                 )
                             } else {
                                 null
@@ -115,6 +116,7 @@ constructor(
                                     description = it.description,
                                     thumbnail = it.thumbnail,
                                     isReactiveToTone = it.isReactiveToTone,
+                                    hasReactiveAxes = !it.axes.isEmpty(),
                                     selectedColorId = metadata?.getSelectedColorId(),
                                     colorTone =
                                         metadata?.getColorTone()
@@ -174,11 +176,7 @@ constructor(
             .map { setting -> setting == 1 }
             .map { isDynamic -> if (isDynamic) ClockSize.DYNAMIC else ClockSize.SMALL }
             .distinctUntilChanged()
-            .shareIn(
-                scope = mainScope,
-                started = SharingStarted.Eagerly,
-                replay = 1,
-            )
+            .shareIn(scope = mainScope, started = SharingStarted.Eagerly, replay = 1)
 
     override suspend fun setClockSize(size: ClockSize) {
         secureSettingsRepository.setInt(
@@ -198,7 +196,7 @@ constructor(
     private fun JSONObject.getColorTone(): Int {
         return this.optInt(
             KEY_METADATA_COLOR_TONE_PROGRESS,
-            ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS
+            ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS,
         )
     }
 
@@ -208,6 +206,7 @@ constructor(
         description: String,
         thumbnail: Drawable,
         isReactiveToTone: Boolean,
+        hasReactiveAxes: Boolean,
         selectedColorId: String? = null,
         @IntRange(from = 0, to = 100) colorTone: Int = 0,
         @ColorInt seedColor: Int? = null,
@@ -218,6 +217,7 @@ constructor(
             description = description,
             thumbnail = thumbnail,
             isReactiveToTone = isReactiveToTone,
+            hasReactiveAxes = hasReactiveAxes,
             selectedColorId = selectedColorId,
             colorToneProgress = colorTone,
             seedColor = seedColor,

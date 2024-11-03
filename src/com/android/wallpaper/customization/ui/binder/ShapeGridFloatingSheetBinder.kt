@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.customization.picker.grid.ui.binder.GridIconViewBinder
 import com.android.customization.picker.grid.ui.viewmodel.GridIconViewModel
+import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_SHAPE_GRID
 import com.android.wallpaper.customization.ui.viewmodel.ShapeGridFloatingSheetHeightsViewModel
@@ -82,16 +83,24 @@ object ShapeGridFloatingSheetBinder {
                     shouldAnimateColor = { optionsViewModel.selectedOption.value == APP_SHAPE_GRID },
                 )
                 .also { tabs.setAdapter(it) }
+
         val floatingSheetContainer =
             view.requireViewById<ViewGroup>(R.id.shape_grid_floating_sheet_content_container)
 
         val shapeContent = view.requireViewById<View>(R.id.app_shape_container)
+        val shapeOptionListAdapter =
+            createShapeOptionItemAdapter(view.context, lifecycleOwner, backgroundDispatcher)
+        val shapeOptionList =
+            view.requireViewById<RecyclerView>(R.id.shape_options).also {
+                it.initShapeOptionList(view.context, shapeOptionListAdapter)
+            }
 
         val gridContent = view.requireViewById<View>(R.id.app_grid_container)
-        val adapter = createOptionItemAdapter(view.context, lifecycleOwner, backgroundDispatcher)
+        val gridOptionListAdapter =
+            createGridOptionItemAdapter(view.context, lifecycleOwner, backgroundDispatcher)
         val gridOptionList =
             view.requireViewById<RecyclerView>(R.id.grid_options).also {
-                it.initGridOptionList(view.context, adapter)
+                it.initGridOptionList(view.context, gridOptionListAdapter)
             }
 
         // Get the shape content height when it is ready
@@ -168,11 +177,23 @@ object ShapeGridFloatingSheetBinder {
                 }
 
                 launch {
-                    viewModel.optionItems.collect { options ->
-                        adapter.setItems(options) {
+                    viewModel.gridOptions.collect { options ->
+                        gridOptionListAdapter.setItems(options) {
                             val indexToFocus =
                                 options.indexOfFirst { it.isSelected.value }.coerceAtLeast(0)
                             (gridOptionList.layoutManager as LinearLayoutManager).scrollToPosition(
+                                indexToFocus
+                            )
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.shapeOptions.collect { options ->
+                        shapeOptionListAdapter.setItems(options) {
+                            val indexToFocus =
+                                options.indexOfFirst { it.isSelected.value }.coerceAtLeast(0)
+                            (shapeOptionList.layoutManager as LinearLayoutManager).scrollToPosition(
                                 indexToFocus
                             )
                         }
@@ -182,7 +203,52 @@ object ShapeGridFloatingSheetBinder {
         }
     }
 
-    private fun createOptionItemAdapter(
+    private fun createShapeOptionItemAdapter(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        backgroundDispatcher: CoroutineDispatcher,
+    ): OptionItemAdapter<ShapeIconViewModel> =
+        OptionItemAdapter(
+            layoutResourceId = R.layout.shape_option,
+            lifecycleOwner = lifecycleOwner,
+            backgroundDispatcher = backgroundDispatcher,
+            foregroundTintSpec =
+                OptionItemBinder.TintSpec(
+                    selectedColor =
+                        context.getColor(com.android.wallpaper.R.color.system_on_surface),
+                    unselectedColor =
+                        context.getColor(com.android.wallpaper.R.color.system_on_surface),
+                ),
+            bindIcon = { foregroundView: View, shapeIcon: ShapeIconViewModel ->
+                val imageView = foregroundView as? ImageView
+                imageView?.let { ShapeIconViewBinder.bind(imageView, shapeIcon) }
+            },
+        )
+
+    private fun RecyclerView.initShapeOptionList(
+        context: Context,
+        adapter: OptionItemAdapter<ShapeIconViewModel>,
+    ) {
+        apply {
+            this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            addItemDecoration(
+                SingleRowListItemSpacing(
+                    edgeItemSpacePx =
+                        context.resources.getDimensionPixelSize(
+                            R.dimen.floating_sheet_content_horizontal_padding
+                        ),
+                    itemHorizontalSpacePx =
+                        context.resources.getDimensionPixelSize(
+                            com.android.themepicker.R.dimen
+                                .floating_sheet_list_item_horizontal_space
+                        ),
+                )
+            )
+            this.adapter = adapter
+        }
+    }
+
+    private fun createGridOptionItemAdapter(
         context: Context,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
@@ -214,8 +280,7 @@ object ShapeGridFloatingSheetBinder {
                 SingleRowListItemSpacing(
                     edgeItemSpacePx =
                         context.resources.getDimensionPixelSize(
-                            com.android.themepicker.R.dimen
-                                .floating_sheet_content_horizontal_padding
+                            R.dimen.floating_sheet_content_horizontal_padding
                         ),
                     itemHorizontalSpacePx =
                         context.resources.getDimensionPixelSize(

@@ -15,6 +15,7 @@
  */
 package com.android.customization.model.color
 
+import android.graphics.Color
 import com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_SYSTEM_PALETTE
 import com.android.customization.model.color.ColorOptionsProvider.COLOR_SOURCE_HOME
 import com.android.customization.model.color.ColorOptionsProvider.COLOR_SOURCE_LOCK
@@ -54,10 +55,11 @@ class ColorOptionTest {
                 mapOf("fake_package" to "fake_color"),
                 false,
                 source,
+                12345,
                 Style.TONAL_SPOT,
                 /* index= */ 0,
                 ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
-                ColorType.WALLPAPER_COLOR
+                ColorType.WALLPAPER_COLOR,
             )
         assertThat(colorOption.source).isEqualTo(source)
     }
@@ -77,10 +79,11 @@ class ColorOptionTest {
                 mapOf("fake_package" to "fake_color"),
                 /* isDefault= */ false,
                 "fake_source",
+                12345,
                 style,
                 0,
                 ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
-                ColorType.WALLPAPER_COLOR
+                ColorType.WALLPAPER_COLOR,
             )
         assertThat(colorOption.style).isEqualTo(style)
     }
@@ -100,17 +103,41 @@ class ColorOptionTest {
                 mapOf("fake_package" to "fake_color"),
                 /* isDefault= */ false,
                 "fake_source",
+                12345,
                 Style.TONAL_SPOT,
                 index,
                 ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
-                ColorType.WALLPAPER_COLOR
+                ColorType.WALLPAPER_COLOR,
             )
         assertThat(colorOption.index).isEqualTo(index)
     }
 
+    @Test
+    fun colorOption_seedColor() {
+        testColorOptionSeed(Color.RED)
+        testColorOptionSeed(Color.WHITE)
+        testColorOptionSeed(Color.BLACK)
+    }
+
+    private fun testColorOptionSeed(seedColor: Int) {
+        val colorOption: ColorOption =
+            ColorOptionImpl(
+                "fake color",
+                mapOf("fake_package" to "fake_color"),
+                /* isDefault= */ false,
+                "fake_source",
+                seedColor,
+                Style.TONAL_SPOT,
+                0,
+                ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
+                ColorType.WALLPAPER_COLOR,
+            )
+        assertThat(colorOption.seedColor).isEqualTo(seedColor)
+    }
+
     private fun setUpWallpaperColorOption(
         isDefault: Boolean,
-        source: String = "some_source"
+        source: String = "some_source",
     ): ColorOptionImpl {
         val overlays =
             if (isDefault) {
@@ -124,10 +151,11 @@ class ColorOptionTest {
             overlays,
             isDefault,
             source,
+            12345,
             Style.TONAL_SPOT,
             /* index= */ 0,
             ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
-            ColorType.WALLPAPER_COLOR
+            ColorType.WALLPAPER_COLOR,
         )
     }
 

@@ -33,16 +33,15 @@ class ColorOptionImpl(
     overlayPackages: Map<String, String?>,
     isDefault: Boolean,
     private val source: String?,
+    seedColor: Int,
     style: Style,
     index: Int,
     private val previewInfo: PreviewInfo,
     val type: ColorType,
-) : ColorOption(title, overlayPackages, isDefault, style, index) {
+) : ColorOption(title, overlayPackages, isDefault, seedColor, style, index) {
 
-    class PreviewInfo(
-        @ColorInt val lightColors: IntArray,
-        @ColorInt val darkColors: IntArray,
-    ) : ColorOption.PreviewInfo {
+    class PreviewInfo(@ColorInt val lightColors: IntArray, @ColorInt val darkColors: IntArray) :
+        ColorOption.PreviewInfo {
         @ColorInt
         fun resolveColors(darkTheme: Boolean): IntArray {
             return if (darkTheme) darkColors else lightColors
@@ -89,6 +88,7 @@ class ColorOptionImpl(
 
         @ColorSource var source: String? = null
         var isDefault = false
+        @ColorInt var seedColor = 0
         var style = Style.TONAL_SPOT
         var index = 0
         var packages: MutableMap<String, String?> = HashMap()
@@ -100,10 +100,11 @@ class ColorOptionImpl(
                 packages,
                 isDefault,
                 source,
+                seedColor,
                 style,
                 index,
                 createPreviewInfo(),
-                type
+                type,
             )
         }
 

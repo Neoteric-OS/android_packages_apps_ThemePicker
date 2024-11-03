@@ -1,6 +1,5 @@
 package com.android.customization.picker.clock.ui
 
-import android.content.res.Resources
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.android.customization.picker.clock.data.repository.FakeClockPickerRepository
@@ -29,7 +28,7 @@ class FakeClockViewFactory @Inject constructor() : ClockViewFactory {
         override val events: ClockEvents
             get() = TODO("Not yet implemented")
 
-        override fun initialize(resources: Resources, dozeFraction: Float, foldFraction: Float) =
+        override fun initialize(isDarkTheme: Boolean, dozeFraction: Float, foldFraction: Float) =
             TODO("Not yet implemented")
 
         override fun dump(pw: PrintWriter) = TODO("Not yet implemented")

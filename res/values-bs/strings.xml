@@ -44,10 +44,8 @@
     <string name="clock_size_small" msgid="2280449912094164133">"Malo"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Mali sat se prikazuje u uglu vašeg ekrana"</string>
     <string name="grid_title" msgid="1688173478777254123">"Mreža aplikacija"</string>
-    <!-- no translation found for shape_and_grid_title (9092477491363761054) -->
-    <skip />
-    <!-- no translation found for grid_layout (370175667652663686) -->
-    <skip />
+    <string name="shape_and_grid_title" msgid="9092477491363761054">"Oblik i raspored apl."</string>
+    <string name="grid_layout" msgid="370175667652663686">"Raspored"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Primijeni"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Dodirnite da uredite"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Zadrži trenutnu pozadinsku sliku"</string>

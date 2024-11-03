@@ -16,8 +16,8 @@
 
 package com.android.wallpaper.picker.di.modules
 
-import com.android.customization.model.grid.DefaultGridOptionsManager
-import com.android.customization.model.grid.GridOptionsManager2
+import com.android.customization.model.grid.DefaultShapeGridManager
+import com.android.customization.model.grid.ShapeGridManager
 import com.android.customization.picker.mode.shared.util.DarkModeUtil
 import com.android.customization.picker.mode.shared.util.DarkModeUtilImpl
 import dagger.Binds
@@ -32,7 +32,7 @@ abstract class ThemePickerSharedAppModule {
 
     @Binds
     @Singleton
-    abstract fun bindGridOptionsManager2(impl: DefaultGridOptionsManager): GridOptionsManager2
+    abstract fun bindGridOptionsManager2(impl: DefaultShapeGridManager): ShapeGridManager
 
     @Binds @Singleton abstract fun bindDarkModeUtil(impl: DarkModeUtilImpl): DarkModeUtil
 }

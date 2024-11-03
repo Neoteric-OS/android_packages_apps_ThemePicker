@@ -19,10 +19,10 @@ import static com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY
 import static com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_SYSTEM_PALETTE;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.VisibleForTesting;
 
 import com.android.customization.model.CustomizationManager;
@@ -59,11 +59,13 @@ public abstract class ColorOption implements CustomizationOption<ColorOption> {
     private final Style mStyle;
     private final int mIndex;
     private CharSequence mContentDescription;
+    private final @ColorInt int mSeedColor;
 
     protected ColorOption(String title, Map<String, String> overlayPackages, boolean isDefault,
-            Style style, int index) {
+            int seedColor, Style style, int index) {
         mTitle = title;
         mIsDefault = isDefault;
+        mSeedColor = seedColor;
         mStyle = style;
         mIndex = index;
         mPackagesByCategory = Collections.unmodifiableMap(removeNullValues(overlayPackages));
@@ -102,37 +104,8 @@ public abstract class ColorOption implements CustomizationOption<ColorOption> {
         }
     }
 
-    /**
-     * Gets the seed color from the overlay packages in hex string.
-     *
-     * @return a string representing the seed color, or null if the color option is generated from
-     * the default seed.
-     */
-    public Integer getSeedColor() {
-        String seedColor = mPackagesByCategory.get(OVERLAY_CATEGORY_SYSTEM_PALETTE);
-        if (TextUtils.isEmpty(seedColor)) {
-            return null;
-        }
-        if (!seedColor.startsWith("#")) {
-            seedColor = "#" + seedColor;
-        }
-        return Color.parseColor(seedColor);
-    }
-
-    /**
-     * Gets the seed color from the overlay packages for logging.
-     *
-     * @return an int representing the seed color, or NULL_SEED_COLOR
-     */
-    public int getSeedColorForLogging() {
-        String seedColor = mPackagesByCategory.get(OVERLAY_CATEGORY_SYSTEM_PALETTE);
-        if (seedColor == null || seedColor.isEmpty()) {
-            return ThemesUserEventLogger.NULL_SEED_COLOR;
-        }
-        if (!seedColor.startsWith("#")) {
-            seedColor = "#" + seedColor;
-        }
-        return Color.parseColor(seedColor);
+    public @ColorInt int getSeedColor() {
+        return mSeedColor;
     }
 
     /**

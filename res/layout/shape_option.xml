@@ -22,6 +22,14 @@
     android:clipChildren="false">
 
     <ImageView
+        android:id="@id/selection_border"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/option_item_border"
+        android:alpha="0"
+        android:importantForAccessibility="no" />
+
+    <ImageView
         android:id="@id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

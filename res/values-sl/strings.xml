@@ -44,10 +44,8 @@
     <string name="clock_size_small" msgid="2280449912094164133">"Majhna"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"V kotu zaslona je prikazana majhna ura."</string>
     <string name="grid_title" msgid="1688173478777254123">"Mreža aplikacij"</string>
-    <!-- no translation found for shape_and_grid_title (9092477491363761054) -->
-    <skip />
-    <!-- no translation found for grid_layout (370175667652663686) -->
-    <skip />
+    <string name="shape_and_grid_title" msgid="9092477491363761054">"Oblika in postavitev aplikacije"</string>
+    <string name="grid_layout" msgid="370175667652663686">"Postavitev"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Uporabi"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Dotaknite se za urejanje"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Obdrži trenutno ozadje"</string>

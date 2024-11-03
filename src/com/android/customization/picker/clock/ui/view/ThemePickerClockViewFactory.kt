@@ -122,18 +122,24 @@ constructor(
         )
 
     override fun updateColorForAllClocks(@ColorInt seedColor: Int?) {
-        clockControllers.values.forEach { it.events.onSeedColorChanged(seedColor = seedColor) }
+        clockControllers.values.forEach {
+            it.largeClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
+            it.smallClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
+        }
     }
 
     override fun updateColor(clockId: String, @ColorInt seedColor: Int?) {
-        getController(clockId).events.onSeedColorChanged(seedColor)
+        getController(clockId).let {
+            it.largeClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
+            it.smallClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
+        }
     }
 
     override fun updateRegionDarkness() {
         val isRegionDark = isLockscreenWallpaperDark()
         clockControllers.values.forEach {
-            it.largeClock.events.onRegionDarknessChanged(isRegionDark)
-            it.smallClock.events.onRegionDarknessChanged(isRegionDark)
+            it.largeClock.run { events.onThemeChanged(theme.copy(isDarkTheme = isRegionDark)) }
+            it.smallClock.run { events.onThemeChanged(theme.copy(isDarkTheme = isRegionDark)) }
         }
     }
 
@@ -180,13 +186,12 @@ constructor(
     }
 
     private fun initClockController(clockId: String): ClockController {
+        val isWallpaperDark = isLockscreenWallpaperDark()
         val controller =
-            registry.createExampleClock(clockId).also { it?.initialize(resources, 0f, 0f) }
+            registry.createExampleClock(clockId).also { it?.initialize(isWallpaperDark, 0f, 0f) }
         checkNotNull(controller)
 
-        val isWallpaperDark = isLockscreenWallpaperDark()
         // Initialize large clock
-        controller.largeClock.events.onRegionDarknessChanged(isWallpaperDark)
         controller.largeClock.events.onFontSettingChanged(
             resources
                 .getDimensionPixelSize(
@@ -197,7 +202,6 @@ constructor(
         controller.largeClock.events.onTargetRegionChanged(getLargeClockRegion())
 
         // Initialize small clock
-        controller.smallClock.events.onRegionDarknessChanged(isWallpaperDark)
         controller.smallClock.events.onFontSettingChanged(
             resources
                 .getDimensionPixelSize(

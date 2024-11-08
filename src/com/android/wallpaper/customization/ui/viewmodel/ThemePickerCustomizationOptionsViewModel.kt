@@ -131,7 +131,7 @@ constructor(
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val onApplyButtonClicked =
+    val onApplyButtonClicked: Flow<((onComplete: () -> Unit) -> Unit)?> =
         selectedOption
             .flatMapLatest {
                 when (it) {
@@ -155,8 +155,11 @@ constructor(
             }
             .map { onApply ->
                 if (onApply != null) {
-                    fun() {
-                        viewModelScope.launch { onApply() }
+                    fun(onComplete: () -> Unit) {
+                        viewModelScope.launch {
+                            onApply()
+                            onComplete()
+                        }
                     }
                 } else {
                     null

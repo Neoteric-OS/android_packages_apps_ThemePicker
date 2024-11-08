@@ -107,13 +107,15 @@ object ShapeGridFloatingSheetBinder {
         shapeContent.viewTreeObserver.addOnGlobalLayoutListener(
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    _shapeGridFloatingSheetHeights.value =
-                        _shapeGridFloatingSheetHeights.value?.copy(
-                            shapeContentHeight = shapeContent.height
-                        )
-                            ?: ShapeGridFloatingSheetHeightsViewModel(
+                    if (shapeContent.height != 0) {
+                        _shapeGridFloatingSheetHeights.value =
+                            _shapeGridFloatingSheetHeights.value?.copy(
                                 shapeContentHeight = shapeContent.height
                             )
+                                ?: ShapeGridFloatingSheetHeightsViewModel(
+                                    shapeContentHeight = shapeContent.height
+                                )
+                    }
                     shapeContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             }
@@ -122,17 +124,15 @@ object ShapeGridFloatingSheetBinder {
         gridContent.viewTreeObserver.addOnGlobalLayoutListener(
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    // Make sure the recycler view height is the same as its parent. It's possible
-                    // that the recycler view is shorter than expected.
-                    gridOptionList.layoutParams =
-                        gridOptionList.layoutParams.apply { height = gridContent.height }
-                    _shapeGridFloatingSheetHeights.value =
-                        _shapeGridFloatingSheetHeights.value?.copy(
-                            gridContentHeight = gridContent.height
-                        )
-                            ?: ShapeGridFloatingSheetHeightsViewModel(
-                                gridContentHeight = shapeContent.height
+                    if (gridContent.height != 0) {
+                        _shapeGridFloatingSheetHeights.value =
+                            _shapeGridFloatingSheetHeights.value?.copy(
+                                gridContentHeight = gridContent.height
                             )
+                                ?: ShapeGridFloatingSheetHeightsViewModel(
+                                    gridContentHeight = shapeContent.height
+                                )
+                    }
                     shapeContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             }
@@ -152,6 +152,10 @@ object ShapeGridFloatingSheetBinder {
                             val (shapeContentHeight, gridContentHeight) = heights
                             shapeContentHeight ?: return@collect
                             gridContentHeight ?: return@collect
+                            // Make sure the recycler view height is the same as its parent. It's
+                            // possible that the recycler view is shorter than expected.
+                            gridOptionList.layoutParams =
+                                gridOptionList.layoutParams.apply { height = gridContentHeight }
                             val targetHeight =
                                 when (selectedTab) {
                                     SHAPE -> shapeContentHeight

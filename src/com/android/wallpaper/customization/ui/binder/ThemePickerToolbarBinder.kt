@@ -64,12 +64,7 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.onApplyButtonClicked.collect { onApplyButtonClicked ->
-                        applyButton.setOnClickListener {
-                            if (onApplyButtonClicked != null) {
-                                onApplyButtonClicked.invoke()
-                                onNavBack.invoke()
-                            }
-                        }
+                        applyButton.setOnClickListener { onApplyButtonClicked?.invoke(onNavBack) }
                     }
                 }
 

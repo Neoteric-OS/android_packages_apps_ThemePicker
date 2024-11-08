@@ -43,6 +43,10 @@
     <string name="clock_size_large" msgid="3143248715744138979">"크게"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"작게"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"작은 시계가 화면 모서리에 표시됩니다."</string>
+    <!-- no translation found for clock_font_editor_apply (5965611025879105293) -->
+    <skip />
+    <!-- no translation found for clock_font_editor_revert (5307491447405753061) -->
+    <skip />
     <string name="grid_title" msgid="1688173478777254123">"앱 그리드"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"앱 모양 및 레이아웃"</string>
     <string name="grid_layout" msgid="370175667652663686">"레이아웃"</string>

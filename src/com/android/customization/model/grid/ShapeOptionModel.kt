@@ -16,11 +16,9 @@
 
 package com.android.customization.model.grid
 
-interface ShapeGridManager {
-
-    suspend fun getGridOptions(): List<GridOptionModel>?
-
-    suspend fun getShapeOptions(): List<ShapeOptionModel>?
-
-    fun applyShapeGridOption(shapeKey: String, gridKey: String): Int
-}
+data class ShapeOptionModel(
+    val key: String,
+    val title: String,
+    val path: String,
+    val isCurrent: Boolean,
+)

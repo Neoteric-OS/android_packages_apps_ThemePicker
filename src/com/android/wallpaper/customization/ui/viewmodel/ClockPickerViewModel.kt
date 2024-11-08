@@ -109,6 +109,12 @@ constructor(
 
     // Clock style
     private val overridingClock = MutableStateFlow<ClockMetadataModel?>(null)
+    private val isClockEdited =
+        combine(overridingClock, clockPickerInteractor.selectedClock) {
+            overridingClock,
+            selectedClock ->
+            overridingClock != null && overridingClock.clockId != selectedClock.clockId
+        }
     val previewingClock =
         combine(overridingClock, clockPickerInteractor.selectedClock) {
             overridingClock,
@@ -191,6 +197,12 @@ constructor(
 
     // Clock size
     private val overridingClockSize = MutableStateFlow<ClockSize?>(null)
+    private val isClockSizeEdited =
+        combine(overridingClockSize, clockPickerInteractor.selectedClockSize) {
+            overridingClockSize,
+            selectedClockSize ->
+            overridingClockSize != null && overridingClockSize != selectedClockSize
+        }
     val previewingClockSize =
         combine(overridingClockSize, clockPickerInteractor.selectedClockSize) {
             overridingClockSize,
@@ -210,6 +222,12 @@ constructor(
     // Clock color
     // 0 - 100
     private val overridingClockColorId = MutableStateFlow<String?>(null)
+    private val isClockColorIdEdited =
+        combine(overridingClockColorId, clockPickerInteractor.selectedColorId) {
+            overridingClockColorId,
+            selectedColorId ->
+            overridingClockColorId != null && (overridingClockColorId != selectedColorId)
+        }
     private val previewingClockColorId =
         combine(overridingClockColorId, clockPickerInteractor.selectedColorId) {
             overridingClockColorId,
@@ -218,6 +236,12 @@ constructor(
         }
 
     private val overridingSliderProgress = MutableStateFlow<Int?>(null)
+    private val isSliderProgressEdited =
+        combine(overridingSliderProgress, clockPickerInteractor.colorToneProgress) {
+            overridingSliderProgress,
+            colorToneProgress ->
+            overridingSliderProgress != null && (overridingSliderProgress != colorToneProgress)
+        }
     val previewingSliderProgress: Flow<Int> =
         combine(overridingSliderProgress, clockPickerInteractor.colorToneProgress) {
             overridingSliderProgress,
@@ -357,31 +381,40 @@ constructor(
         )
     }
 
+    private val isEdited =
+        combine(isClockEdited, isClockSizeEdited, isClockColorIdEdited, isSliderProgressEdited) {
+            isClockEdited,
+            isClockSizeEdited,
+            isClockColorEdited,
+            isSliderProgressEdited ->
+            isClockEdited || isClockSizeEdited || isClockColorEdited || isSliderProgressEdited
+        }
     val onApply: Flow<(suspend () -> Unit)?> =
         combine(
+            isEdited,
             previewingClock,
             previewingClockSize,
             previewingClockColorId,
             previewingSliderProgress,
-        ) { clock, size, colorId, progress ->
-            {
-                val clockColorViewModel = colorMap[colorId]
-                val seedColor =
-                    if (clockColorViewModel != null) {
-                        blendColorWithTone(
-                            color = clockColorViewModel.color,
-                            colorTone = clockColorViewModel.getColorTone(progress),
-                        )
-                    } else {
-                        null
-                    }
-                clockPickerInteractor.applyClock(
-                    clockId = clock.clockId,
-                    size = size,
-                    selectedColorId = if (colorId == DEFAULT_CLOCK_COLOR_ID) null else colorId,
-                    colorToneProgress = progress,
-                    seedColor = seedColor,
-                )
+        ) { isEdited, clock, size, previewingColorId, previewProgress ->
+            if (isEdited) {
+                {
+                    clockPickerInteractor.applyClock(
+                        clockId = clock.clockId,
+                        size = size,
+                        selectedColorId = previewingColorId,
+                        colorToneProgress = previewProgress,
+                        seedColor =
+                            colorMap[previewingColorId]?.let {
+                                blendColorWithTone(
+                                    color = it.color,
+                                    colorTone = it.getColorTone(previewProgress),
+                                )
+                            },
+                    )
+                }
+            } else {
+                null
             }
         }
 

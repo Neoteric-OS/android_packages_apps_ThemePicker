@@ -60,13 +60,20 @@ constructor(
 
     override val selectedOption = defaultCustomizationOptionsViewModel.selectedOption
 
-    override fun deselectOption(): Boolean {
-        keyguardQuickAffordancePickerViewModel2.resetPreview()
-        shapeGridPickerViewModel.resetPreview()
-        clockPickerViewModel.resetPreview()
-        colorPickerViewModel2.resetPreview()
-        darkModeViewModel.resetPreview()
-        return defaultCustomizationOptionsViewModel.deselectOption()
+    override fun handleBackPressed(): Boolean {
+        val isBackPressedHandled = defaultCustomizationOptionsViewModel.handleBackPressed()
+
+        if (isBackPressedHandled) {
+            // If isBackPressedHandled is handled by DefaultCustomizationOptionsViewModel, it means
+            // we navigate back to the main screen from a secondary screen. Reset preview.
+            keyguardQuickAffordancePickerViewModel2.resetPreview()
+            shapeGridPickerViewModel.resetPreview()
+            clockPickerViewModel.resetPreview()
+            colorPickerViewModel2.resetPreview()
+            darkModeViewModel.resetPreview()
+        }
+
+        return isBackPressedHandled
     }
 
     val onCustomizeClockClicked: Flow<(() -> Unit)?> =
@@ -147,16 +154,12 @@ constructor(
                 }
             }
             .map { onApply ->
-                {
-                    if (onApply != null) {
-                        viewModelScope.launch {
-                            onApply()
-                            // We only wait until onApply() is done to execute deselectOption()
-                            deselectOption()
-                        }
-                    } else {
-                        null
+                if (onApply != null) {
+                    fun() {
+                        viewModelScope.launch { onApply() }
                     }
+                } else {
+                    null
                 }
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)

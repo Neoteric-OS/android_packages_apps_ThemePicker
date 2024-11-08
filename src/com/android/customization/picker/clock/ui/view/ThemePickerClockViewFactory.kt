@@ -26,6 +26,7 @@ import androidx.annotation.ColorInt
 import androidx.lifecycle.LifecycleOwner
 import com.android.internal.policy.SystemBarUtils
 import com.android.systemui.plugins.clocks.ClockController
+import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.systemui.plugins.clocks.WeatherData
 import com.android.systemui.shared.clocks.ClockRegistry
 import com.android.wallpaper.config.BaseFlags
@@ -133,6 +134,10 @@ constructor(
             it.largeClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
             it.smallClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
         }
+    }
+
+    override fun updateFontAxes(clockId: String, settings: List<ClockFontAxisSetting>) {
+        getController(clockId).let { it.events.onFontAxesChanged(settings) }
     }
 
     override fun updateRegionDarkness() {

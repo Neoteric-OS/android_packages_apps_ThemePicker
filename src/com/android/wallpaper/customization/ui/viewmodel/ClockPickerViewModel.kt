@@ -40,6 +40,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
+import kotlin.collections.map
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -72,6 +73,7 @@ constructor(
     enum class Tab {
         STYLE,
         COLOR,
+        FONT,
     }
 
     private val colorMap = ClockColorViewModel.getPresetColorMap(context.resources)
@@ -137,7 +139,7 @@ constructor(
                         payload =
                             ClockStyleModel(
                                 clockModel.thumbnail,
-                                isEditable = clockModel.hasReactiveAxes,
+                                isEditable = !clockModel.axes.isEmpty(),
                             ),
                         text = Text.Loaded(contentDescription),
                         isTextUserVisible = false,
@@ -145,9 +147,14 @@ constructor(
                         onClicked =
                             isSelectedFlow.map { isSelected ->
                                 if (isSelected) {
-                                    null
+                                    fun() {
+                                        _selectedTab.value = Tab.FONT
+                                    }
                                 } else {
-                                    { overridingClock.value = clockModel }
+                                    fun() {
+                                        overridingClock.value = clockModel
+                                        overrideFontAxes.value = null
+                                    }
                                 }
                             },
                     )
@@ -158,6 +165,29 @@ constructor(
             // the flows run sequentially
             .flowOn(backgroundDispatcher.limitedParallelism(1))
             .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    // Clock Font Axis Editor
+    private val overrideFontAxes = MutableStateFlow<Map<String, Float>?>(null)
+    val previewingFontAxes =
+        combine(overrideFontAxes, previewingClock) { overrideAxes, previewingClock ->
+                overrideAxes ?: previewingClock.axes.associate { it.key to it.currentValue }
+            }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
+
+    fun updatePreviewFontAxis(key: String, value: Float) {
+        val fontAxes = previewingFontAxes.value.toMutableMap()
+        fontAxes[key] = value
+        overrideFontAxes.value = fontAxes
+    }
+
+    fun applyFontAxes() {
+        _selectedTab.value = Tab.STYLE
+    }
+
+    fun revertFontAxes() {
+        overrideFontAxes.value = null
+        _selectedTab.value = Tab.STYLE
+    }
 
     // Clock size
     private val overridingClockSize = MutableStateFlow<ClockSize?>(null)
@@ -360,6 +390,7 @@ constructor(
         overridingClockSize.value = null
         overridingClockColorId.value = null
         overridingSliderProgress.value = null
+        overrideFontAxes.value = null
         _selectedTab.value = Tab.STYLE
     }
 

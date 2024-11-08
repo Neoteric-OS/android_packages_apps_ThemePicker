@@ -20,6 +20,7 @@ package com.android.customization.picker.clock.shared.model
 import android.graphics.drawable.Drawable
 import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
+import com.android.systemui.plugins.clocks.ClockFontAxis
 
 /** Model for clock metadata. */
 data class ClockMetadataModel(
@@ -28,7 +29,7 @@ data class ClockMetadataModel(
     val description: String,
     val thumbnail: Drawable,
     val isReactiveToTone: Boolean,
-    val hasReactiveAxes: Boolean,
+    val axes: List<ClockFontAxis>,
     val selectedColorId: String?,
     @IntRange(from = 0, to = 100) val colorToneProgress: Int,
     @ColorInt val seedColor: Int?,

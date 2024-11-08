@@ -22,6 +22,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
+import com.android.systemui.plugins.clocks.ClockFontAxis
 import com.android.systemui.plugins.clocks.ClockMetadata
 import com.android.systemui.shared.clocks.ClockRegistry
 import com.android.systemui.shared.settings.data.repository.SecureSettingsRepository
@@ -70,7 +71,7 @@ constructor(
                                     description = clockConfig.description,
                                     thumbnail = clockConfig.thumbnail,
                                     isReactiveToTone = clockConfig.isReactiveToTone,
-                                    hasReactiveAxes = !clockConfig.axes.isEmpty(),
+                                    axes = clockConfig.axes,
                                 )
                             } else {
                                 null
@@ -116,7 +117,7 @@ constructor(
                                     description = it.description,
                                     thumbnail = it.thumbnail,
                                     isReactiveToTone = it.isReactiveToTone,
-                                    hasReactiveAxes = !it.axes.isEmpty(),
+                                    axes = it.axes,
                                     selectedColorId = metadata?.getSelectedColorId(),
                                     colorTone =
                                         metadata?.getColorTone()
@@ -206,7 +207,7 @@ constructor(
         description: String,
         thumbnail: Drawable,
         isReactiveToTone: Boolean,
-        hasReactiveAxes: Boolean,
+        axes: List<ClockFontAxis>,
         selectedColorId: String? = null,
         @IntRange(from = 0, to = 100) colorTone: Int = 0,
         @ColorInt seedColor: Int? = null,
@@ -217,7 +218,7 @@ constructor(
             description = description,
             thumbnail = thumbnail,
             isReactiveToTone = isReactiveToTone,
-            hasReactiveAxes = hasReactiveAxes,
+            axes = axes,
             selectedColorId = selectedColorId,
             colorToneProgress = colorTone,
             seedColor = seedColor,

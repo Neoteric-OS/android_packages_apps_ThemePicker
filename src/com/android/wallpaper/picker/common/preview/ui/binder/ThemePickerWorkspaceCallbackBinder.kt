@@ -24,8 +24,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.android.customization.model.grid.DefaultShapeGridManager.Companion.COL_GRID_KEY
-import com.android.customization.model.grid.DefaultShapeGridManager.Companion.COL_SHAPE_KEY
 import com.android.customization.picker.color.data.util.MaterialColorsGenerator
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START
@@ -139,19 +137,10 @@ constructor(
                 lifecycleOwner.lifecycleScope.launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         launch {
-                            viewModel.shapeGridPickerViewModel.previewingShapeKey.collect {
-                                workspaceCallback.sendMessage(
-                                    MESSAGE_ID_UPDATE_SHAPE,
-                                    bundleOf(COL_SHAPE_KEY to it),
-                                )
-                            }
-                        }
-
-                        launch {
-                            viewModel.shapeGridPickerViewModel.previewingGridKey.collect {
+                            viewModel.shapeGridPickerViewModel.previewingGridOptionKey.collect {
                                 workspaceCallback.sendMessage(
                                     MESSAGE_ID_UPDATE_GRID,
-                                    bundleOf(COL_GRID_KEY to it),
+                                    bundleOf(KEY_GRID_NAME to it),
                                 )
                             }
                         }
@@ -183,8 +172,8 @@ constructor(
     }
 
     companion object {
-        const val MESSAGE_ID_UPDATE_SHAPE = 2586
         const val MESSAGE_ID_UPDATE_GRID = 7414
+        const val KEY_GRID_NAME = "grid_name"
 
         const val MESSAGE_ID_UPDATE_COLOR = 856
         const val KEY_COLOR_RESOURCE_IDS: String = "color_resource_ids"

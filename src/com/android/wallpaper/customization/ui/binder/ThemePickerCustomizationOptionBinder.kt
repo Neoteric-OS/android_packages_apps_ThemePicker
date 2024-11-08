@@ -277,7 +277,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     combine(
                             clockPickerViewModel.previewingSeedColor,
                             clockPickerViewModel.previewingClock,
-                            clockPickerViewModel.previewingFontAxes,
+                            clockPickerViewModel.previewingFontAxisMap,
                             ::Triple,
                         )
                         .collect { triple ->

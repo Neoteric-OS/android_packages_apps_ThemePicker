@@ -29,7 +29,7 @@ data class ClockMetadataModel(
     val description: String,
     val thumbnail: Drawable,
     val isReactiveToTone: Boolean,
-    val axes: List<ClockFontAxis>,
+    val fontAxes: List<ClockFontAxis>,
     val selectedColorId: String?,
     @IntRange(from = 0, to = 100) val colorToneProgress: Int,
     @ColorInt val seedColor: Int?,

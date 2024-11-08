@@ -207,13 +207,13 @@ class ClockPickerViewModelTest {
 
     @Test
     fun previewingFontAxes_defaultWhenNoOverrides() = runTest {
-        val previewingFontAxes = collectLastValue(underTest.previewingFontAxes)
+        val previewingFontAxes = collectLastValue(underTest.previewingFontAxisMap)
         assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
     }
 
     @Test
     fun previewingFontAxes_updateAxisChangesSetting() = runTest {
-        val previewingFontAxes = collectLastValue(underTest.previewingFontAxes)
+        val previewingFontAxes = collectLastValue(underTest.previewingFontAxisMap)
         assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
 
         underTest.updatePreviewFontAxis("key", 100f)
@@ -225,7 +225,7 @@ class ClockPickerViewModelTest {
 
     @Test
     fun previewingFontAxes_applyFontEditorExitsTab_keepsPreviewAxis() = runTest {
-        val previewingFontAxes = collectLastValue(underTest.previewingFontAxes)
+        val previewingFontAxes = collectLastValue(underTest.previewingFontAxisMap)
         val clockStyleOptions = collectLastValue(underTest.clockStyleOptions)
         val selectedTab = collectLastValue(underTest.selectedTab)
         // Advance CLOCKS_EVENT_UPDATE_DELAY_MILLIS since there is a delay from clockStyleOptions
@@ -251,7 +251,7 @@ class ClockPickerViewModelTest {
 
     @Test
     fun previewingFontAxes_revertFontEditorExitsTab_revertsPreviewAxis() = runTest {
-        val previewingFontAxes = collectLastValue(underTest.previewingFontAxes)
+        val previewingFontAxes = collectLastValue(underTest.previewingFontAxisMap)
         val clockStyleOptions = collectLastValue(underTest.clockStyleOptions)
         val selectedTab = collectLastValue(underTest.selectedTab)
         // Advance CLOCKS_EVENT_UPDATE_DELAY_MILLIS since there is a delay from clockStyleOptions

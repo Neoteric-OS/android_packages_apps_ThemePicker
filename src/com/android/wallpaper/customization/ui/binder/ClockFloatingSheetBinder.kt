@@ -189,9 +189,9 @@ object ClockFloatingSheetBinder {
                 launch {
                     var boundClockId: ClockId? = null
                     var boundEditorViews = mapOf<String, Pair<View, ClockFontAxis>>()
-                    combine(viewModel.previewingClock, viewModel.previewingFontAxes, ::Pair)
+                    combine(viewModel.previewingClock, viewModel.previewingFontAxisMap, ::Pair)
                         .collect { pair ->
-                            val (clock, axisSettings) = pair
+                            val (clock, fontAxisMap) = pair
                             if (clock == null) {
                                 boundClockId = null
                                 boundEditorViews = mapOf()
@@ -201,11 +201,11 @@ object ClockFloatingSheetBinder {
 
                             if (boundClockId != clock.clockId) {
                                 boundEditorViews =
-                                    initClockFontEditor(clockFontContent, clock.axes, viewModel)
+                                    initClockFontEditor(clockFontContent, clock.fontAxes, viewModel)
                                 boundClockId = clock.clockId
                             }
 
-                            for ((key, value) in axisSettings) {
+                            for ((key, value) in fontAxisMap) {
                                 boundEditorViews[key]?.let { pair ->
                                     val (view, axis) = pair
                                     view.findViewById<Switch>(R.id.clock_axis_switch)?.apply {
@@ -277,14 +277,14 @@ object ClockFloatingSheetBinder {
 
     private fun initClockFontEditor(
         parent: ViewGroup,
-        axes: List<ClockFontAxis>,
+        fontAxes: List<ClockFontAxis>,
         viewModel: ClockPickerViewModel,
     ): Map<String, Pair<View, ClockFontAxis>> {
         parent.removeAllViews()
         val inflater = LayoutInflater.from(parent.context)
         val axisMap = mutableMapOf<String, Pair<View, ClockFontAxis>>()
         var nextSwitch: View? = null
-        for (axis in axes) {
+        for (axis in fontAxes) {
             val view =
                 when (axis.type) {
                     AxisType.Float -> {

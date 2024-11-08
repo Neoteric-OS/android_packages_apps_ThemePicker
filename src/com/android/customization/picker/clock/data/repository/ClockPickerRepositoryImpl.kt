@@ -23,6 +23,7 @@ import androidx.annotation.IntRange
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.systemui.plugins.clocks.ClockFontAxis
+import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.systemui.plugins.clocks.ClockMetadata
 import com.android.systemui.shared.clocks.ClockRegistry
 import com.android.systemui.shared.settings.data.repository.SecureSettingsRepository
@@ -71,7 +72,7 @@ constructor(
                                     description = clockConfig.description,
                                     thumbnail = clockConfig.thumbnail,
                                     isReactiveToTone = clockConfig.isReactiveToTone,
-                                    axes = clockConfig.axes,
+                                    fontAxes = clockConfig.axes,
                                 )
                             } else {
                                 null
@@ -117,7 +118,7 @@ constructor(
                                     description = it.description,
                                     thumbnail = it.thumbnail,
                                     isReactiveToTone = it.isReactiveToTone,
-                                    axes = it.axes,
+                                    fontAxes = it.axes,
                                     selectedColorId = metadata?.getSelectedColorId(),
                                     colorTone =
                                         metadata?.getColorTone()
@@ -186,6 +187,14 @@ constructor(
         )
     }
 
+    override suspend fun setClockFontAxes(axisSettings: List<ClockFontAxisSetting>) {
+        registry.mutateSetting { oldSettings ->
+            val newSettings = oldSettings.copy(axes = axisSettings)
+            newSettings.metadata = oldSettings.metadata
+            newSettings
+        }
+    }
+
     private fun JSONObject.getSelectedColorId(): String? {
         return if (this.isNull(KEY_METADATA_SELECTED_COLOR_ID)) {
             null
@@ -207,7 +216,7 @@ constructor(
         description: String,
         thumbnail: Drawable,
         isReactiveToTone: Boolean,
-        axes: List<ClockFontAxis>,
+        fontAxes: List<ClockFontAxis>,
         selectedColorId: String? = null,
         @IntRange(from = 0, to = 100) colorTone: Int = 0,
         @ColorInt seedColor: Int? = null,
@@ -218,7 +227,7 @@ constructor(
             description = description,
             thumbnail = thumbnail,
             isReactiveToTone = isReactiveToTone,
-            axes = axes,
+            fontAxes = fontAxes,
             selectedColorId = selectedColorId,
             colorToneProgress = colorTone,
             seedColor = seedColor,

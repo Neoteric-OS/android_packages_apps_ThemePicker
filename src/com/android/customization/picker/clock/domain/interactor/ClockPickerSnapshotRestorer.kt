@@ -21,6 +21,7 @@ import android.text.TextUtils
 import android.util.Log
 import com.android.customization.picker.clock.data.repository.ClockPickerRepository
 import com.android.customization.picker.clock.shared.model.ClockSnapshotModel
+import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotStore
 import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot
@@ -29,6 +30,7 @@ import javax.inject.Singleton
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import org.json.JSONArray
 
 /** Handles state restoration for clocks. */
 @Singleton
@@ -38,9 +40,7 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
     private var snapshotStore: SnapshotStore = SnapshotStore.NOOP
     private var originalOption: ClockSnapshotModel? = null
 
-    override suspend fun setUpSnapshotRestorer(
-        store: SnapshotStore,
-    ): RestorableSnapshot {
+    override suspend fun setUpSnapshotRestorer(store: SnapshotStore): RestorableSnapshot {
         snapshotStore = store
         originalOption =
             ClockSnapshotModel(
@@ -58,6 +58,10 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
                         .distinctUntilChanged()
                         .firstOrNull(),
                 seedColor = repository.selectedClock.map { clock -> clock.seedColor }.firstOrNull(),
+                axisSettings =
+                    repository.selectedClock
+                        .map { clock -> clock.fontAxes.map { it.toSetting() } }
+                        .firstOrNull(),
             )
         return snapshot(originalOption)
     }
@@ -71,7 +75,9 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
                     optionToRestore.colorToneProgress?.toString() !=
                         snapshot.args[KEY_COLOR_TONE_PROGRESS] ||
                     optionToRestore.seedColor?.toString() != snapshot.args[KEY_SEED_COLOR] ||
-                    optionToRestore.selectedColorId != snapshot.args[KEY_COLOR_ID]
+                    optionToRestore.selectedColorId != snapshot.args[KEY_COLOR_ID] ||
+                    (optionToRestore.axisSettings ?: listOf()) !=
+                        ClockFontAxisSetting.fromJson(JSONArray(snapshot.args[KEY_FONT_AXES]))
             ) {
                 Log.wtf(
                     TAG,
@@ -87,10 +93,11 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
                 repository.setClockColor(
                     selectedColorId = optionToRestore.selectedColorId,
                     colorToneProgress = optionToRestore.colorToneProgress,
-                    seedColor = optionToRestore.seedColor
+                    seedColor = optionToRestore.seedColor,
                 )
             }
             optionToRestore.clockId?.let { repository.setSelectedClock(it) }
+            optionToRestore.axisSettings?.let { repository.setClockFontAxes(it) }
         }
     }
 
@@ -101,7 +108,7 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
     private fun snapshot(clockSnapshotModel: ClockSnapshotModel? = null): RestorableSnapshot {
         val options =
             if (clockSnapshotModel == null) emptyMap()
-            else
+            else {
                 buildMap {
                     clockSnapshotModel.clockId?.let { put(KEY_CLOCK_ID, it) }
                     clockSnapshotModel.clockSize?.let { put(KEY_CLOCK_SIZE, it.toString()) }
@@ -110,7 +117,11 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
                         put(KEY_COLOR_TONE_PROGRESS, it.toString())
                     }
                     clockSnapshotModel.seedColor?.let { put(KEY_SEED_COLOR, it.toString()) }
+                    clockSnapshotModel.axisSettings?.let {
+                        put(KEY_FONT_AXES, ClockFontAxisSetting.toJson(it).toString())
+                    }
                 }
+            }
 
         return RestorableSnapshot(options)
     }
@@ -122,5 +133,6 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
         private const val KEY_COLOR_ID = "color_id"
         private const val KEY_COLOR_TONE_PROGRESS = "color_tone_progress"
         private const val KEY_SEED_COLOR = "seed_color"
+        private const val KEY_FONT_AXES = "font_axes"
     }
 }

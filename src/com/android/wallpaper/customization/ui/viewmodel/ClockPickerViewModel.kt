@@ -29,6 +29,7 @@ import com.android.customization.picker.color.domain.interactor.ColorPickerInter
 import com.android.customization.picker.color.shared.model.ColorOptionModel
 import com.android.customization.picker.color.shared.model.ColorType
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
+import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
@@ -145,7 +146,7 @@ constructor(
                         payload =
                             ClockStyleModel(
                                 clockModel.thumbnail,
-                                isEditable = !clockModel.axes.isEmpty(),
+                                isEditable = !clockModel.fontAxes.isEmpty(),
                             ),
                         text = Text.Loaded(contentDescription),
                         isTextUserVisible = false,
@@ -159,7 +160,7 @@ constructor(
                                 } else {
                                     fun() {
                                         overridingClock.value = clockModel
-                                        overrideFontAxes.value = null
+                                        overrideFontAxisMap.value = null
                                     }
                                 }
                             },
@@ -173,17 +174,19 @@ constructor(
             .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     // Clock Font Axis Editor
-    private val overrideFontAxes = MutableStateFlow<Map<String, Float>?>(null)
-    val previewingFontAxes =
-        combine(overrideFontAxes, previewingClock) { overrideAxes, previewingClock ->
-                overrideAxes ?: previewingClock.axes.associate { it.key to it.currentValue }
+    private val overrideFontAxisMap = MutableStateFlow<Map<String, Float>?>(null)
+    val previewingFontAxisMap =
+        combine(overrideFontAxisMap, previewingClock) { overrideAxes, previewingClock ->
+                overrideAxes ?: previewingClock.fontAxes.associate { it.key to it.currentValue }
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
+    private val isFontAxisMapEdited = overrideFontAxisMap.map { it != null }
+
     fun updatePreviewFontAxis(key: String, value: Float) {
-        val fontAxes = previewingFontAxes.value.toMutableMap()
-        fontAxes[key] = value
-        overrideFontAxes.value = fontAxes
+        val axisMap = previewingFontAxisMap.value.toMutableMap()
+        axisMap[key] = value
+        overrideFontAxisMap.value = axisMap
     }
 
     fun applyFontAxes() {
@@ -191,7 +194,7 @@ constructor(
     }
 
     fun revertFontAxes() {
-        overrideFontAxes.value = null
+        overrideFontAxisMap.value = null
         _selectedTab.value = Tab.STYLE
     }
 
@@ -382,13 +385,25 @@ constructor(
     }
 
     private val isEdited =
-        combine(isClockEdited, isClockSizeEdited, isClockColorIdEdited, isSliderProgressEdited) {
+        combine(
+            isClockEdited,
+            isClockSizeEdited,
+            isClockColorIdEdited,
+            isSliderProgressEdited,
+            isFontAxisMapEdited,
+        ) {
             isClockEdited,
             isClockSizeEdited,
             isClockColorEdited,
-            isSliderProgressEdited ->
-            isClockEdited || isClockSizeEdited || isClockColorEdited || isSliderProgressEdited
+            isSliderProgressEdited,
+            isFontAxisMapEdited ->
+            isClockEdited ||
+                isClockSizeEdited ||
+                isClockColorEdited ||
+                isSliderProgressEdited ||
+                isFontAxisMapEdited
         }
+
     val onApply: Flow<(suspend () -> Unit)?> =
         combine(
             isEdited,
@@ -396,7 +411,14 @@ constructor(
             previewingClockSize,
             previewingClockColorId,
             previewingSliderProgress,
-        ) { isEdited, clock, size, previewingColorId, previewProgress ->
+            previewingFontAxisMap,
+        ) { array ->
+            val isEdited = array[0] as Boolean
+            val clock = array[1] as ClockMetadataModel
+            val size = array[2] as ClockSize
+            val previewingColorId = array[3] as String
+            val previewProgress = array[4] as Int
+            val axisMap = array[5] as Map<String, Float>
             if (isEdited) {
                 {
                     clockPickerInteractor.applyClock(
@@ -411,6 +433,7 @@ constructor(
                                     colorTone = it.getColorTone(previewProgress),
                                 )
                             },
+                        axisSettings = axisMap.map { ClockFontAxisSetting(it.key, it.value) },
                     )
                 }
             } else {
@@ -423,7 +446,7 @@ constructor(
         overridingClockSize.value = null
         overridingClockColorId.value = null
         overridingSliderProgress.value = null
-        overrideFontAxes.value = null
+        overrideFontAxisMap.value = null
         _selectedTab.value = Tab.STYLE
     }
 

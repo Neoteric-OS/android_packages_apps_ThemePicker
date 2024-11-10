@@ -109,14 +109,16 @@ class ShapeGridPickerViewModelTest {
         testScope.runTest {
             val shapeOptions = collectLastValue(underTest.shapeOptions)
 
-            for (i in 0 until underTest.shapePaths.size) {
-                val expectedKey = underTest.shapePaths[i].first
-                val expectedPath = underTest.shapePaths[i].second
+            for (i in 0 until FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST.size) {
+                val (expectedKey, expectedPath, expectedTitle) =
+                    with(FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST[i]) {
+                        arrayOf(key, path, title)
+                    }
                 assertShapeItem(
                     optionItem = shapeOptions()?.get(i),
-                    key = expectedKey,
+                    key = FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST[i].key,
                     payload = ShapeIconViewModel(expectedKey, expectedPath),
-                    text = Text.Loaded(expectedKey),
+                    text = Text.Loaded(expectedTitle),
                     isTextUserVisible = true,
                     isSelected = expectedKey == "arch",
                     isEnabled = true,
@@ -136,14 +138,15 @@ class ShapeGridPickerViewModelTest {
             onCircleOptionClicked()?.invoke()
 
             assertThat(previewingShapeKey()).isEqualTo("circle")
-            for (i in 0 until underTest.shapePaths.size) {
-                val expectedKey = underTest.shapePaths[i].first
-                val expectedPath = underTest.shapePaths[i].second
+            for (i in 0 until FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST.size) {
+                val expectedKey = FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST[i].key
+                val expectedPath = FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST[i].path
+                val expectedTitle = FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST[i].title
                 assertShapeItem(
                     optionItem = shapeOptions()?.get(i),
                     key = expectedKey,
                     payload = ShapeIconViewModel(expectedKey, expectedPath),
-                    text = Text.Loaded(expectedKey),
+                    text = Text.Loaded(expectedTitle),
                     isTextUserVisible = true,
                     isSelected = expectedKey == "circle",
                     isEnabled = true,

@@ -80,4 +80,14 @@ class ClockPickerInteractorTest {
             .isEqualTo(FakeClockPickerRepository.CLOCK_COLOR_TONE_PROGRESS)
         Truth.assertThat(observedSeedColor()).isEqualTo(FakeClockPickerRepository.SEED_COLOR)
     }
+
+    @Test
+    fun setFontAxisSettings() = runTest {
+        val axisSettings = collectLastValue(underTest.axisSettings)
+        val fakeSettings = listOf(FakeClockPickerRepository.buildFakeAxis(10).toSetting())
+
+        underTest.setClockFontAxes(fakeSettings)
+
+        Truth.assertThat(axisSettings()).isEqualTo(fakeSettings)
+    }
 }

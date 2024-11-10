@@ -30,6 +30,7 @@ import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.ui.view.ClockHostView2
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.customization.picker.grid.ui.binder.GridIconViewBinder
+import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
@@ -276,11 +277,15 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     combine(
                             clockPickerViewModel.previewingSeedColor,
                             clockPickerViewModel.previewingClock,
-                        ) { color, clock ->
-                            color to clock
-                        }
-                        .collect { (color, clock) ->
+                            clockPickerViewModel.previewingFontAxisMap,
+                            ::Triple,
+                        )
+                        .collect { triple ->
+                            val (color, clock, axisMap) = triple
                             clockViewFactory.updateColor(clock.clockId, color)
+
+                            val axisList = axisMap.map { ClockFontAxisSetting(it.key, it.value) }
+                            clockViewFactory.updateFontAxes(clock.clockId, axisList)
                         }
                 }
             }

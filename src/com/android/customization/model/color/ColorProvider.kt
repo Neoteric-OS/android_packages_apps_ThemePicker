@@ -39,6 +39,7 @@ import com.android.customization.picker.color.shared.model.ColorType
 import com.android.systemui.monet.ColorScheme
 import com.android.systemui.monet.Style
 import com.android.themepicker.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.module.InjectorProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -96,13 +97,22 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
         homeWallpaperColors: WallpaperColors?,
         lockWallpaperColors: WallpaperColors?,
     ) {
-        val wallpaperColorsChanged =
-            this.homeWallpaperColors != homeWallpaperColors ||
-                this.lockWallpaperColors != lockWallpaperColors
-        if (wallpaperColorsChanged || reload) {
-            loadSeedColors(homeWallpaperColors, lockWallpaperColors)
-            this.homeWallpaperColors = homeWallpaperColors
-            this.lockWallpaperColors = lockWallpaperColors
+        val isNewPickerUi = BaseFlags.get().isNewPickerUi()
+        if (isNewPickerUi) {
+            val wallpaperColorsChanged = this.homeWallpaperColors != homeWallpaperColors
+            if (wallpaperColorsChanged || reload) {
+                loadSeedColors(homeWallpaperColors)
+                this.homeWallpaperColors = homeWallpaperColors
+            }
+        } else {
+            val wallpaperColorsChanged =
+                this.homeWallpaperColors != homeWallpaperColors ||
+                    this.lockWallpaperColors != lockWallpaperColors
+            if (wallpaperColorsChanged || reload) {
+                loadSeedColors(homeWallpaperColors, lockWallpaperColors)
+                this.homeWallpaperColors = homeWallpaperColors
+                this.lockWallpaperColors = lockWallpaperColors
+            }
         }
 
         scope.launch {
@@ -132,7 +142,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
 
     private fun loadSeedColors(
         homeWallpaperColors: WallpaperColors?,
-        lockWallpaperColors: WallpaperColors?,
+        lockWallpaperColors: WallpaperColors? = null,
     ) {
         if (homeWallpaperColors == null) return
 

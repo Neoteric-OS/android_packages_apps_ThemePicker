@@ -46,7 +46,6 @@ import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.customization.picker.clock.ui.viewmodel.ClockSettingsViewModel
 import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder
 import com.android.themepicker.R
-import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.picker.common.ui.view.ItemSpacing
 import com.android.wallpaper.picker.option.ui.binder.OptionItemBinder
 import kotlinx.coroutines.flow.combine
@@ -104,13 +103,13 @@ object ClockSettingsBinder {
             getRadioText(
                 view.context.applicationContext,
                 view.resources.getString(R.string.clock_size_dynamic),
-                view.resources.getString(R.string.clock_size_dynamic_description)
+                view.resources.getString(R.string.clock_size_dynamic_description),
             )
         view.requireViewById<RadioButton>(R.id.radio_small).text =
             getRadioText(
                 view.context.applicationContext,
                 view.resources.getString(R.string.clock_size_small),
-                view.resources.getString(R.string.clock_size_small_description)
+                view.resources.getString(R.string.clock_size_small_description),
             )
 
         val colorOptionContainer = view.requireViewById<View>(R.id.color_picker_container)
@@ -160,7 +159,7 @@ object ClockSettingsBinder {
                                 ColorOptionIconBinder.bind(
                                     item.requireViewById(R.id.foreground),
                                     payload,
-                                    darkMode
+                                    darkMode,
                                 )
                                 OptionItemBinder.bind(
                                     view = item,
@@ -200,9 +199,6 @@ object ClockSettingsBinder {
                         )
                         .collect { (clockId, size) ->
                             clockHostView.removeAllViews()
-                            if (BaseFlags.get().isClockReactiveVariantsEnabled()) {
-                                clockViewFactory.setReactiveTouchInteractionEnabled(clockId, true)
-                            }
                             val clockView =
                                 when (size) {
                                     ClockSize.DYNAMIC -> clockViewFactory.getLargeView(clockId)
@@ -279,20 +275,20 @@ object ClockSettingsBinder {
     private fun getRadioText(
         context: Context,
         title: String,
-        description: String
+        description: String,
     ): SpannableString {
         val text = SpannableString(title + "\n" + description)
         text.setSpan(
             TextAppearanceSpan(context, R.style.SectionTitleTextStyle),
             0,
             title.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
         text.setSpan(
             TextAppearanceSpan(context, R.style.SectionSubtitleTextStyle),
             title.length + 1,
             title.length + 1 + description.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
         return text
     }

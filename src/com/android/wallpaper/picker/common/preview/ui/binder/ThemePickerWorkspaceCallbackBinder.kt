@@ -16,7 +16,6 @@
 
 package com.android.wallpaper.picker.common.preview.ui.binder
 
-import android.app.WallpaperManager
 import android.os.Bundle
 import android.os.Message
 import androidx.core.os.bundleOf
@@ -43,13 +42,13 @@ import com.android.wallpaper.picker.common.preview.ui.binder.WorkspaceCallbackBi
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 @Singleton
 class ThemePickerWorkspaceCallbackBinder
 @Inject
 constructor(
-    private val wallpaperManager: WallpaperManager,
     private val defaultWorkspaceCallbackBinder: DefaultWorkspaceCallbackBinder,
     private val materialColorsGenerator: MaterialColorsGenerator,
 ) : WorkspaceCallbackBinder {
@@ -157,25 +156,28 @@ constructor(
                         }
 
                         launch {
-                            viewModel.colorPickerViewModel2.previewingColorOption.collect {
-                                if (it == null) {
-                                    workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, Bundle())
-                                    return@collect
-                                }
-                                val seedColor = it.colorOption.seedColor
-                                val (ids, colors) =
-                                    materialColorsGenerator.generate(
-                                        seedColor,
-                                        it.colorOption.style,
-                                    )
-                                workspaceCallback.sendMessage(
-                                    MESSAGE_ID_UPDATE_COLOR,
-                                    Bundle().apply {
-                                        putIntArray(KEY_COLOR_RESOURCE_IDS, ids)
-                                        putIntArray(KEY_COLOR_VALUES, colors)
-                                    },
+                            combine(
+                                    viewModel.colorPickerViewModel2.previewingColorOption,
+                                    viewModel.darkModeViewModel.previewingIsDarkMode,
+                                    ::Pair,
                                 )
-                            }
+                                .collect { (colorModel, darkMode) ->
+                                    val bundle =
+                                        Bundle().apply {
+                                            if (colorModel != null) {
+                                                val (ids, colors) =
+                                                    materialColorsGenerator.generate(
+                                                        colorModel.colorOption.seedColor,
+                                                        colorModel.colorOption.style,
+                                                    )
+                                                putIntArray(KEY_COLOR_RESOURCE_IDS, ids)
+                                                putIntArray(KEY_COLOR_VALUES, colors)
+                                            }
+
+                                            putBoolean(KEY_DARK_MODE, darkMode)
+                                        }
+                                    workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, bundle)
+                                }
                         }
                     }
                 }
@@ -189,5 +191,6 @@ constructor(
         const val MESSAGE_ID_UPDATE_COLOR = 856
         const val KEY_COLOR_RESOURCE_IDS: String = "color_resource_ids"
         const val KEY_COLOR_VALUES: String = "color_values"
+        const val KEY_DARK_MODE: String = "use_dark_mode"
     }
 }

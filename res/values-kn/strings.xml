@@ -43,10 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"ದೊಡ್ಡದು"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"ಚಿಕ್ಕದು"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"ನಿಮ್ಮ ಸ್ಕ್ರೀನ್‌ನ ಮೂಲೆಯಲ್ಲಿ ಸಣ್ಣ ಗಡಿಯಾರವೊಂದು ಕಾಣಿಸುತ್ತದೆ"</string>
-    <!-- no translation found for clock_font_editor_apply (5965611025879105293) -->
-    <skip />
-    <!-- no translation found for clock_font_editor_revert (5307491447405753061) -->
-    <skip />
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"ಕ್ಲಾಕ್ ಫಾಂಟ್ ಬದಲಾವಣೆಗಳನ್ನು ಅನ್ವಯಿಸಿ"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"ಕ್ಲಾಕ್ ಫಾಂಟ್ ಬದಲಾವಣೆಗಳನ್ನು ರದ್ದುಗೊಳಿಸಿ"</string>
     <string name="grid_title" msgid="1688173478777254123">"ಆ್ಯಪ್ ಗ್ರಿಡ್"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"ಆ್ಯಪ್ ಆಕಾರ, ಲೇಔಟ್"</string>
     <string name="grid_layout" msgid="370175667652663686">"ಲೇಔಟ್"</string>

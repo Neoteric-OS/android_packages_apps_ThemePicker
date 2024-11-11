@@ -43,8 +43,16 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
         applyButton: Button,
         viewModel: CustomizationOptionsViewModel,
         lifecycleOwner: LifecycleOwner,
+        onNavBack: () -> Unit,
     ) {
-        defaultToolbarBinder.bind(navButton, toolbar, applyButton, viewModel, lifecycleOwner)
+        defaultToolbarBinder.bind(
+            navButton,
+            toolbar,
+            applyButton,
+            viewModel,
+            lifecycleOwner,
+            onNavBack,
+        )
 
         if (viewModel !is ThemePickerCustomizationOptionsViewModel) {
             throw IllegalArgumentException(
@@ -56,7 +64,7 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.onApplyButtonClicked.collect { onApplyButtonClicked ->
-                        applyButton.setOnClickListener { onApplyButtonClicked?.invoke() }
+                        applyButton.setOnClickListener { onApplyButtonClicked?.invoke(onNavBack) }
                     }
                 }
 

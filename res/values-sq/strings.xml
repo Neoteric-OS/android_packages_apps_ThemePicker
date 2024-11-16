@@ -43,10 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"E madhe"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"E vogël"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Në këndin e ekranit shfaqet një orë e vogël"</string>
-    <!-- no translation found for clock_font_editor_apply (5965611025879105293) -->
-    <skip />
-    <!-- no translation found for clock_font_editor_revert (5307491447405753061) -->
-    <skip />
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"Zbato ndryshimet e fontit të orës"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"Zhbëj ndryshimet e fontit të orës"</string>
     <string name="grid_title" msgid="1688173478777254123">"Rrjeta e aplikacioneve"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Forma e struktura e aplikacionit"</string>
     <string name="grid_layout" msgid="370175667652663686">"Struktura"</string>

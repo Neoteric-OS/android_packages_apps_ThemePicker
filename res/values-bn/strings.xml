@@ -43,10 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"বড়"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"ছোট করুন"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"স্ক্রিনের কোনায় একটি ছোট ঘড়ি দেখানো হয়"</string>
-    <!-- no translation found for clock_font_editor_apply (5965611025879105293) -->
-    <skip />
-    <!-- no translation found for clock_font_editor_revert (5307491447405753061) -->
-    <skip />
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"ঘড়ির ফন্ট পরিবর্তন প্রয়োগ করুন"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"ঘড়ির ফন্ট পরিবর্তনকে আগের অবস্থায় ফিরিয়ে আনুন"</string>
     <string name="grid_title" msgid="1688173478777254123">"অ্যাপ গ্রিড"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"অ্যাপ শেপ ও লেআউট"</string>
     <string name="grid_layout" msgid="370175667652663686">"লেআউট"</string>

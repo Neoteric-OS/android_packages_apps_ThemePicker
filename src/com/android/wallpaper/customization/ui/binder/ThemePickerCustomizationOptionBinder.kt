@@ -32,7 +32,6 @@ import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.customization.picker.grid.ui.binder.GridIconViewBinder
 import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.themepicker.R
-import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
@@ -253,12 +252,6 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                         }
                         .collect { (clock, size) ->
                             clockHostView.removeAllViews()
-                            if (BaseFlags.get().isClockReactiveVariantsEnabled()) {
-                                clockViewFactory.setReactiveTouchInteractionEnabled(
-                                    clock.clockId,
-                                    true,
-                                )
-                            }
                             val clockView =
                                 when (size) {
                                     ClockSize.DYNAMIC ->

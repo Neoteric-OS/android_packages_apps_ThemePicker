@@ -37,10 +37,6 @@ class FakeClockViewFactory @Inject constructor() : ClockViewFactory {
 
     override fun getController(clockId: String): ClockController = clockControllers[clockId]!!
 
-    override fun setReactiveTouchInteractionEnabled(clockId: String, enable: Boolean) {
-        TODO("Not yet implemented")
-    }
-
     override fun getLargeView(clockId: String): View {
         TODO("Not yet implemented")
     }

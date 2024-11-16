@@ -46,6 +46,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/clock_style_clock_size_title"
+                android:layout_marginBottom="8dp"
                 android:clipToPadding="false"
                 android:clipChildren="false">
 
@@ -64,10 +65,15 @@
                     android:layout_height="@dimen/floating_sheet_clock_style_option_size"
                     android:visibility="invisible" />
 
+                <!--
+                TODO (b/377528523): We intentionally disable over scroll mode since it will clip the
+                  edit icon when in over scroll.
+                -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/clock_style_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:overScrollMode="never"
                     android:clipChildren="false"
                     android:clipToPadding="false"/>
             </FrameLayout>
@@ -167,7 +173,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/floating_sheet_content_horizontal_padding"
-            android:paddingVertical="@dimen/floating_sheet_content_vertical_padding"
             android:orientation="vertical"
             android:clipToPadding="false"
             android:clipChildren="false">

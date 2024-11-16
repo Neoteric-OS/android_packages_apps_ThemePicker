@@ -120,6 +120,9 @@ object ColorsFloatingSheetBinder {
                     )
                 val night = uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
                 ColorOptionIconBinder2.bind(colorOptionIconView, colorIcon, night)
+                // Return null since it does not need the lifecycleOwner to launch any job for later
+                // disposal when rebind.
+                return@OptionItemAdapter2 null
             },
         )
 

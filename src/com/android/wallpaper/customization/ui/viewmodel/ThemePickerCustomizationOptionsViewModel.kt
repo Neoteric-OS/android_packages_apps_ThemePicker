@@ -30,6 +30,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -170,6 +171,14 @@ constructor(
     val isOnApplyEnabled: Flow<Boolean> = onApplyButtonClicked.map { it != null }
 
     val isOnApplyVisible: Flow<Boolean> = selectedOption.map { it != null }
+
+    val isToolbarCollapsed: Flow<Boolean> =
+        combine(selectedOption, clockPickerViewModel.selectedTab) { selectedOption, selectedTab ->
+                selectedOption ==
+                    ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK &&
+                    selectedTab == ClockPickerViewModel.Tab.FONT
+            }
+            .distinctUntilChanged()
 
     @ViewModelScoped
     @AssistedFactory

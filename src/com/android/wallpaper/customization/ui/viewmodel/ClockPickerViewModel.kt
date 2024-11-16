@@ -53,6 +53,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
@@ -123,7 +124,7 @@ constructor(
             overridingClock ?: selectedClock
         }
 
-    data class ClockStyleModel(val thumbnail: Drawable, val isEditable: Boolean)
+    data class ClockStyleModel(val thumbnail: Drawable, val showEditButton: StateFlow<Boolean>)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val clockStyleOptions: StateFlow<List<OptionItemViewModel<ClockStyleModel>>> =
@@ -131,40 +132,10 @@ constructor(
             .mapLatest { allClocks ->
                 // Delay to avoid the case that the full list of clocks is not initiated.
                 delay(CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
-                allClocks.map { clockModel ->
-                    val isSelectedFlow =
-                        previewingClock
-                            .map { it.clockId == clockModel.clockId }
-                            .stateIn(viewModelScope)
-                    val contentDescription =
-                        resources.getString(
-                            R.string.select_clock_action_description,
-                            clockModel.description,
-                        )
-                    OptionItemViewModel<ClockStyleModel>(
-                        key = MutableStateFlow(clockModel.clockId) as StateFlow<String>,
-                        payload =
-                            ClockStyleModel(
-                                clockModel.thumbnail,
-                                isEditable = !clockModel.fontAxes.isEmpty(),
-                            ),
-                        text = Text.Loaded(contentDescription),
-                        isTextUserVisible = false,
-                        isSelected = isSelectedFlow,
-                        onClicked =
-                            isSelectedFlow.map { isSelected ->
-                                if (isSelected) {
-                                    fun() {
-                                        _selectedTab.value = Tab.FONT
-                                    }
-                                } else {
-                                    fun() {
-                                        overridingClock.value = clockModel
-                                        overrideFontAxisMap.value = null
-                                    }
-                                }
-                            },
-                    )
+                val allClockMap = allClocks.groupBy { it.fontAxes.isNotEmpty() }
+                buildList {
+                    allClockMap[true]?.map { add(it.toOption(resources)) }
+                    allClockMap[false]?.map { add(it.toOption(resources)) }
                 }
             }
             // makes sure that the operations above this statement are executed on I/O dispatcher
@@ -173,27 +144,65 @@ constructor(
             .flowOn(backgroundDispatcher.limitedParallelism(1))
             .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
+    private suspend fun ClockMetadataModel.toOption(
+        resources: Resources
+    ): OptionItemViewModel<ClockStyleModel> {
+        val isSelectedFlow = previewingClock.map { it.clockId == clockId }.stateIn(viewModelScope)
+        val isEditable = fontAxes.isNotEmpty()
+        val showEditButton = isSelectedFlow.map { it && isEditable }.stateIn(viewModelScope)
+        val contentDescription =
+            resources.getString(R.string.select_clock_action_description, description)
+        return OptionItemViewModel<ClockStyleModel>(
+            key = MutableStateFlow(clockId) as StateFlow<String>,
+            payload = ClockStyleModel(thumbnail = thumbnail, showEditButton = showEditButton),
+            text = Text.Loaded(contentDescription),
+            isTextUserVisible = false,
+            isSelected = isSelectedFlow,
+            onClicked =
+                isSelectedFlow.map { isSelected ->
+                    if (isSelected && isEditable) {
+                        fun() {
+                            _selectedTab.value = Tab.FONT
+                        }
+                    } else {
+                        fun() {
+                            overridingClock.value = this
+                            overrideFontAxisMap.value = null
+                        }
+                    }
+                },
+        )
+    }
+
     // Clock Font Axis Editor
     private val overrideFontAxisMap = MutableStateFlow<Map<String, Float>?>(null)
+    private val isFontAxisMapEdited = overrideFontAxisMap.map { it != null }
+    private val selectedClockFontAxes =
+        previewingClock
+            .map { clock -> clock.fontAxes.associate { it.key to it.currentValue } }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val previewingFontAxisMap =
-        combine(overrideFontAxisMap, previewingClock) { overrideAxes, previewingClock ->
-                overrideAxes ?: previewingClock.fontAxes.associate { it.key to it.currentValue }
+        combine(overrideFontAxisMap, selectedClockFontAxes.filterNotNull()) {
+                overrideAxes,
+                selectedFontAxes ->
+                selectedFontAxes.toMutableMap().let { mutableMap ->
+                    overrideAxes?.forEach { (key, value) -> mutableMap[key] = value }
+                    mutableMap.toMap()
+                }
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
-    private val isFontAxisMapEdited = overrideFontAxisMap.map { it != null }
-
     fun updatePreviewFontAxis(key: String, value: Float) {
-        val axisMap = previewingFontAxisMap.value.toMutableMap()
+        val axisMap = (overrideFontAxisMap.value?.toMutableMap() ?: mutableMapOf())
         axisMap[key] = value
-        overrideFontAxisMap.value = axisMap
+        overrideFontAxisMap.value = axisMap.toMap()
     }
 
-    fun applyFontAxes() {
+    fun confirmFontAxes() {
         _selectedTab.value = Tab.STYLE
     }
 
-    fun revertFontAxes() {
+    fun cancelFontAxes() {
         overrideFontAxisMap.value = null
         _selectedTab.value = Tab.STYLE
     }

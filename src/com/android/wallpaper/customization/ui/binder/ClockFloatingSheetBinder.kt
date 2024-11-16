@@ -104,12 +104,12 @@ object ClockFloatingSheetBinder {
         val clockFontContent =
             view.requireViewById<ViewGroup>(R.id.clock_floating_sheet_font_content)
         val clockFontToolbar = view.requireViewById<ViewGroup>(R.id.clock_font_toolbar)
-        clockFontToolbar
-            .requireViewById<View>(R.id.clock_font_revert)
-            .setOnClickListener(View.OnClickListener { viewModel.revertFontAxes() })
-        clockFontToolbar
-            .requireViewById<View>(R.id.clock_font_apply)
-            .setOnClickListener(View.OnClickListener { viewModel.applyFontAxes() })
+        clockFontToolbar.requireViewById<View>(R.id.clock_font_revert).setOnClickListener {
+            viewModel.revertFontAxes()
+        }
+        clockFontToolbar.requireViewById<View>(R.id.clock_font_apply).setOnClickListener {
+            viewModel.applyFontAxes()
+        }
 
         // Clock color
         val clockColorContent = view.requireViewById<View>(R.id.clock_floating_sheet_color_content)

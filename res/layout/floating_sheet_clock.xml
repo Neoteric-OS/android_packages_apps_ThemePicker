@@ -189,7 +189,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
-        android:layout_marginVertical="@dimen/floating_sheet_tab_toolbar_vertical_margin">
+        android:layout_marginTop="@dimen/floating_sheet_tab_clock_font_toolbar_top_margin"
+        android:layout_marginBottom="@dimen/floating_sheet_tab_clock_font_toolbar_bottom_margin">
 
         <ImageView
             android:id="@+id/clock_font_revert"
@@ -197,6 +198,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/clock_font_revert"
             android:contentDescription="@string/clock_font_editor_revert" />
+
         <ImageView
             android:id="@+id/clock_font_apply"
             android:layout_width="wrap_content"

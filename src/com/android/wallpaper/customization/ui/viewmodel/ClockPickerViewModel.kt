@@ -91,7 +91,7 @@ constructor(
                         contentDescription = Text.Resource(R.string.clock_style),
                     ),
                     context.getString(R.string.clock_style),
-                    it == Tab.STYLE,
+                    it == Tab.STYLE || it == Tab.FONT,
                 ) {
                     _selectedTab.value = Tab.STYLE
                 },

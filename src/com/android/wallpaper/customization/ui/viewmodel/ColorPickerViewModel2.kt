@@ -27,7 +27,7 @@ import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
-import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
+import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -109,7 +109,7 @@ constructor(
 
     /** The list of all color options mapped by their color type */
     private val allColorOptions:
-        Flow<Map<ColorType, List<OptionItemViewModel<ColorOptionIconViewModel>>>> =
+        Flow<Map<ColorType, List<OptionItemViewModel2<ColorOptionIconViewModel>>>> =
         interactor.colorOptions.map { colorOptions ->
             colorOptions
                 .map { colorOptionEntry ->
@@ -128,7 +128,7 @@ constructor(
                                             ?: colorOptionModel.isSelected
                                     }
                                     .stateIn(viewModelScope)
-                            OptionItemViewModel<ColorOptionIconViewModel>(
+                            OptionItemViewModel2<ColorOptionIconViewModel>(
                                 key = MutableStateFlow(colorOptionModel.key) as StateFlow<String>,
                                 payload =
                                     ColorOptionIconViewModel(
@@ -188,9 +188,9 @@ constructor(
     }
 
     /** The list of all available color options for the selected Color Type. */
-    val colorOptions: Flow<List<OptionItemViewModel<ColorOptionIconViewModel>>> =
+    val colorOptions: Flow<List<OptionItemViewModel2<ColorOptionIconViewModel>>> =
         combine(allColorOptions, selectedColorTypeTabId) {
-            allColorOptions: Map<ColorType, List<OptionItemViewModel<ColorOptionIconViewModel>>>,
+            allColorOptions: Map<ColorType, List<OptionItemViewModel2<ColorOptionIconViewModel>>>,
             selectedColorTypeIdOrNull ->
             val selectedColorTypeId = selectedColorTypeIdOrNull ?: ColorType.WALLPAPER_COLOR
             allColorOptions[selectedColorTypeId]!!

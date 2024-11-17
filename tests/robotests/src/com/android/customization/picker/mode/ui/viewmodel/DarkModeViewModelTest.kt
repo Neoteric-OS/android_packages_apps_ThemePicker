@@ -91,16 +91,19 @@ class DarkModeViewModelTest {
         testScope.runTest {
             uiModeManager.setNightModeActivated(false)
             darkModeRepository.refreshIsDarkModeActivated()
+            val getOverridingIsDarkMode = collectLastValue(darkModeViewModel.overridingIsDarkMode)
             val getPreviewingIsDarkMode = collectLastValue(darkModeViewModel.previewingIsDarkMode)
             val getToggleDarkMode = collectLastValue(darkModeViewModel.toggleDarkMode)
             assertThat(getPreviewingIsDarkMode()).isFalse()
 
             getToggleDarkMode()?.invoke()
 
+            assertThat(getOverridingIsDarkMode()).isTrue()
             assertThat(getPreviewingIsDarkMode()).isTrue()
 
             getToggleDarkMode()?.invoke()
 
+            assertThat(getOverridingIsDarkMode()).isNull()
             assertThat(getPreviewingIsDarkMode()).isFalse()
         }
     }

@@ -36,6 +36,7 @@ import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
+import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -174,7 +175,7 @@ constructor(
             .shareIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(), replay = 1)
 
     /** The list of all available quick affordances for the selected slot. */
-    val quickAffordances: Flow<List<OptionItemViewModel<Icon>>> =
+    val quickAffordances: Flow<List<OptionItemViewModel2<Icon>>> =
         quickAffordanceInteractor.affordances.map { affordances ->
             val isNoneSelected =
                 combine(selectedSlotId, previewingQuickAffordances, selectedAffordanceIds) {
@@ -219,7 +220,7 @@ constructor(
                                 } ?: selectedAffordanceIds.contains(affordance.id)
                             }
                             .stateIn(viewModelScope)
-                    OptionItemViewModel<Icon>(
+                    OptionItemViewModel2<Icon>(
                         key =
                             selectedSlotId
                                 .map { slotId -> "$slotId::${affordance.id}" }
@@ -374,8 +375,8 @@ constructor(
         slotId: StateFlow<String>,
         isSelected: StateFlow<Boolean>,
         onSelected: Flow<(() -> Unit)?>,
-    ): OptionItemViewModel<Icon> {
-        return OptionItemViewModel<Icon>(
+    ): OptionItemViewModel2<Icon> {
+        return OptionItemViewModel2<Icon>(
             key = slotId.map { "$it::none" }.stateIn(viewModelScope),
             payload = Icon.Resource(res = R.drawable.link_off, contentDescription = null),
             text = Text.Resource(res = R.string.keyguard_affordance_none),

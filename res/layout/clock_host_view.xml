@@ -13,7 +13,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<com.android.customization.picker.clock.ui.view.ClockHostView2
+<com.android.customization.picker.clock.ui.view.ClockConstraintLayoutHostView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/clock_host_view"
     android:importantForAccessibility="noHideDescendants"

@@ -12,10 +12,7 @@ import com.android.wallpaper.util.ScreenSizeCalculator
  * same size of lockscreen to layout clock and scale down it to the size in picker carousel
  * according to ratio of preview to LS
  */
-class ClockHostView(
-    context: Context,
-    attrs: AttributeSet?,
-) : FrameLayout(context, attrs) {
+class ClockHostView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     private var previewRatio: Float = 1F
         set(value) {
             if (field != value) {
@@ -41,15 +38,16 @@ class ClockHostView(
         parentWidthMeasureSpec: Int,
         widthUsed: Int,
         parentHeightMeasureSpec: Int,
-        heightUsed: Int
+        heightUsed: Int,
     ) {
+
         val screenSize = ScreenSizeCalculator.getInstance().getScreenSize(display)
         super.measureChildWithMargins(
             child,
             MeasureSpec.makeMeasureSpec(screenSize.x, EXACTLY),
             widthUsed,
             MeasureSpec.makeMeasureSpec(screenSize.y, EXACTLY),
-            heightUsed
+            heightUsed,
         )
     }
 }

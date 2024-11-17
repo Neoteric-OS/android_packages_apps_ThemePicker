@@ -41,10 +41,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.ui.adapter.ClockSettingsTabAdapter
 import com.android.customization.picker.clock.ui.view.ClockCarouselView
-import com.android.customization.picker.clock.ui.view.ClockHostView
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.customization.picker.clock.ui.viewmodel.ClockSettingsViewModel
 import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder
+import com.android.systemui.shared.Flags
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.ui.view.ItemSpacing
 import com.android.wallpaper.picker.option.ui.binder.OptionItemBinder
@@ -64,7 +64,10 @@ object ClockSettingsBinder {
         clockViewFactory: ClockViewFactory,
         lifecycleOwner: LifecycleOwner,
     ) {
-        val clockHostView: ClockHostView = view.requireViewById(R.id.clock_host_view)
+        if (Flags.newCustomizationPickerUi()) {
+            return
+        }
+        val clockHostView: ViewGroup = view.requireViewById(R.id.clock_host_view)
         val tabView: RecyclerView = view.requireViewById(R.id.tabs)
         val tabAdapter = ClockSettingsTabAdapter()
         tabView.adapter = tabAdapter
@@ -204,10 +207,11 @@ object ClockSettingsBinder {
                                     ClockSize.DYNAMIC -> clockViewFactory.getLargeView(clockId)
                                     ClockSize.SMALL -> clockViewFactory.getSmallView(clockId)
                                 }
-                            // The clock view might still be attached to an existing parent. Detach
-                            // before adding to another parent.
+                            // The clock view might still be attached to an existing parent.
+                            // Detach before adding to another parent.
                             (clockView.parent as? ViewGroup)?.removeView(clockView)
                             clockHostView.addView(clockView)
+
                             when (size) {
                                 ClockSize.DYNAMIC -> {
                                     // When clock size data flow emits clock size signal, we want

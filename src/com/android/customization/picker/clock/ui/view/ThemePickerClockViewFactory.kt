@@ -28,6 +28,7 @@ import com.android.internal.policy.SystemBarUtils
 import com.android.systemui.plugins.clocks.ClockController
 import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.systemui.plugins.clocks.WeatherData
+import com.android.systemui.shared.Flags
 import com.android.systemui.shared.clocks.ClockRegistry
 import com.android.wallpaper.util.ScreenSizeCalculator
 import com.android.wallpaper.util.TimeUtils.TimeTicker
@@ -64,6 +65,7 @@ constructor(
      * configs, e.g. animation state, might change during the reuse of the clock view in the app.
      */
     override fun getLargeView(clockId: String): View {
+        assert(!Flags.newCustomizationPickerUi())
         return getController(clockId).largeClock.let {
             it.animations.onPickerCarouselSwiping(1F)
             it.view
@@ -75,8 +77,12 @@ constructor(
      * configs, e.g. translation X, might change during the reuse of the clock view in the app.
      */
     override fun getSmallView(clockId: String): View {
+        assert(!Flags.newCustomizationPickerUi())
         val smallClockFrame =
-            smallClockFrames[clockId]
+            smallClockFrames[clockId]?.apply {
+                (layoutParams as FrameLayout.LayoutParams).topMargin = getSmallClockTopMargin()
+                (layoutParams as FrameLayout.LayoutParams).marginStart = getSmallClockStartPadding()
+            }
                 ?: createSmallClockFrame().also {
                     it.addView(getController(clockId).smallClock.view)
                     smallClockFrames[clockId] = it
@@ -111,7 +117,10 @@ constructor(
     private fun getSmallClockStartPadding() =
         appContext.resources.getDimensionPixelSize(
             com.android.systemui.customization.R.dimen.clock_padding_start
-        )
+        ) +
+            appContext.resources.getDimensionPixelSize(
+                com.android.systemui.customization.R.dimen.status_view_margin_horizontal
+            )
 
     override fun updateColorForAllClocks(@ColorInt seedColor: Int?) {
         clockControllers.values.forEach {

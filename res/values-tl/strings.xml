@@ -43,10 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"Malaki"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Maliit"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"May makikitang maliit na orasan sa sulok ng iyong screen"</string>
-    <!-- no translation found for clock_font_editor_apply (5965611025879105293) -->
-    <skip />
-    <!-- no translation found for clock_font_editor_revert (5307491447405753061) -->
-    <skip />
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"Ilapat ang mga pagbabago sa font ng orasan"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"I-undo ang mga pagbabago sa font ng orasan"</string>
     <string name="grid_title" msgid="1688173478777254123">"Grid ng app"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Shape ng app at layout"</string>
     <string name="grid_layout" msgid="370175667652663686">"Layout"</string>

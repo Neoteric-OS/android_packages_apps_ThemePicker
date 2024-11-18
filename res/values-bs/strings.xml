@@ -43,10 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"Veliko"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Malo"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Mali sat se prikazuje u uglu vašeg ekrana"</string>
-    <!-- no translation found for clock_font_editor_apply (5965611025879105293) -->
-    <skip />
-    <!-- no translation found for clock_font_editor_revert (5307491447405753061) -->
-    <skip />
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"Primjena promjena fonta na satu"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"Poništavanje promjena fonta na satu"</string>
     <string name="grid_title" msgid="1688173478777254123">"Mreža aplikacija"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Oblik i raspored apl."</string>
     <string name="grid_layout" msgid="370175667652663686">"Raspored"</string>

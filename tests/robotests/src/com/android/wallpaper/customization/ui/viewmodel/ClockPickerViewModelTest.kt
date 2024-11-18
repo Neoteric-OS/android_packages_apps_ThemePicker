@@ -243,7 +243,7 @@ class ClockPickerViewModelTest {
         assertThat(selectedTab()).isEqualTo(Tab.FONT)
         assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f))
 
-        underTest.applyFontAxes()
+        underTest.confirmFontAxes()
 
         assertThat(selectedTab()).isEqualTo(Tab.STYLE)
         assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f))
@@ -269,7 +269,7 @@ class ClockPickerViewModelTest {
         assertThat(selectedTab()).isEqualTo(Tab.FONT)
         assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f))
 
-        underTest.revertFontAxes()
+        underTest.cancelFontAxes()
 
         assertThat(selectedTab()).isEqualTo(Tab.STYLE)
         assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))

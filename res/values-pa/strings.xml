@@ -43,10 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"ਵੱਡਾ"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"ਛੋਟਾ"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"ਤੁਹਾਡੀ ਸਕ੍ਰੀਨ ਦੇ ਕੋਨੇ \'ਤੇ ਇੱਕ ਛੋਟੀ ਘੜੀ ਦਿਖਾਈ ਦਿੰਦੀ ਹੈ"</string>
-    <!-- no translation found for clock_font_editor_apply (5965611025879105293) -->
-    <skip />
-    <!-- no translation found for clock_font_editor_revert (5307491447405753061) -->
-    <skip />
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"ਘੜੀ ਦੇ ਫ਼ੌਟਾਂ ਵਿੱਚ ਕੀਤੀਆਂ ਤਬਦੀਲੀਆਂ ਲਾਗੂ ਕਰੋ"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"ਘੜੀ ਦੇ ਫ਼ੌਟਾਂ ਵਿੱਚ ਕੀਤੀਆਂ ਤਬਦੀਲੀਆਂ ਨੂੰ ਅਣਕੀਤਾ ਕਰੋ"</string>
     <string name="grid_title" msgid="1688173478777254123">"ਐਪ ਗ੍ਰਿਡ"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"ਐਪ ਦੀ ਆਕ੍ਰਿਤੀ ਅਤੇ ਖਾਕਾ"</string>
     <string name="grid_layout" msgid="370175667652663686">"ਖਾਕਾ"</string>

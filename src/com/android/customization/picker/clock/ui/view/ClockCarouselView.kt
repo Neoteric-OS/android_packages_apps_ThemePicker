@@ -33,18 +33,10 @@ import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.ui.viewmodel.ClockCarouselItemViewModel
 import com.android.systemui.plugins.clocks.ClockController
 import com.android.themepicker.R
-import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.picker.FixedWidthDisplayRatioFrameLayout
 import java.lang.Float.max
 
-class ClockCarouselView(
-    context: Context,
-    attrs: AttributeSet,
-) :
-    FrameLayout(
-        context,
-        attrs,
-    ) {
+class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
     val carousel: Carousel
     private val motionLayout: MotionLayout
@@ -153,7 +145,7 @@ class ClockCarouselView(
                 override fun onTransitionStarted(
                     motionLayout: MotionLayout?,
                     startId: Int,
-                    endId: Int
+                    endId: Int,
                 ) {
                     if (motionLayout == null) {
                         return
@@ -301,15 +293,13 @@ class ClockCarouselView(
                     motionLayout: MotionLayout?,
                     triggerId: Int,
                     positive: Boolean,
-                    progress: Float
+                    progress: Float,
                 ) {}
             }
         )
     }
 
-    fun setSelectedClockIndex(
-        index: Int,
-    ) {
+    fun setSelectedClockIndex(index: Int) {
         // 1. setUpClockCarouselView() can possibly not be called before setSelectedClockIndex().
         //    We need to check if index out of bound.
         // 2. jumpToIndex() to the same position can cause the views unnecessarily populate again.
@@ -382,7 +372,7 @@ class ClockCarouselView(
         val clockSize: ClockSize,
         val clocks: List<ClockCarouselItemViewModel>,
         private val clockViewFactory: ClockViewFactory,
-        private val onClockSelected: (clock: ClockCarouselItemViewModel) -> Unit
+        private val onClockSelected: (clock: ClockCarouselItemViewModel) -> Unit,
     ) : Carousel.Adapter {
 
         // This map is used to eagerly save the translation X and Y of each small clock view, so
@@ -418,9 +408,6 @@ class ClockCarouselView(
 
             // Add the clock view to the clock host view
             clockHostView.removeAllViews()
-            if (BaseFlags.get().isClockReactiveVariantsEnabled()) {
-                clockViewFactory.setReactiveTouchInteractionEnabled(clockId, false)
-            }
             val clockView =
                 when (clockSize) {
                     ClockSize.DYNAMIC -> clockViewFactory.getLargeView(clockId)
@@ -439,19 +426,9 @@ class ClockCarouselView(
 
             when (clockSize) {
                 ClockSize.DYNAMIC ->
-                    initializeDynamicClockView(
-                        isMiddleView,
-                        clockScaleView,
-                        clockId,
-                        clockHostView,
-                    )
+                    initializeDynamicClockView(isMiddleView, clockScaleView, clockId, clockHostView)
                 ClockSize.SMALL ->
-                    initializeSmallClockView(
-                        clockId,
-                        isMiddleView,
-                        clockHostView,
-                        clockView,
-                    )
+                    initializeSmallClockView(clockId, isMiddleView, clockHostView, clockView)
             }
             cardView.alpha = if (isMiddleView) 0f else 1f
         }
@@ -502,11 +479,7 @@ class ClockCarouselView(
                     it.pivotX = it.width / 2F
                     it.pivotY = it.height / 2F
                     val translationX =
-                        getTranslationDistance(
-                            clockHostView.width,
-                            clockView.width,
-                            clockView.left,
-                        )
+                        getTranslationDistance(clockHostView.width, clockView.width, clockView.left)
                     val translationY =
                         getTranslationDistance(
                             clockHostView.height,
@@ -537,7 +510,7 @@ class ClockCarouselView(
                 R.id.item_view_1,
                 R.id.item_view_2,
                 R.id.item_view_3,
-                R.id.item_view_4
+                R.id.item_view_4,
             )
 
         fun getScalingUpScale(progress: Float) =

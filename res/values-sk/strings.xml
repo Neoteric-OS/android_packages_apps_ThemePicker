@@ -43,10 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"Veľké"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Malé"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"V rohu obrazovky sa zobrazujú malé hodiny"</string>
-    <!-- no translation found for clock_font_editor_apply (5965611025879105293) -->
-    <skip />
-    <!-- no translation found for clock_font_editor_revert (5307491447405753061) -->
-    <skip />
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"Použiť zmeny písma ciferníka"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"Vrátiť zmeny písma ciferníka"</string>
     <string name="grid_title" msgid="1688173478777254123">"Mriežka aplikácií"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Tvar a rozloženie"</string>
     <string name="grid_layout" msgid="370175667652663686">"Rozloženie"</string>
@@ -114,7 +112,7 @@
     <string name="mode_title" msgid="2394873501427436055">"Tmavý motív"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Dočasne vypnuté šetričom batérie"</string>
     <string name="mode_changed" msgid="2243581369395418584">"Motív bol zmenený"</string>
-    <string name="themed_icon_title" msgid="7312460430471956558">"Prefarbené ikony"</string>
+    <string name="themed_icon_title" msgid="7312460430471956558">"Ikony s motívom"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Zmeniť mriežku aplikácií"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Farby tapety"</string>

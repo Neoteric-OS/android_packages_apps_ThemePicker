@@ -156,6 +156,9 @@ object ShortcutFloatingSheetBinder {
                 val imageView =
                     itemView.requireViewById<ImageView>(com.android.wallpaper.R.id.foreground)
                 IconViewBinder.bind(imageView, gridIcon)
+                // Return null since it does not need the lifecycleOwner to launch any job for later
+                // disposal when rebind.
+                return@OptionItemAdapter2 null
             },
         )
 

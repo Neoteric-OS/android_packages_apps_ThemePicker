@@ -79,7 +79,10 @@ constructor(
     override fun getSmallView(clockId: String): View {
         assert(!Flags.newCustomizationPickerUi())
         val smallClockFrame =
-            smallClockFrames[clockId]
+            smallClockFrames[clockId]?.apply {
+                (layoutParams as FrameLayout.LayoutParams).topMargin = getSmallClockTopMargin()
+                (layoutParams as FrameLayout.LayoutParams).marginStart = getSmallClockStartPadding()
+            }
                 ?: createSmallClockFrame().also {
                     it.addView(getController(clockId).smallClock.view)
                     smallClockFrames[clockId] = it
@@ -114,7 +117,10 @@ constructor(
     private fun getSmallClockStartPadding() =
         appContext.resources.getDimensionPixelSize(
             com.android.systemui.customization.R.dimen.clock_padding_start
-        )
+        ) +
+            appContext.resources.getDimensionPixelSize(
+                com.android.systemui.customization.R.dimen.status_view_margin_horizontal
+            )
 
     override fun updateColorForAllClocks(@ColorInt seedColor: Int?) {
         clockControllers.values.forEach {

@@ -187,18 +187,20 @@
     <dimen name="floating_sheet_tab_clock_font_toolbar_bottom_margin">8dp</dimen>
     <dimen name="floating_sheet_list_item_horizontal_space">4dp</dimen>
     <dimen name="floating_sheet_list_item_vertical_space">4dp</dimen>
+    <dimen name="floating_sheet_clock_style_option_list_margin_bottom">8dp</dimen>
     <dimen name="floating_sheet_clock_style_option_size">82dp</dimen>
     <dimen name="floating_sheet_clock_edit_icon_size">48dp</dimen>
     <dimen name="floating_sheet_clock_style_thumbnail_margin">12dp</dimen>
     <dimen name="floating_sheet_clock_style_clock_size_text_margin_end">16dp</dimen>
+    <dimen name="floating_sheet_clock_color_option_list_bottom_margin">12dp</dimen>
     <dimen name="floating_sheet_color_option_size">54dp</dimen>
     <dimen name="floating_sheet_color_option_stroke_width">3dp</dimen>
     <dimen name="customization_option_entry_shortcut_icon_size">20dp</dimen>
 
     <!-- Clock font control dimensions -->
     <dimen name="clock_font_axis_name_width">64dp</dimen>
-    <dimen name="clock_axis_control_padding_start">16dp</dimen>
-    <dimen name="clock_axis_control_row_vertical_padding">10dp</dimen>
-    <dimen name="clock_font_control_switch_padding_horizontal">38dp</dimen>
+    <dimen name="clock_axis_control_text_margin_end">16dp</dimen>
+    <dimen name="clock_axis_control_slider_row_margin_vertical">10dp</dimen>
+    <dimen name="clock_axis_control_switch_row_margin_vertical">8dp</dimen>
     <dimen name="clock_font_apply_padding_start">8dp</dimen>
 </resources>

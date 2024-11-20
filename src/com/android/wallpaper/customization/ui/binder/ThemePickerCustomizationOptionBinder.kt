@@ -295,7 +295,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     combine(
                             clockPickerViewModel.previewingSeedColor,
                             clockPickerViewModel.previewingClock,
-                            clockPickerViewModel.previewingFontAxisMap,
+                            clockPickerViewModel.previewingClockFontAxisMap,
                             colorUpdateViewModel.systemColorsUpdated,
                             ::Quadruple,
                         )

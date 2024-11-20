@@ -16,19 +16,18 @@
 
 package com.android.wallpaper.customization.ui.binder
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Configuration
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Switch
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -42,10 +41,10 @@ import com.android.customization.picker.color.ui.view.ColorOptionIconView
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.systemui.plugins.clocks.AxisType
-import com.android.systemui.plugins.clocks.ClockFontAxis
-import com.android.systemui.plugins.clocks.ClockId
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
+import com.android.wallpaper.customization.ui.view.ClockFontSliderViewHolder
+import com.android.wallpaper.customization.ui.view.ClockFontSwitchViewHolder
 import com.android.wallpaper.customization.ui.viewmodel.ClockFloatingSheetHeightsViewModel
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.ClockStyleModel
@@ -57,7 +56,6 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewMo
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import java.lang.ref.WeakReference
-import kotlin.math.abs
 import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,8 +69,8 @@ object ClockFloatingSheetBinder {
     private const val SLIDER_DISABLED_ALPHA = .3f
     private const val ANIMATION_DURATION = 200L
 
-    private val _clockFloatingSheetHeights: MutableStateFlow<ClockFloatingSheetHeightsViewModel?> =
-        MutableStateFlow(null)
+    private val _clockFloatingSheetHeights: MutableStateFlow<ClockFloatingSheetHeightsViewModel> =
+        MutableStateFlow(ClockFloatingSheetHeightsViewModel())
     private val clockFloatingSheetHeights: Flow<ClockFloatingSheetHeightsViewModel> =
         _clockFloatingSheetHeights.asStateFlow().filterNotNull()
 
@@ -145,14 +143,14 @@ object ClockFloatingSheetBinder {
         clockStyleContent.viewTreeObserver.addOnGlobalLayoutListener(
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    if (clockStyleContent.height != 0) {
+                    if (
+                        clockStyleContent.height != 0 &&
+                            _clockFloatingSheetHeights.value.clockStyleContentHeight == null
+                    ) {
                         _clockFloatingSheetHeights.value =
-                            _clockFloatingSheetHeights.value?.copy(
+                            _clockFloatingSheetHeights.value.copy(
                                 clockStyleContentHeight = clockStyleContent.height
                             )
-                                ?: ClockFloatingSheetHeightsViewModel(
-                                    clockStyleContentHeight = clockStyleContent.height
-                                )
                         clockStyleContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
                 }
@@ -162,14 +160,31 @@ object ClockFloatingSheetBinder {
         clockColorContent.viewTreeObserver.addOnGlobalLayoutListener(
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    if (clockColorContent.height != 0) {
+                    if (
+                        clockColorContent.height != 0 &&
+                            _clockFloatingSheetHeights.value.clockColorContentHeight == null
+                    ) {
                         _clockFloatingSheetHeights.value =
-                            _clockFloatingSheetHeights.value?.copy(
+                            _clockFloatingSheetHeights.value.copy(
                                 clockColorContentHeight = clockColorContent.height
                             )
-                                ?: ClockFloatingSheetHeightsViewModel(
-                                    clockColorContentHeight = clockColorContent.height
-                                )
+                        clockColorContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                }
+            }
+        )
+
+        clockFontContent.viewTreeObserver.addOnGlobalLayoutListener(
+            object : OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    if (
+                        clockFontContent.height != 0 &&
+                            _clockFloatingSheetHeights.value.clockFontContentHeight == null
+                    ) {
+                        _clockFloatingSheetHeights.value =
+                            _clockFloatingSheetHeights.value.copy(
+                                clockFontContentHeight = clockFontContent.height
+                            )
                         clockColorContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
                 }
@@ -177,81 +192,67 @@ object ClockFloatingSheetBinder {
         )
 
         lifecycleOwner.lifecycleScope.launch {
+            var currentContent: View = clockStyleContent
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.tabs.collect { tabAdapter.submitList(it) } }
 
                 launch {
                     combine(clockFloatingSheetHeights, viewModel.selectedTab, ::Pair).collect {
                         (heights, selectedTab) ->
-                        val (clockStyleContentHeight, clockColorContentHeight) = heights
+                        val (
+                            clockStyleContentHeight,
+                            clockColorContentHeight,
+                            clockFontContentHeight) =
+                            heights
                         clockStyleContentHeight ?: return@collect
                         clockColorContentHeight ?: return@collect
+                        clockFontContentHeight ?: return@collect
 
-                        if (selectedTab == Tab.STYLE || selectedTab == Tab.COLOR) {
-                            val targetHeight =
-                                when (selectedTab) {
-                                    Tab.STYLE -> clockStyleContentHeight
-                                    Tab.COLOR -> clockColorContentHeight
-                                    else -> 0
-                                } +
-                                    view.resources.getDimensionPixelSize(
-                                        R.dimen.floating_sheet_content_vertical_padding
-                                    ) * 2
-
-                            ValueAnimator.ofInt(floatingSheetContainer.height, targetHeight)
-                                .apply {
-                                    addUpdateListener { valueAnimator ->
-                                        val value = valueAnimator.animatedValue as Int
-                                        floatingSheetContainer.layoutParams =
-                                            floatingSheetContainer.layoutParams.apply {
-                                                height = value
-                                            }
-                                    }
-                                    duration = ANIMATION_DURATION
+                        val fromHeight = floatingSheetContainer.height
+                        val toHeight =
+                            when (selectedTab) {
+                                Tab.STYLE -> clockStyleContentHeight
+                                Tab.COLOR -> clockColorContentHeight
+                                Tab.FONT -> clockFontContentHeight
+                            } +
+                                view.resources.getDimensionPixelSize(
+                                    R.dimen.floating_sheet_content_vertical_padding
+                                ) * 2
+                        // Start to animate the content height
+                        ValueAnimator.ofInt(fromHeight, toHeight)
+                            .apply {
+                                addUpdateListener { valueAnimator ->
+                                    val value = valueAnimator.animatedValue as Int
+                                    floatingSheetContainer.layoutParams =
+                                        floatingSheetContainer.layoutParams.apply { height = value }
+                                    currentContent.alpha = getAlpha(fromHeight, toHeight, value)
                                 }
-                                .start()
-                        } else if (selectedTab == Tab.FONT) {
-                            floatingSheetContainer.layoutParams =
-                                LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                                duration = ANIMATION_DURATION
+                                addListener(
+                                    object : AnimatorListenerAdapter() {
+                                        override fun onAnimationEnd(animation: Animator) {
+                                            clockStyleContent.isVisible = selectedTab == Tab.STYLE
+                                            clockStyleContent.alpha = 1f
+                                            clockColorContent.isVisible = selectedTab == Tab.COLOR
+                                            clockColorContent.alpha = 1f
+                                            clockFontContent.isVisible = selectedTab == Tab.FONT
+                                            clockFontContent.alpha = 1f
+                                            currentContent =
+                                                when (selectedTab) {
+                                                    Tab.STYLE -> clockStyleContent
+                                                    Tab.COLOR -> clockColorContent
+                                                    Tab.FONT -> clockFontContent
+                                                }
+                                            // Also update the floating toolbar when the height
+                                            // animation ends.
+                                            tabs.isVisible = selectedTab != Tab.FONT
+                                            clockFontToolbar.isVisible = selectedTab == Tab.FONT
+                                        }
+                                    }
                                 )
-                        }
-
-                        clockStyleContent.isVisible = selectedTab == Tab.STYLE
-                        clockColorContent.isVisible = selectedTab == Tab.COLOR
-                        clockFontContent.isVisible = selectedTab == Tab.FONT
-
-                        tabs.isVisible = selectedTab != Tab.FONT
-                        clockFontToolbar.isVisible = selectedTab == Tab.FONT
+                            }
+                            .start()
                     }
-                }
-
-                launch {
-                    var boundClockId: ClockId? = null
-                    var boundEditorViews = mapOf<String, Pair<View, ClockFontAxis>>()
-                    combine(viewModel.previewingClock, viewModel.previewingFontAxisMap, ::Pair)
-                        .collect { pair ->
-                            val (clock, fontAxisMap) = pair
-
-                            if (boundClockId != clock.clockId) {
-                                boundEditorViews =
-                                    initClockFontEditor(clockFontContent, clock.fontAxes, viewModel)
-                                boundClockId = clock.clockId
-                            }
-
-                            for ((key, value) in fontAxisMap) {
-                                boundEditorViews[key]?.let { pair ->
-                                    val (view, axis) = pair
-                                    view.findViewById<Switch>(R.id.clock_axis_switch)?.apply {
-                                        isChecked = abs(value - axis.maxValue) < 0.01f
-                                    }
-                                    view.findViewById<SeekBar>(R.id.clock_axis_slider)?.apply {
-                                        setProgress(value.toInt(), false)
-                                    }
-                                }
-                            }
-                        }
                 }
 
                 launch {
@@ -308,78 +309,93 @@ object ClockFloatingSheetBinder {
                 }
             }
         }
+
+        bindClockFontContent(
+            clockFontContent = clockFontContent,
+            viewModel = viewModel,
+            lifecycleOwner = lifecycleOwner,
+        )
     }
 
-    private fun initClockFontEditor(
-        parent: ViewGroup,
-        fontAxes: List<ClockFontAxis>,
+    private fun bindClockFontContent(
+        clockFontContent: View,
         viewModel: ClockPickerViewModel,
-    ): Map<String, Pair<View, ClockFontAxis>> {
-        parent.removeAllViews()
+        lifecycleOwner: LifecycleOwner,
+    ) {
+        val sliderViewList =
+            listOf(
+                ClockFontSliderViewHolder(
+                    name = clockFontContent.requireViewById(R.id.clock_axis_slider_name1),
+                    slider = clockFontContent.requireViewById(R.id.clock_axis_slider1),
+                ),
+                ClockFontSliderViewHolder(
+                    name = clockFontContent.requireViewById(R.id.clock_axis_slider_name2),
+                    slider = clockFontContent.requireViewById(R.id.clock_axis_slider2),
+                ),
+            )
+        val switchViewList =
+            listOf(
+                ClockFontSwitchViewHolder(
+                    name = clockFontContent.requireViewById(R.id.clock_axis_switch_name1),
+                    switch = clockFontContent.requireViewById(R.id.clock_axis_switch1),
+                ),
+                ClockFontSwitchViewHolder(
+                    name = clockFontContent.requireViewById(R.id.clock_axis_switch_name2),
+                    switch = clockFontContent.requireViewById(R.id.clock_axis_switch2),
+                ),
+            )
+        val sliderViewMap: MutableMap<String, ClockFontSliderViewHolder> = mutableMapOf()
+        val switchViewMap: MutableMap<String, ClockFontSwitchViewHolder> = mutableMapOf()
 
-        val inflater = LayoutInflater.from(parent.context)
-        val axisMap = mutableMapOf<String, Pair<View, ClockFontAxis>>()
-        var nextSwitch: View? = null
-        for (axis in fontAxes) {
-            val view =
-                when (axis.type) {
-                    AxisType.Float -> {
-                        val id = R.layout.clock_font_axis_slider_row
-                        val row = inflater.inflate(id, parent, false)
-                        parent.addView(row)
-                        row
-                    }
-                    AxisType.Boolean ->
-                        nextSwitch?.also { nextSwitch = null }
-                            ?: run {
-                                val id = R.layout.clock_font_axis_switch_row
-                                val row = inflater.inflate(id, parent, false)
-                                parent.addView(row)
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.selectedClockFontAxes.filterNotNull().collect { fontAxes ->
+                        // This data flow updates only when a new clock style is selected. We
+                        // initiate the clock font content with regard to that clock style.
+                        sliderViewMap.clear()
+                        switchViewMap.clear()
 
-                                nextSwitch = row.requireViewById(R.id.clock_switch_two)
-                                row.requireViewById(R.id.clock_switch_one)
-                            }
-                }
-
-            view.visibility = View.VISIBLE
-            axisMap[axis.key] = Pair(view, axis)
-            view.contentDescription = axis.description
-            view.requireViewById<TextView>(R.id.clock_axis_name).text = axis.name
-
-            view.findViewById<Switch>(R.id.clock_axis_switch)?.apply {
-                isChecked = abs(axis.currentValue - axis.maxValue) < 0.01f
-                setOnCheckedChangeListener { v, _ ->
-                    val value = if (v.isChecked) axis.maxValue else axis.minValue
-                    viewModel.updatePreviewFontAxis(axis.key, value)
-                }
-            }
-
-            view.findViewById<SeekBar>(R.id.clock_axis_slider)?.apply {
-                setMax(axis.maxValue.toInt())
-                setMin(axis.minValue.toInt())
-                setProgress(axis.currentValue.toInt(), false)
-
-                setOnSeekBarChangeListener(
-                    object : SeekBar.OnSeekBarChangeListener {
-                        override fun onProgressChanged(
-                            seekBar: SeekBar?,
-                            progress: Int,
-                            fromUser: Boolean,
-                        ) {
-                            if (fromUser) {
-                                viewModel.updatePreviewFontAxis(axis.key, progress.toFloat())
+                        // Initiate the slider views
+                        val floatAxisList = fontAxes.filter { it.type == AxisType.Float }
+                        sliderViewList.forEachIndexed { i, viewHolder ->
+                            val floatAxis = floatAxisList.getOrNull(i)
+                            viewHolder.setIsVisible(floatAxis != null)
+                            floatAxis?.let {
+                                sliderViewMap[floatAxis.key] = viewHolder
+                                viewHolder.initView(it) { value ->
+                                    viewModel.updatePreviewFontAxis(floatAxis.key, value)
+                                }
                             }
                         }
 
-                        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-                        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                        // Initiate the switch views
+                        val booleanAxisList = fontAxes.filter { it.type == AxisType.Boolean }
+                        switchViewList.forEachIndexed { i, viewHolder ->
+                            val booleanAxis = booleanAxisList.getOrNull(i)
+                            viewHolder.setIsVisible(booleanAxis != null)
+                            booleanAxis?.let {
+                                switchViewMap[it.key] = viewHolder
+                                viewHolder.initView(booleanAxis) { value ->
+                                    viewModel.updatePreviewFontAxis(booleanAxis.key, value)
+                                }
+                            }
+                        }
                     }
-                )
+                }
+
+                launch {
+                    viewModel.previewingClockFontAxisMap.collect { axisMap ->
+                        // This data flow updates when user configures the sliders and switches
+                        // in the clock font content.
+                        axisMap.forEach { (key, value) ->
+                            sliderViewMap[key]?.setValue(value)
+                            switchViewMap[key]?.setValue(value)
+                        }
+                    }
+                }
             }
         }
-
-        return axisMap
     }
 
     private fun createClockStyleOptionItemAdapter(
@@ -456,4 +472,8 @@ object ClockFloatingSheetBinder {
             )
         }
     }
+
+    // Alpha is 1 when current height is from height, and 0 when current height is to height.
+    private fun getAlpha(fromHeight: Int, toHeight: Int, currentHeight: Int): Float =
+        (1 - (currentHeight - fromHeight).toFloat() / (toHeight - fromHeight).toFloat())
 }

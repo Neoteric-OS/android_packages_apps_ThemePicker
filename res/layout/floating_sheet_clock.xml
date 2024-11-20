@@ -17,8 +17,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:paddingHorizontal="@dimen/floating_sheet_horizontal_padding"
     android:orientation="vertical">
 
@@ -31,185 +29,66 @@
         android:clipToPadding="false"
         android:clipChildren="false">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <include
+            layout="@layout/floating_sheet_clock_style_content"
             android:id="@+id/clock_floating_sheet_style_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:clipChildren="false">
+            android:layout_height="wrap_content" />
 
-            <FrameLayout
-                android:id="@+id/clock_style_list_container"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/clock_style_clock_size_title"
-                android:layout_marginBottom="8dp"
-                android:clipToPadding="false"
-                android:clipChildren="false">
-
-                <!--
-                This is an invisible placeholder put in place so that the parent keeps its height
-                stable as the RecyclerView updates from 0 items to N items. Keeping it stable allows
-                the layout logic to keep the size of the preview container stable as well, which
-                bodes well for setting up the SurfaceView for remote rendering without changing its
-                size after the content is loaded into the RecyclerView.
-
-                It's critical for any TextViews inside the included layout to have text.
-                -->
-                <include
-                    layout="@layout/clock_style_option"
-                    android:layout_width="@dimen/floating_sheet_clock_style_option_size"
-                    android:layout_height="@dimen/floating_sheet_clock_style_option_size"
-                    android:visibility="invisible" />
-
-                <!--
-                TODO (b/377528523): We intentionally disable over scroll mode since it will clip the
-                  edit icon when in over scroll.
-                -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/clock_style_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:overScrollMode="never"
-                    android:clipChildren="false"
-                    android:clipToPadding="false"/>
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/clock_style_clock_size_title"
-                style="@style/CustomizationOptionEntryTitleTextStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/clock_size_large"
-                android:layout_marginStart="@dimen/floating_sheet_content_horizontal_padding"
-                android:layout_marginEnd="@dimen/floating_sheet_clock_style_clock_size_text_margin_end"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/clock_style_clock_size_switch"
-                app:layout_constraintTop_toBottomOf="@+id/clock_style_list_container"
-                app:layout_constraintBottom_toTopOf="@+id/clock_style_clock_size_description" />
-
-            <TextView
-                android:id="@+id/clock_style_clock_size_description"
-                style="@style/CustomizationOptionEntrySubtitleTextStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/floating_sheet_content_horizontal_padding"
-                android:layout_marginEnd="@dimen/floating_sheet_clock_style_clock_size_text_margin_end"
-                android:text="@string/clock_size_dynamic_description"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/clock_style_clock_size_switch"
-                app:layout_constraintTop_toBottomOf="@+id/clock_style_clock_size_title"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-            <Switch
-                android:id="@+id/clock_style_clock_size_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/floating_sheet_content_horizontal_padding"
-                app:layout_constraintTop_toTopOf="@+id/clock_style_clock_size_title"
-                app:layout_constraintBottom_toBottomOf="@+id/clock_style_clock_size_description"
-                app:layout_constraintEnd_toEndOf="parent"
-                style="@style/Switch.SettingsLib"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
+        <include
+            layout="@layout/floating_sheet_clock_color_content"
             android:id="@+id/clock_floating_sheet_color_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:clipToPadding="false"
-            android:clipChildren="false">
+            android:layout_height="wrap_content" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:clipChildren="false"
-                android:layout_marginBottom="12dp">
-
-                <!--
-                This is an invisible placeholder put in place so that the parent keeps its height
-                stable as the RecyclerView updates from 0 items to N items. Keeping it stable allows
-                the layout logic to keep the size of the preview container stable as well, which
-                bodes well for setting up the SurfaceView for remote rendering without changing its
-                size after the content is loaded into the RecyclerView.
-
-                It's critical for any TextViews inside the included layout to have text.
-                -->
-                <include
-                    layout="@layout/color_option"
-                    android:layout_width="@dimen/option_item_size"
-                    android:layout_height="@dimen/option_item_size"
-                    android:visibility="invisible" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/clock_color_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipChildren="false"
-                    android:clipToPadding="false" />
-            </FrameLayout>
-
-            <SeekBar
-                android:id="@+id/clock_color_slider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingHorizontal="@dimen/floating_sheet_content_horizontal_padding"
-                android:minHeight="@dimen/touch_target_min_height"
-                android:thumb="@null"
-                android:contentDescription="@string/accessibility_clock_slider_description"
-                android:background="@null"
-                android:progressDrawable="@drawable/saturation_progress_drawable"
-                android:splitTrack="false" />
-        </LinearLayout>
-
-        <LinearLayout
+        <include
+            layout="@layout/floating_sheet_clock_font_content"
             android:id="@+id/clock_floating_sheet_font_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/floating_sheet_content_horizontal_padding"
-            android:orientation="vertical"
-            android:clipToPadding="false"
-            android:clipChildren="false">
-
-            <!-- Populated dynamically w/ clock axis information -->
-        </LinearLayout>
+            android:layout_height="wrap_content" />
     </FrameLayout>
 
-    <com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
-        android:id="@+id/floating_toolbar"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginVertical="@dimen/floating_sheet_tab_toolbar_vertical_margin" />
+        android:layout_marginVertical="@dimen/floating_sheet_tab_toolbar_vertical_margin">
 
-    <LinearLayout
-        android:id="@+id/clock_font_toolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/floating_sheet_tab_clock_font_toolbar_top_margin"
-        android:layout_marginBottom="@dimen/floating_sheet_tab_clock_font_toolbar_bottom_margin">
-
-        <ImageView
-            android:id="@+id/clock_font_revert"
+        <!-- Invisible placeholder to make sure the view does not shrink in height when the floating
+         toolbar visibility is gone -->
+        <include
+            layout="@layout/floating_toolbar_tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/clock_font_revert"
-            android:contentDescription="@string/clock_font_editor_revert" />
+            android:layout_marginVertical="@dimen/floating_tab_toolbar_padding_vertical"
+            android:visibility="invisible" />
 
-        <ImageView
-            android:id="@+id/clock_font_apply"
+        <com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
+            android:id="@+id/floating_toolbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/clock_font_apply_padding_start"
-            android:src="@drawable/clock_font_apply"
-            android:contentDescription="@string/clock_font_editor_apply" />
-    </LinearLayout>
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:id="@+id/clock_font_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/clock_font_revert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/clock_font_revert"
+                android:contentDescription="@string/clock_font_editor_revert" />
+
+            <ImageView
+                android:id="@+id/clock_font_apply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/clock_font_apply_padding_start"
+                android:src="@drawable/clock_font_apply"
+                android:contentDescription="@string/clock_font_editor_apply" />
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

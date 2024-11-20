@@ -36,6 +36,7 @@ import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
+import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -127,7 +128,7 @@ constructor(
     data class ClockStyleModel(val thumbnail: Drawable, val showEditButton: StateFlow<Boolean>)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val clockStyleOptions: StateFlow<List<OptionItemViewModel<ClockStyleModel>>> =
+    val clockStyleOptions: StateFlow<List<OptionItemViewModel2<ClockStyleModel>>> =
         clockPickerInteractor.allClocks
             .mapLatest { allClocks ->
                 // Delay to avoid the case that the full list of clocks is not initiated.
@@ -146,13 +147,13 @@ constructor(
 
     private suspend fun ClockMetadataModel.toOption(
         resources: Resources
-    ): OptionItemViewModel<ClockStyleModel> {
+    ): OptionItemViewModel2<ClockStyleModel> {
         val isSelectedFlow = previewingClock.map { it.clockId == clockId }.stateIn(viewModelScope)
         val isEditable = fontAxes.isNotEmpty()
         val showEditButton = isSelectedFlow.map { it && isEditable }.stateIn(viewModelScope)
         val contentDescription =
             resources.getString(R.string.select_clock_action_description, description)
-        return OptionItemViewModel<ClockStyleModel>(
+        return OptionItemViewModel2<ClockStyleModel>(
             key = MutableStateFlow(clockId) as StateFlow<String>,
             payload = ClockStyleModel(thumbnail = thumbnail, showEditButton = showEditButton),
             text = Text.Loaded(contentDescription),

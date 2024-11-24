@@ -66,6 +66,7 @@ import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.module.FragmentFactory
 import com.android.wallpaper.module.NetworkStatusNotifier
+import com.android.wallpaper.module.PackageStatusNotifier
 import com.android.wallpaper.module.PartnerProvider
 import com.android.wallpaper.module.WallpaperPicker2Injector
 import com.android.wallpaper.module.WallpaperPreferences
@@ -118,6 +119,7 @@ constructor(
     prefs: Lazy<WallpaperPreferences>,
     wallpaperColorsRepository: Lazy<WallpaperColorsRepository>,
     defaultWallpaperCategoryWrapper: Lazy<WallpaperCategoryWrapper>,
+    packageNotifier: Lazy<PackageStatusNotifier>,
 ) :
     WallpaperPicker2Injector(
         mainScope,
@@ -132,6 +134,7 @@ constructor(
         prefs,
         wallpaperColorsRepository,
         defaultWallpaperCategoryWrapper,
+        packageNotifier,
     ),
     CustomizationInjector {
     private var customizationSections: CustomizationSections? = null

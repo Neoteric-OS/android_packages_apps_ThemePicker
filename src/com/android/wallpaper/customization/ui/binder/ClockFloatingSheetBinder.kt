@@ -214,10 +214,7 @@ object ClockFloatingSheetBinder {
                                 Tab.STYLE -> clockStyleContentHeight
                                 Tab.COLOR -> clockColorContentHeight
                                 Tab.FONT -> clockFontContentHeight
-                            } +
-                                view.resources.getDimensionPixelSize(
-                                    R.dimen.floating_sheet_content_vertical_padding
-                                ) * 2
+                            }
                         // Start to animate the content height
                         ValueAnimator.ofInt(fromHeight, toHeight)
                             .apply {
@@ -402,7 +399,7 @@ object ClockFloatingSheetBinder {
         lifecycleOwner: LifecycleOwner
     ): OptionItemAdapter2<ClockStyleModel> =
         OptionItemAdapter2(
-            layoutResourceId = R.layout.clock_style_option2,
+            layoutResourceId = R.layout.clock_style_option,
             lifecycleOwner = lifecycleOwner,
             bindPayload = { view: View, styleModel: ClockStyleModel ->
                 view

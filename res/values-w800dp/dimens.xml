@@ -23,4 +23,5 @@
     <dimen name="clock_carousel_item_card_width">114dp</dimen>
     <dimen name="clock_carousel_item_card_height">124dp</dimen>
     <dimen name="clock_carousel_guideline_margin">320dp</dimen>
+    <item name="clock_carousel_scale" format="float" type="dimen">0.35</item>
 </resources>

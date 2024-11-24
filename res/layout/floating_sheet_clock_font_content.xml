@@ -20,9 +20,10 @@
     android:id="@+id/clock_floating_sheet_font_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/floating_sheet_content_vertical_padding"
+    android:paddingHorizontal="@dimen/floating_sheet_content_horizontal_padding"
     android:clipChildren="false"
-    android:clipToPadding="false"
-    android:paddingHorizontal="@dimen/floating_sheet_content_horizontal_padding">
+    android:clipToPadding="false">
 
     <TextView
         android:id="@+id/clock_axis_slider_name1"

@@ -40,7 +40,7 @@
     <string name="clock_size" msgid="5028923902364418263">"Hajmi"</string>
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Dinamik"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"Soat hajmi ekran qulfidagi kontent asosida oʻzgaradi"</string>
-    <string name="clock_size_large" msgid="3143248715744138979">"Yirik"</string>
+    <string name="clock_size_large" msgid="3143248715744138979">"Katta"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Kichik"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Ekran chekkasida kichik soat chiqishi"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Soat shrifti oʻzgarishlarini qoʻllash"</string>

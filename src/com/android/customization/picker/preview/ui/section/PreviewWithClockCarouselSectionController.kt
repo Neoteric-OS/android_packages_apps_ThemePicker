@@ -97,11 +97,7 @@ class PreviewWithClockCarouselSectionController(
     ) {
 
     private val viewModel =
-        ViewModelProvider(
-                activity,
-                clockCarouselViewModelFactory,
-            )
-            .get() as ClockCarouselViewModel
+        ViewModelProvider(activity, clockCarouselViewModelFactory).get() as ClockCarouselViewModel
 
     private var clockColorAndSizeButton: View? = null
 
@@ -184,7 +180,7 @@ class PreviewWithClockCarouselSectionController(
                                 )
                                 if (onAttachStateChangeListener != null) {
                                     carouselView.carousel.removeOnAttachStateChangeListener(
-                                        onAttachStateChangeListener,
+                                        onAttachStateChangeListener
                                     )
                                 }
                             }

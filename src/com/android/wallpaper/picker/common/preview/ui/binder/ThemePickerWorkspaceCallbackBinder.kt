@@ -39,6 +39,7 @@ import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptio
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.common.preview.ui.binder.WorkspaceCallbackBinder.Companion.sendMessage
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,12 +57,14 @@ constructor(
     override fun bind(
         workspaceCallback: Message,
         viewModel: CustomizationOptionsViewModel,
+        colorUpdateViewModel: ColorUpdateViewModel,
         screen: Screen,
         lifecycleOwner: LifecycleOwner,
     ) {
         defaultWorkspaceCallbackBinder.bind(
             workspaceCallback = workspaceCallback,
             viewModel = viewModel,
+            colorUpdateViewModel = colorUpdateViewModel,
             screen = screen,
             lifecycleOwner = lifecycleOwner,
         )
@@ -158,10 +161,11 @@ constructor(
                         launch {
                             combine(
                                     viewModel.colorPickerViewModel2.previewingColorOption,
-                                    viewModel.darkModeViewModel.previewingIsDarkMode,
-                                    ::Pair,
+                                    viewModel.darkModeViewModel.overridingIsDarkMode,
+                                    colorUpdateViewModel.systemColorsUpdated,
+                                    ::Triple,
                                 )
-                                .collect { (colorModel, darkMode) ->
+                                .collect { (colorModel, darkMode, _) ->
                                     val bundle =
                                         Bundle().apply {
                                             if (colorModel != null) {
@@ -174,7 +178,9 @@ constructor(
                                                 putIntArray(KEY_COLOR_VALUES, colors)
                                             }
 
-                                            putBoolean(KEY_DARK_MODE, darkMode)
+                                            if (darkMode != null) {
+                                                putBoolean(KEY_DARK_MODE, darkMode)
+                                            }
                                         }
                                     workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, bundle)
                                 }

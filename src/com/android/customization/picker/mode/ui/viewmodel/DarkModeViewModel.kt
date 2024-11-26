@@ -22,6 +22,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 
 @ViewModelScoped
@@ -31,7 +32,8 @@ constructor(private val interactor: DarkModeInteractor, private val logger: Them
     private val isDarkMode = interactor.isDarkMode
     val isEnabled = interactor.isEnabled
 
-    private val overridingIsDarkMode = MutableStateFlow<Boolean?>(null)
+    private val _overridingIsDarkMode = MutableStateFlow<Boolean?>(null)
+    val overridingIsDarkMode = _overridingIsDarkMode.asStateFlow()
     val previewingIsDarkMode =
         combine(overridingIsDarkMode, isDarkMode, isEnabled) { override, current, isEnabled ->
             if (isEnabled) {
@@ -41,7 +43,8 @@ constructor(private val interactor: DarkModeInteractor, private val logger: Them
 
     val toggleDarkMode =
         combine(overridingIsDarkMode, isDarkMode) { override, current ->
-            { overridingIsDarkMode.value = override?.not() ?: !current }
+            // Only set override if its value is different from current, else set to null
+            { _overridingIsDarkMode.value = if (override == null) !current else null }
         }
 
     val onApply: Flow<(suspend () -> Unit)?> =
@@ -55,6 +58,6 @@ constructor(private val interactor: DarkModeInteractor, private val logger: Them
         }
 
     fun resetPreview() {
-        overridingIsDarkMode.value = null
+        _overridingIsDarkMode.value = null
     }
 }

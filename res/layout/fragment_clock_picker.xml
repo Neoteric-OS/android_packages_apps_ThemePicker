@@ -62,10 +62,10 @@
             <Space
                 android:id="@+id/placeholder"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/min_taptarget_height"
+                android:layout_height="@dimen/accessibility_min_height"
                 app:layout_constraintBottom_toTopOf="@id/apply_button"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHeight_min="@dimen/min_taptarget_height"
+                app:layout_constraintHeight_min="@dimen/accessibility_min_height"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/options_container"

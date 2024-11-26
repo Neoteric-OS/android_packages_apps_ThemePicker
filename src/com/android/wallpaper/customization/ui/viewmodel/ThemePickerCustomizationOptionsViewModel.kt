@@ -62,6 +62,16 @@ constructor(
     override val selectedOption = defaultCustomizationOptionsViewModel.selectedOption
 
     override fun handleBackPressed(): Boolean {
+
+        if (
+            defaultCustomizationOptionsViewModel.selectedOption.value ==
+                ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK &&
+                clockPickerViewModel.selectedTab.value == ClockPickerViewModel.Tab.FONT
+        ) {
+            clockPickerViewModel.cancelFontAxes()
+            return true
+        }
+
         val isBackPressedHandled = defaultCustomizationOptionsViewModel.handleBackPressed()
 
         if (isBackPressedHandled) {

@@ -58,10 +58,11 @@ class ClockCarouselViewModelTest {
                     description = "description",
                     thumbnail = ColorDrawable(0),
                     isReactiveToTone = true,
+                    hasReactiveAxes = false,
                     selectedColorId = null,
                     colorToneProgress = ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS,
                     seedColor = null,
-                ),
+                )
             )
         )
     }

@@ -49,10 +49,9 @@ private constructor(
 
     /** View-models for each color tab. */
     val colorTypeTabs: Flow<Map<ColorType, ColorTypeTabViewModel>> =
-        combine(
-            interactor.colorOptions,
-            selectedColorTypeTabId,
-        ) { colorOptions, selectedColorTypeIdOrNull ->
+        combine(interactor.colorOptions, selectedColorTypeTabId) {
+            colorOptions,
+            selectedColorTypeIdOrNull ->
             colorOptions.keys
                 .mapIndexed { index, colorType ->
                     val isSelected =
@@ -143,8 +142,7 @@ private constructor(
                                                             .sourceForLogging,
                                                         colorOptionModel.colorOption
                                                             .styleForLogging,
-                                                        colorOptionModel.colorOption
-                                                            .seedColorForLogging,
+                                                        colorOptionModel.colorOption.seedColor,
                                                     )
                                                 }
                                             }
@@ -180,7 +178,7 @@ private constructor(
                     min(
                         max(0, COLOR_SECTION_OPTION_SIZE - wallpaperOptions.size),
                         presetOptions.size,
-                    )
+                    ),
                 )
             subOptions + additionalSubOptions
         }
@@ -192,11 +190,7 @@ private constructor(
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return ColorPickerViewModel(
-                context = context,
-                interactor = interactor,
-                logger = logger,
-            )
+            return ColorPickerViewModel(context = context, interactor = interactor, logger = logger)
                 as T
         }
     }

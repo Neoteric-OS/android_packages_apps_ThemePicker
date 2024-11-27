@@ -44,10 +44,8 @@
     <string name="clock_size_small" msgid="2280449912094164133">"သေး"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"သင့်ဖန်သားပြင်ထောင့်တွင် ပြသထားသော နာရီအသေးတစ်ခု"</string>
     <string name="grid_title" msgid="1688173478777254123">"အက်ပ်ဇယား"</string>
-    <!-- no translation found for shape_and_grid_title (9092477491363761054) -->
-    <skip />
-    <!-- no translation found for grid_layout (370175667652663686) -->
-    <skip />
+    <string name="shape_and_grid_title" msgid="9092477491363761054">"အက်ပ်ပုံစံ၊ အပြင်အဆင်"</string>
+    <string name="grid_layout" msgid="370175667652663686">"အပြင်အဆင်"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"အသုံးပြုရန်"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"တည်းဖြတ်ရန် တို့ပါ"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"လက်ရှိနောက်ခံပုံ ဆက်ထားရန်"</string>

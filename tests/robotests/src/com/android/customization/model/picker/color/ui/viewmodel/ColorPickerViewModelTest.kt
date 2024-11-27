@@ -17,7 +17,6 @@
 package com.android.customization.model.picker.color.ui.viewmodel
 
 import android.content.Context
-import android.graphics.Color
 import android.stats.style.StyleEnums
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
@@ -86,7 +85,7 @@ class ColorPickerViewModelTest {
             ColorPickerViewModel.Factory(
                     context = context,
                     interactor = interactor,
-                    logger = logger
+                    logger = logger,
                 )
                 .create(ColorPickerViewModel::class.java)
 
@@ -105,19 +104,19 @@ class ColorPickerViewModelTest {
 
             assertColorOptionUiState(
                 colorOptions = colorSectionOptions(),
-                selectedColorOptionIndex = 0
+                selectedColorOptionIndex = 0,
             )
 
             selectColorOption(colorSectionOptions, 2)
             assertColorOptionUiState(
                 colorOptions = colorSectionOptions(),
-                selectedColorOptionIndex = 2
+                selectedColorOptionIndex = 2,
             )
 
             selectColorOption(colorSectionOptions, 4)
             assertColorOptionUiState(
                 colorOptions = colorSectionOptions(),
-                selectedColorOptionIndex = 4
+                selectedColorOptionIndex = 4,
             )
         }
 
@@ -129,12 +128,12 @@ class ColorPickerViewModelTest {
                     repository.buildWallpaperOption(
                         ColorOptionsProvider.COLOR_SOURCE_LOCK,
                         Style.EXPRESSIVE,
-                        "121212"
+                        121212,
                     )
                 ),
-                listOf(repository.buildPresetOption(Style.FRUIT_SALAD, "#ABCDEF")),
+                listOf(repository.buildPresetOption(Style.FRUIT_SALAD, -54321)),
                 ColorType.PRESET_COLOR,
-                0
+                0,
             )
 
             val colorTypes = collectLastValue(underTest.colorTypeTabs)
@@ -149,7 +148,7 @@ class ColorPickerViewModelTest {
             assertThat(logger.themeColorSource)
                 .isEqualTo(StyleEnums.COLOR_SOURCE_LOCK_SCREEN_WALLPAPER)
             assertThat(logger.themeColorStyle).isEqualTo(Style.EXPRESSIVE.toString().hashCode())
-            assertThat(logger.themeSeedColor).isEqualTo(Color.parseColor("#121212"))
+            assertThat(logger.themeSeedColor).isEqualTo(121212)
         }
 
     @Test
@@ -160,12 +159,12 @@ class ColorPickerViewModelTest {
                     repository.buildWallpaperOption(
                         ColorOptionsProvider.COLOR_SOURCE_LOCK,
                         Style.EXPRESSIVE,
-                        "121212"
+                        121212,
                     )
                 ),
-                listOf(repository.buildPresetOption(Style.FRUIT_SALAD, "#ABCDEF")),
+                listOf(repository.buildPresetOption(Style.FRUIT_SALAD, -54321)),
                 ColorType.WALLPAPER_COLOR,
-                0
+                0,
             )
 
             val colorTypes = collectLastValue(underTest.colorTypeTabs)
@@ -179,7 +178,7 @@ class ColorPickerViewModelTest {
 
             assertThat(logger.themeColorSource).isEqualTo(StyleEnums.COLOR_SOURCE_PRESET_COLOR)
             assertThat(logger.themeColorStyle).isEqualTo(Style.FRUIT_SALAD.toString().hashCode())
-            assertThat(logger.themeSeedColor).isEqualTo(Color.parseColor("#ABCDEF"))
+            assertThat(logger.themeSeedColor).isEqualTo(-54321)
         }
 
     @Test
@@ -193,7 +192,7 @@ class ColorPickerViewModelTest {
                 colorTypes = colorTypes(),
                 colorOptions = colorOptions(),
                 selectedColorTypeText = "Wallpaper colors",
-                selectedColorOptionIndex = 0
+                selectedColorOptionIndex = 0,
             )
 
             // Select "Basic colors" tab
@@ -202,7 +201,7 @@ class ColorPickerViewModelTest {
                 colorTypes = colorTypes(),
                 colorOptions = colorOptions(),
                 selectedColorTypeText = "Basic colors",
-                selectedColorOptionIndex = -1
+                selectedColorOptionIndex = -1,
             )
 
             // Select a color option
@@ -214,7 +213,7 @@ class ColorPickerViewModelTest {
                 colorTypes = colorTypes(),
                 colorOptions = colorOptions(),
                 selectedColorTypeText = "Wallpaper colors",
-                selectedColorOptionIndex = -1
+                selectedColorOptionIndex = -1,
             )
 
             // Check new option is selected
@@ -223,7 +222,7 @@ class ColorPickerViewModelTest {
                 colorTypes = colorTypes(),
                 colorOptions = colorOptions(),
                 selectedColorTypeText = "Basic colors",
-                selectedColorOptionIndex = 2
+                selectedColorOptionIndex = 2,
             )
         }
 

@@ -24,9 +24,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.android.customization.model.color.ColorOptionsProvider
 import com.android.customization.picker.color.data.util.MaterialColorsGenerator
-import com.android.systemui.monet.ColorScheme
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_INITIALLY_SELECTED_SLOT_ID
@@ -153,10 +151,7 @@ constructor(
                                     workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, Bundle())
                                     return@collect
                                 }
-                                val seedColor =
-                                    it.colorOption.seedColor
-                                        ?: getSeedColorFromSource(it.colorOption.source)
-                                        ?: return@collect
+                                val seedColor = it.colorOption.seedColor
                                 val (ids, colors) =
                                     materialColorsGenerator.generate(
                                         seedColor,
@@ -174,16 +169,6 @@ constructor(
                     }
                 }
         }
-    }
-
-    private fun getSeedColorFromSource(source: String?): Int? {
-        return when (source) {
-                ColorOptionsProvider.COLOR_SOURCE_HOME -> WallpaperManager.FLAG_SYSTEM
-                ColorOptionsProvider.COLOR_SOURCE_LOCK -> WallpaperManager.FLAG_LOCK
-                else -> null
-            }
-            ?.let { wallpaperManager.getWallpaperColors(it) }
-            ?.let { ColorScheme.getSeedColor(it) }
     }
 
     companion object {

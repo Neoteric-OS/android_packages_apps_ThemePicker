@@ -20,7 +20,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FakeGridOptionsManager @Inject constructor() : GridOptionsManager2 {
+class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
 
     var isGridOptionAvailable: Boolean = true
 

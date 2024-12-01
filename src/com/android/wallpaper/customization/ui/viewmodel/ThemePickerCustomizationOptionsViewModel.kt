@@ -27,6 +27,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -58,6 +59,8 @@ constructor(
     val colorPickerViewModel2 = colorPickerViewModel2Factory.create(viewModelScope = viewModelScope)
     val shapeGridPickerViewModel =
         shapeGridPickerViewModelFactory.create(viewModelScope = viewModelScope)
+
+    private var onApplyJob: Job? = null
 
     override val selectedOption = defaultCustomizationOptionsViewModel.selectedOption
 
@@ -167,9 +170,14 @@ constructor(
             .map { onApply ->
                 if (onApply != null) {
                     fun(onComplete: () -> Unit) {
-                        viewModelScope.launch {
-                            onApply()
-                            onComplete()
+                        // Prevent double apply
+                        if (onApplyJob?.isActive != true) {
+                            onApplyJob =
+                                viewModelScope.launch {
+                                    onApply()
+                                    onComplete()
+                                    onApplyJob = null
+                                }
                         }
                     }
                 } else {

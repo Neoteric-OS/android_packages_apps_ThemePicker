@@ -52,7 +52,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 @Singleton
@@ -259,7 +258,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     combine(
-                            clockPickerViewModel.previewingClock.filterNotNull(),
+                            clockPickerViewModel.previewingClock,
                             clockPickerViewModel.previewingClockSize,
                         ) { clock, size ->
                             clock to size

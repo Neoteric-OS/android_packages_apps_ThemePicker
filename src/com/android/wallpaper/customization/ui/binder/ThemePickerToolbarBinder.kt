@@ -22,16 +22,18 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toolbar
 import androidx.core.graphics.ColorUtils
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isInvisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.android.wallpaper.R
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.customization.ui.viewmodel.ToolbarHeightsViewModel
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultToolbarBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,6 +41,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @Singleton
@@ -54,6 +57,7 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
         toolbar: Toolbar,
         applyButton: Button,
         viewModel: CustomizationOptionsViewModel,
+        colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
         onNavBack: () -> Unit,
     ) {
@@ -62,6 +66,7 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
             toolbar,
             applyButton,
             viewModel,
+            colorUpdateViewModel,
             lifecycleOwner,
             onNavBack,
         )
@@ -111,13 +116,14 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
             }
         )
 
-        val applyButtonTextColorEnabled =
-            applyButton.resources.getColor(R.color.system_on_primary, null)
-        val applyButtonTextColorDisabled =
-            ColorUtils.setAlphaComponent(
-                applyButton.resources.getColor(R.color.system_on_surface, null),
-                97,
-            ) // 97 for 38% transparent
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                DrawableCompat.setTint(DrawableCompat.wrap(applyButton.background), color)
+            },
+            color = colorUpdateViewModel.colorPrimary,
+            shouldAnimate = { true },
+            lifecycleOwner = lifecycleOwner,
+        )
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -133,9 +139,22 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
                     viewModel.isApplyButtonEnabled.collect {
                         applyButton.isEnabled = it
                         applyButton.background.alpha =
-                            if (it) 255 else 31 // 255 for 100%, 31 for 12% transparent,
-                        applyButton.setTextColor(
-                            if (it) applyButtonTextColorEnabled else applyButtonTextColorDisabled
+                            if (it) 255 else 31 // 255 for 100%, 31 for 12% transparent
+                        ColorUpdateBinder.bind(
+                            setColor = { color -> applyButton.setTextColor(color) },
+                            color =
+                                if (it) {
+                                    colorUpdateViewModel.colorOnPrimary
+                                } else {
+                                    colorUpdateViewModel.colorOnSurface.map { color: Int ->
+                                        ColorUtils.setAlphaComponent(
+                                            color,
+                                            97,
+                                        ) // 97 for 38% transparent
+                                    }
+                                },
+                            shouldAnimate = { true },
+                            lifecycleOwner = lifecycleOwner,
                         )
                     }
                 }

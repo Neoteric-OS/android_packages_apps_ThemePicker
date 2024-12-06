@@ -88,7 +88,7 @@ constructor(
             listOf(
                 FloatingToolbarTabViewModel(
                     Icon.Resource(
-                        res = R.drawable.ic_style_filled_24px,
+                        res = R.drawable.ic_clock_filled_24px,
                         contentDescription = Text.Resource(R.string.clock_style),
                     ),
                     context.getString(R.string.clock_style),

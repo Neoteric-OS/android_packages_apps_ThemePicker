@@ -202,6 +202,7 @@
     <dimen name="floating_sheet_color_option_size">54dp</dimen>
     <dimen name="floating_sheet_color_option_stroke_width">3dp</dimen>
     <dimen name="customization_option_entry_shortcut_icon_size">20dp</dimen>
+    <dimen name="customization_option_entry_clock_icon_size">44dp</dimen>
 
     <!-- Clock font control dimensions -->
     <dimen name="clock_font_axis_name_width">64dp</dimen>

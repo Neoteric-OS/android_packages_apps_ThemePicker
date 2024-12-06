@@ -24,6 +24,7 @@ import com.android.wallpaper.picker.customization.data.repository.WallpaperColor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.TestInjector
+import com.android.wallpaper.testing.TestPackageStatusNotifier
 import com.android.wallpaper.util.DisplayUtils
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,6 +43,7 @@ constructor(
     injectedWallpaperInteractor: WallpaperInteractor,
     prefs: WallpaperPreferences,
     private val fakeWallpaperCategoryWrapper: WallpaperCategoryWrapper,
+    private val testStatusNotifier: TestPackageStatusNotifier,
 ) :
     TestInjector(
         themesUserEventLogger,
@@ -53,6 +55,7 @@ constructor(
         injectedWallpaperInteractor,
         prefs,
         fakeWallpaperCategoryWrapper,
+        testStatusNotifier,
     ),
     CustomizationInjector {
     /////////////////

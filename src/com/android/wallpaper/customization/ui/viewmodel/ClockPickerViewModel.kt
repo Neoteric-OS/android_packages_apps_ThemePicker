@@ -117,10 +117,9 @@ constructor(
             selectedClock ->
             overridingClock != null && overridingClock.clockId != selectedClock.clockId
         }
+    val selectedClock = clockPickerInteractor.selectedClock
     val previewingClock =
-        combine(overridingClock, clockPickerInteractor.selectedClock) {
-            overridingClock,
-            selectedClock ->
+        combine(overridingClock, selectedClock) { overridingClock, selectedClock ->
             overridingClock ?: selectedClock
         }
 

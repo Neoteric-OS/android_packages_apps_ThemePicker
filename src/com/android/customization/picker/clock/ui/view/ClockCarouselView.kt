@@ -19,6 +19,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,7 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
 
     val carousel: Carousel
     private val motionLayout: MotionLayout
+    private val clockViewScale: Float
     private lateinit var adapter: ClockCarouselAdapter
     private lateinit var clockViewFactory: ClockViewFactory
     private var toCenterClockController: ClockController? = null
@@ -56,6 +58,11 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
         carousel = clockCarousel.requireViewById(R.id.carousel)
         motionLayout = clockCarousel.requireViewById(R.id.motion_container)
         motionLayout.contentDescription = context.getString(R.string.custom_clocks_label)
+        clockViewScale =
+            TypedValue().let {
+                resources.getValue(R.dimen.clock_carousel_scale, it, true)
+                it.float
+            }
     }
 
     /**
@@ -130,7 +137,14 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
             overrideScreenPreviewWidth()
         }
 
-        adapter = ClockCarouselAdapter(clockSize, clocks, clockViewFactory, onClockSelected)
+        adapter =
+            ClockCarouselAdapter(
+                clockViewScale,
+                clockSize,
+                clocks,
+                clockViewFactory,
+                onClockSelected,
+            )
         carousel.isInfinite = clocks.size >= MIN_CLOCKS_TO_ENABLE_INFINITE_CAROUSEL
         carousel.setAdapter(adapter)
         val indexOfSelectedClock =
@@ -222,8 +236,8 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
                         ?.largeClock
                         ?.animations
                         ?.onPickerCarouselSwiping(progress)
-                    val scalingDownScale = getScalingDownScale(progress)
-                    val scalingUpScale = getScalingUpScale(progress)
+                    val scalingDownScale = getScalingDownScale(progress, clockViewScale)
+                    val scalingUpScale = getScalingUpScale(progress, clockViewScale)
                     offCenterClockScaleView?.scaleX = scalingDownScale
                     offCenterClockScaleView?.scaleY = scalingDownScale
                     toCenterClockScaleView?.scaleX = scalingUpScale
@@ -369,6 +383,7 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
     }
 
     private class ClockCarouselAdapter(
+        val clockViewScale: Float,
         val clockSize: ClockSize,
         val clocks: List<ClockCarouselItemViewModel>,
         private val clockViewFactory: ClockViewFactory,
@@ -450,8 +465,8 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
                 clockScaleView.scaleY = 1f
                 controller.largeClock.animations.onPickerCarouselSwiping(1F)
             } else {
-                clockScaleView.scaleX = CLOCK_CAROUSEL_VIEW_SCALE
-                clockScaleView.scaleY = CLOCK_CAROUSEL_VIEW_SCALE
+                clockScaleView.scaleX = clockViewScale
+                clockScaleView.scaleY = clockViewScale
                 controller.largeClock.animations.onPickerCarouselSwiping(0F)
             }
         }
@@ -501,7 +516,6 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
     companion object {
         // The carousel needs to have at least 5 different clock faces to be infinite
         const val MIN_CLOCKS_TO_ENABLE_INFINITE_CAROUSEL = 5
-        const val CLOCK_CAROUSEL_VIEW_SCALE = 0.5f
         const val TRANSITION_DURATION = 250
 
         val itemViewIds =
@@ -513,10 +527,11 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
                 R.id.item_view_4,
             )
 
-        fun getScalingUpScale(progress: Float) =
-            CLOCK_CAROUSEL_VIEW_SCALE + progress * (1f - CLOCK_CAROUSEL_VIEW_SCALE)
+        fun getScalingUpScale(progress: Float, clockViewScale: Float) =
+            clockViewScale + progress * (1f - clockViewScale)
 
-        fun getScalingDownScale(progress: Float) = 1f - progress * (1f - CLOCK_CAROUSEL_VIEW_SCALE)
+        fun getScalingDownScale(progress: Float, clockViewScale: Float) =
+            1f - progress * (1f - clockViewScale)
 
         // This makes the card only starts to reveal in the last quarter of the trip so
         // the card won't overlap the preview.

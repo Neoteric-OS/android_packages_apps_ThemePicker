@@ -88,7 +88,7 @@ constructor(
             listOf(
                 FloatingToolbarTabViewModel(
                     Icon.Resource(
-                        res = R.drawable.ic_style_filled_24px,
+                        res = R.drawable.ic_clock_filled_24px,
                         contentDescription = Text.Resource(R.string.clock_style),
                     ),
                     context.getString(R.string.clock_style),
@@ -117,10 +117,9 @@ constructor(
             selectedClock ->
             overridingClock != null && overridingClock.clockId != selectedClock.clockId
         }
+    val selectedClock = clockPickerInteractor.selectedClock
     val previewingClock =
-        combine(overridingClock, clockPickerInteractor.selectedClock) {
-            overridingClock,
-            selectedClock ->
+        combine(overridingClock, selectedClock) { overridingClock, selectedClock ->
             overridingClock ?: selectedClock
         }
 

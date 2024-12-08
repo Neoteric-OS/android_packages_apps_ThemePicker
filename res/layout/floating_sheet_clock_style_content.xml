@@ -19,6 +19,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="@dimen/floating_sheet_clock_style_content_top_padding"
+    android:paddingBottom="@dimen/floating_sheet_clock_style_content_bottom_padding"
     android:clipToPadding="false"
     android:clipChildren="false">
 
@@ -45,19 +47,14 @@
         -->
         <include
             layout="@layout/clock_style_option"
-            android:layout_width="@dimen/floating_sheet_clock_style_option_size"
-            android:layout_height="@dimen/floating_sheet_clock_style_option_size"
+            android:layout_width="@dimen/floating_sheet_clock_style_option_width"
+            android:layout_height="@dimen/floating_sheet_clock_style_option_height"
             android:visibility="invisible" />
 
-        <!--
-        TODO (b/377528523): We intentionally disable over scroll mode since it will clip the
-          edit icon when in over scroll.
-        -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/clock_style_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:overScrollMode="never"
             android:clipChildren="false"
             android:clipToPadding="false"/>
     </FrameLayout>

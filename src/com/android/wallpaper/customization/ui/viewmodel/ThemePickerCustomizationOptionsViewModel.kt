@@ -178,9 +178,9 @@ constructor(
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val isOnApplyEnabled: Flow<Boolean> = onApplyButtonClicked.map { it != null }
+    val isApplyButtonEnabled: Flow<Boolean> = onApplyButtonClicked.map { it != null }
 
-    val isOnApplyVisible: Flow<Boolean> = selectedOption.map { it != null }
+    val isApplyButtonVisible: Flow<Boolean> = selectedOption.map { it != null }
 
     val isToolbarCollapsed: Flow<Boolean> =
         combine(selectedOption, clockPickerViewModel.selectedTab) { selectedOption, selectedTab ->

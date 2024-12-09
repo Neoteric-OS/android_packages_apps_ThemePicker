@@ -46,6 +46,7 @@ import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
 import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.TestCurrentWallpaperInfoFactory
 import com.android.wallpaper.testing.TestInjector
+import com.android.wallpaper.testing.TestPackageStatusNotifier
 import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.collectLastValue
 import com.android.wallpaper.util.DisplayUtils
@@ -80,6 +81,7 @@ class KeyguardQuickAffordancePickerViewModelTest {
     private lateinit var client: FakeCustomizationProviderClient
     private lateinit var quickAffordanceInteractor: KeyguardQuickAffordancePickerInteractor
     private lateinit var wallpaperInteractor: WallpaperInteractor
+    private lateinit var testPackageStatusNotifier: TestPackageStatusNotifier
 
     @Before
     fun setUp() {
@@ -109,6 +111,7 @@ class KeyguardQuickAffordancePickerViewModelTest {
                         backgroundDispatcher = testDispatcher,
                     )
             )
+        testPackageStatusNotifier = TestPackageStatusNotifier()
         InjectorProvider.setInjector(
             TestInjector(
                 logger,
@@ -120,6 +123,7 @@ class KeyguardQuickAffordancePickerViewModelTest {
                 wallpaperInteractor,
                 mock(WallpaperPreferences::class.java),
                 mock(WallpaperCategoryWrapper::class.java),
+                testPackageStatusNotifier,
             )
         )
         underTest =

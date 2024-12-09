@@ -21,11 +21,13 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toolbar
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.isInvisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.wallpaper.R
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.customization.ui.viewmodel.ToolbarHeightsViewModel
 import com.android.wallpaper.picker.customization.ui.binder.DefaultToolbarBinder
@@ -109,6 +111,14 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
             }
         )
 
+        val applyButtonTextColorEnabled =
+            applyButton.resources.getColor(R.color.system_on_primary, null)
+        val applyButtonTextColorDisabled =
+            ColorUtils.setAlphaComponent(
+                applyButton.resources.getColor(R.color.system_on_surface, null),
+                97,
+            ) // 97 for 38% transparent
+
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -117,9 +127,18 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
                     }
                 }
 
-                launch { viewModel.isOnApplyVisible.collect { applyButton.isInvisible = !it } }
+                launch { viewModel.isApplyButtonVisible.collect { applyButton.isInvisible = !it } }
 
-                launch { viewModel.isOnApplyEnabled.collect { applyButton.isEnabled = it } }
+                launch {
+                    viewModel.isApplyButtonEnabled.collect {
+                        applyButton.isEnabled = it
+                        applyButton.background.alpha =
+                            if (it) 255 else 31 // 255 for 100%, 31 for 12% transparent,
+                        applyButton.setTextColor(
+                            if (it) applyButtonTextColorEnabled else applyButtonTextColorDisabled
+                        )
+                    }
+                }
 
                 launch {
                     combine(toolbarHeights, viewModel.isToolbarCollapsed, ::Pair).collect {

@@ -14,47 +14,43 @@
      limitations under the License.
 -->
 <!-- Content description is set programmatically on the parent FrameLayout -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/floating_sheet_clock_style_option_size"
-    android:layout_height="@dimen/floating_sheet_clock_style_option_size"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/floating_sheet_clock_style_option_width"
+    android:layout_height="@dimen/floating_sheet_clock_style_option_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clipToPadding="false"
     android:clipChildren="false">
 
-    <ImageView
-        android:id="@id/selection_border"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/option_item_border"
-        android:alpha="0"
-        android:importantForAccessibility="no" />
-
-    <ImageView
+    <com.android.wallpaper.picker.option.ui.view.OptionItemBackground
         android:id="@id/background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/option_item_background"
-        android:importantForAccessibility="no" />
+        android:layout_width="@dimen/floating_sheet_clock_style_option_background_size"
+        android:layout_height="@dimen/floating_sheet_clock_style_option_background_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:importantForAccessibility="no"
+        android:layout_gravity="bottom" />
 
-    <FrameLayout
+
+    <ImageView
         android:id="@+id/foreground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="@dimen/floating_sheet_clock_style_option_thumbnail_size"
+        android:layout_height="@dimen/floating_sheet_clock_style_option_thumbnail_size"
+        android:layout_marginBottom="@dimen/floating_sheet_clock_style_thumbnail_margin_bottom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/ic_clock_24px" />
 
-        <ImageView
-            android:id="@+id/clock_icon"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/floating_sheet_clock_style_thumbnail_margin"
-            android:src="@drawable/ic_clock_24px" />
-
-        <ImageView
-            android:id="@+id/edit_icon"
-            android:layout_width="@dimen/floating_sheet_clock_edit_icon_size"
-            android:layout_height="@dimen/floating_sheet_clock_edit_icon_size"
-            android:layout_marginTop="-16dp"
-            android:layout_marginLeft="50dp"
-            android:src="@drawable/edit_icon"/>
-
-    </FrameLayout>
-</FrameLayout>
+    <ImageView
+        android:id="@+id/edit_icon"
+        android:layout_width="@dimen/floating_sheet_clock_edit_icon_size"
+        android:layout_height="@dimen/floating_sheet_clock_edit_icon_size"
+        android:layout_marginTop="@dimen/floating_sheet_clock_edit_icon_margin"
+        android:layout_marginEnd="@dimen/floating_sheet_clock_edit_icon_margin"
+        android:src="@drawable/edit_icon"
+        app:layout_constraintEnd_toEndOf="@+id/background"
+        app:layout_constraintTop_toTopOf="@+id/background"
+        android:importantForAccessibility="no" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 

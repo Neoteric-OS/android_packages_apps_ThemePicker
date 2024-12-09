@@ -85,6 +85,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             lockScreenCustomizationOptionEntries
                 .find { it.first == ThemePickerLockCustomizationOption.CLOCK }
                 ?.second
+        val optionClockIcon = optionClock?.findViewById<ImageView>(R.id.option_entry_clock_icon)
 
         val optionShortcut =
             lockScreenCustomizationOptionEntries
@@ -124,6 +125,12 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 launch {
                     optionsViewModel.onCustomizeClockClicked.collect {
                         optionClock?.setOnClickListener { _ -> it?.invoke() }
+                    }
+                }
+
+                launch {
+                    optionsViewModel.clockPickerViewModel.selectedClock.collect {
+                        optionClockIcon?.setImageDrawable(it.thumbnail)
                     }
                 }
 

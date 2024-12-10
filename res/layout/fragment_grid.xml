@@ -55,12 +55,13 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="28dp"
         android:background="@drawable/picker_fragment_background"
+        android:paddingBottom="62dp"
         android:clipChildren="false">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="20dp"
+            android:layout_marginTop="22dp"
             android:clipChildren="false">
 
             <androidx.recyclerview.widget.RecyclerView

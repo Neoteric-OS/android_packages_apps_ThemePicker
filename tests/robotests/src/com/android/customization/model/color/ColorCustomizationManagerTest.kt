@@ -71,7 +71,7 @@ class ColorCustomizationManagerTest {
     @Test
     fun testParseSettings() {
         val source = COLOR_SOURCE_HOME
-        val style = Style.SPRITZ
+        @Style.Type val style = Style.SPRITZ
         val someColor = "aabbcc"
         val someOtherColor = "bbccdd"
         val settings =
@@ -79,7 +79,7 @@ class ColorCustomizationManagerTest {
                 OVERLAY_CATEGORY_SYSTEM_PALETTE to someColor,
                 OVERLAY_CATEGORY_COLOR to someOtherColor,
                 OVERLAY_COLOR_SOURCE to source,
-                OVERLAY_THEME_STYLE to style.toString(),
+                OVERLAY_THEME_STYLE to Style.toString(style),
                 ColorOption.TIMESTAMP_FIELD to "12345",
             )
         val json = JSONObject(settings).toString()
@@ -87,7 +87,7 @@ class ColorCustomizationManagerTest {
         manager.parseSettings(json)
 
         assertThat(manager.currentColorSource).isEqualTo(source)
-        assertThat(manager.currentStyle).isEqualTo(style.toString())
+        assertThat(manager.currentStyle).isEqualTo(Style.toString(style))
         assertThat(manager.currentOverlays.size).isEqualTo(2)
         assertThat(manager.currentOverlays[OVERLAY_CATEGORY_COLOR]).isEqualTo(someOtherColor)
         assertThat(manager.currentOverlays[OVERLAY_CATEGORY_SYSTEM_PALETTE]).isEqualTo(someColor)

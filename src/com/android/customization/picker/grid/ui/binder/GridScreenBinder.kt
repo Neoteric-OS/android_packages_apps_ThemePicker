@@ -36,9 +36,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
 object GridScreenBinder {
-
-    const val GRID_ITEM_SPACING_DP = 20
-
     fun bind(
         view: View,
         viewModel: GridScreenViewModel,
@@ -50,8 +47,12 @@ object GridScreenBinder {
     ) {
         val optionView: RecyclerView = view.requireViewById(com.android.wallpaper.R.id.options)
         optionView.layoutManager =
-            LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, /* reverseLayout= */ false)
-        optionView.addItemDecoration(ItemSpacing(GRID_ITEM_SPACING_DP))
+            LinearLayoutManager(
+                view.context,
+                RecyclerView.HORIZONTAL,
+                /* reverseLayout= */ false,
+            )
+        optionView.addItemDecoration(ItemSpacing(ItemSpacing.ITEM_SPACING_DP))
         val adapter =
             OptionItemAdapter(
                 layoutResourceId = R.layout.grid_option,
@@ -67,7 +68,7 @@ object GridScreenBinder {
                 bindIcon = { foregroundView: View, gridIcon: GridIconViewModel ->
                     val imageView = foregroundView as? ImageView
                     imageView?.let { GridIconViewBinder.bind(imageView, gridIcon) }
-                },
+                }
             )
         optionView.adapter = adapter
 

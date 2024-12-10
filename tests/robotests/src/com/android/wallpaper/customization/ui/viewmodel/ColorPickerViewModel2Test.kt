@@ -28,12 +28,14 @@ import com.android.customization.picker.color.domain.interactor.ColorPickerSnaps
 import com.android.customization.picker.color.shared.model.ColorType
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.systemui.monet.Style
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import com.android.wallpaper.testing.FakeSnapshotStore
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
+import dagger.hilt.android.internal.lifecycle.RetainedLifecycleImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -58,6 +60,7 @@ class ColorPickerViewModel2Test {
     private lateinit var repository: FakeColorPickerRepository
     private lateinit var interactor: ColorPickerInteractor
     private lateinit var store: FakeSnapshotStore
+    private lateinit var colorUpdateViewModel: ColorUpdateViewModel
 
     private lateinit var context: Context
     private lateinit var testScope: TestScope
@@ -80,11 +83,14 @@ class ColorPickerViewModel2Test {
                     },
             )
 
+        colorUpdateViewModel = ColorUpdateViewModel(context, RetainedLifecycleImpl())
+
         underTest =
             ColorPickerViewModel2(
                 context = context,
                 interactor = interactor,
                 logger = logger,
+                colorUpdateViewModel = colorUpdateViewModel,
                 viewModelScope = testScope.backgroundScope,
             )
 
@@ -112,7 +118,7 @@ class ColorPickerViewModel2Test {
 
             assertThat(job.isActive).isTrue()
 
-            underTest.onApplyComplete()
+            colorUpdateViewModel.updateColors()
 
             assertThat(job.isActive).isFalse()
         }
@@ -245,7 +251,7 @@ class ColorPickerViewModel2Test {
     private suspend fun TestScope.applySelectedColorOption() {
         val onApply = collectLastValue(underTest.onApply)()
         testScope.launch { onApply?.invoke() }
-        underTest.onApplyComplete()
+        colorUpdateViewModel.updateColors()
     }
 
     /**

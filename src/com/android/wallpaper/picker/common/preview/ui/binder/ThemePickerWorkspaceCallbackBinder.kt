@@ -211,12 +211,6 @@ constructor(
                         }
 
                         launch {
-                            colorUpdateViewModel.systemColorsUpdated.collect {
-                                viewModel.colorPickerViewModel2.onApplyComplete()
-                            }
-                        }
-
-                        launch {
                             combine(
                                     viewModel.colorPickerViewModel2.previewingColorOption,
                                     viewModel.darkModeViewModel.overridingIsDarkMode,

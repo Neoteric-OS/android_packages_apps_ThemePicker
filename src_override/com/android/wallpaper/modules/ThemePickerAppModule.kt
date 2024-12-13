@@ -27,7 +27,9 @@ import com.android.customization.picker.clock.data.repository.ClockPickerReposit
 import com.android.customization.picker.clock.data.repository.ClockPickerRepositoryImpl
 import com.android.customization.picker.clock.data.repository.ClockRegistryProvider
 import com.android.customization.picker.color.data.repository.ColorPickerRepository
+import com.android.customization.picker.color.data.repository.ColorPickerRepository2
 import com.android.customization.picker.color.data.repository.ColorPickerRepositoryImpl
+import com.android.customization.picker.color.data.repository.ColorPickerRepositoryImpl2
 import com.android.systemui.shared.clocks.ClockRegistry
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
@@ -86,6 +88,12 @@ abstract class ThemePickerAppModule {
     @Binds
     @Singleton
     abstract fun bindColorPickerRepository(impl: ColorPickerRepositoryImpl): ColorPickerRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindColorPickerRepository2(
+        impl: ColorPickerRepositoryImpl2
+    ): ColorPickerRepository2
 
     @Binds
     @Singleton

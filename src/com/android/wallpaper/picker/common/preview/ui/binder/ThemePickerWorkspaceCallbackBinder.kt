@@ -216,14 +216,14 @@ constructor(
                                     viewModel.darkModeViewModel.overridingIsDarkMode,
                                     ::Pair,
                                 )
-                                .collect { (colorModel, darkMode) ->
+                                .collect { (colorOption, darkMode) ->
                                     val bundle =
                                         Bundle().apply {
-                                            if (colorModel != null) {
+                                            if (colorOption != null) {
                                                 val (ids, colors) =
                                                     materialColorsGenerator.generate(
-                                                        colorModel.colorOption.seedColor,
-                                                        colorModel.colorOption.style,
+                                                        colorOption.seedColor,
+                                                        colorOption.style,
                                                     )
                                                 putIntArray(KEY_COLOR_RESOURCE_IDS, ids)
                                                 putIntArray(KEY_COLOR_VALUES, colors)

@@ -22,9 +22,8 @@ import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.android.customization.model.color.ColorOptionsProvider
 import com.android.customization.module.logging.TestThemesUserEventLogger
-import com.android.customization.picker.color.data.repository.FakeColorPickerRepository
-import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor
-import com.android.customization.picker.color.domain.interactor.ColorPickerSnapshotRestorer
+import com.android.customization.picker.color.data.repository.FakeColorPickerRepository2
+import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor2
 import com.android.customization.picker.color.shared.model.ColorType
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.systemui.monet.Style
@@ -39,7 +38,6 @@ import dagger.hilt.android.internal.lifecycle.RetainedLifecycleImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -57,8 +55,8 @@ import org.robolectric.RobolectricTestRunner
 class ColorPickerViewModel2Test {
     private val logger = TestThemesUserEventLogger()
     private lateinit var underTest: ColorPickerViewModel2
-    private lateinit var repository: FakeColorPickerRepository
-    private lateinit var interactor: ColorPickerInteractor
+    private lateinit var repository: FakeColorPickerRepository2
+    private lateinit var interactor: ColorPickerInteractor2
     private lateinit var store: FakeSnapshotStore
     private lateinit var colorUpdateViewModel: ColorUpdateViewModel
 
@@ -71,17 +69,10 @@ class ColorPickerViewModel2Test {
         val testDispatcher = UnconfinedTestDispatcher()
         Dispatchers.setMain(testDispatcher)
         testScope = TestScope(testDispatcher)
-        repository = FakeColorPickerRepository(context = context)
+        repository = FakeColorPickerRepository2()
         store = FakeSnapshotStore()
 
-        interactor =
-            ColorPickerInteractor(
-                repository = repository,
-                snapshotRestorer =
-                    ColorPickerSnapshotRestorer(repository = repository).apply {
-                        runBlocking { setUpSnapshotRestorer(store = store) }
-                    },
-            )
+        interactor = ColorPickerInteractor2(repository = repository)
 
         colorUpdateViewModel = ColorUpdateViewModel(context, RetainedLifecycleImpl())
 

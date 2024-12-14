@@ -57,6 +57,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 
 /** View model for the clock customization screen. */
@@ -120,8 +121,9 @@ constructor(
     val selectedClock = clockPickerInteractor.selectedClock
     val previewingClock =
         combine(overridingClock, selectedClock) { overridingClock, selectedClock ->
-            overridingClock ?: selectedClock
-        }
+                (overridingClock ?: selectedClock)
+            }
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
     data class ClockStyleModel(val thumbnail: Drawable, val showEditButton: StateFlow<Boolean>)
 

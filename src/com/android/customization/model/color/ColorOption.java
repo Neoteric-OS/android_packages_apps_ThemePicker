@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -56,13 +57,14 @@ public abstract class ColorOption implements CustomizationOption<ColorOption> {
     protected final Map<String, String> mPackagesByCategory;
     private final String mTitle;
     private final boolean mIsDefault;
-    private final Style mStyle;
+    @Style.Type
+    private final Integer mStyle;
     private final int mIndex;
     private CharSequence mContentDescription;
     private final @ColorInt int mSeedColor;
 
     protected ColorOption(String title, Map<String, String> overlayPackages, boolean isDefault,
-            int seedColor, Style style, int index) {
+            int seedColor, @Style.Type Integer style, int index) {
         mTitle = title;
         mIsDefault = isDefault;
         mSeedColor = seedColor;
@@ -82,9 +84,9 @@ public abstract class ColorOption implements CustomizationOption<ColorOption> {
 
         String currentStyle = colorManager.getCurrentStyle();
         if (TextUtils.isEmpty(currentStyle)) {
-            currentStyle = Style.TONAL_SPOT.toString();
+            currentStyle = Style.toString(Style.TONAL_SPOT);
         }
-        boolean isCurrentStyle = TextUtils.equals(getStyle().toString(), currentStyle);
+        boolean isCurrentStyle = TextUtils.equals(Style.toString(getStyle()), currentStyle);
 
         if (mIsDefault) {
             String serializedOverlays = colorManager.getStoredOverlays();
@@ -116,7 +118,7 @@ public abstract class ColorOption implements CustomizationOption<ColorOption> {
         if (other == null) {
             return false;
         }
-        if (mStyle != other.getStyle()) {
+        if (!Objects.equals(mStyle, other.getStyle())) {
             return false;
         }
         String thisSerializedPackages = getSerializedPackages();
@@ -225,7 +227,8 @@ public abstract class ColorOption implements CustomizationOption<ColorOption> {
     /**
      * @return the style of this color option
      */
-    public Style getStyle() {
+    @Style.Type
+    public Integer getStyle() {
         return mStyle;
     }
 

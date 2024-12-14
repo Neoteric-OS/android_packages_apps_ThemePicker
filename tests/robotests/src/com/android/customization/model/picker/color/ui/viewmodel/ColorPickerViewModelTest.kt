@@ -147,7 +147,8 @@ class ColorPickerViewModelTest {
 
             assertThat(logger.themeColorSource)
                 .isEqualTo(StyleEnums.COLOR_SOURCE_LOCK_SCREEN_WALLPAPER)
-            assertThat(logger.themeColorStyle).isEqualTo(Style.EXPRESSIVE.toString().hashCode())
+            assertThat(logger.themeColorStyle)
+                .isEqualTo(Style.toString(Style.EXPRESSIVE).hashCode())
             assertThat(logger.themeSeedColor).isEqualTo(121212)
         }
 
@@ -177,7 +178,8 @@ class ColorPickerViewModelTest {
             advanceUntilIdle()
 
             assertThat(logger.themeColorSource).isEqualTo(StyleEnums.COLOR_SOURCE_PRESET_COLOR)
-            assertThat(logger.themeColorStyle).isEqualTo(Style.FRUIT_SALAD.toString().hashCode())
+            assertThat(logger.themeColorStyle)
+                .isEqualTo(Style.toString(Style.FRUIT_SALAD).hashCode())
             assertThat(logger.themeSeedColor).isEqualTo(-54321)
         }
 

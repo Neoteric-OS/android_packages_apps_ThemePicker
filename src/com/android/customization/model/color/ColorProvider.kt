@@ -67,6 +67,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
     private var loaderJob: Job? = null
     private val monetEnabled = ColorUtils.isMonetEnabled(context)
     // TODO(b/202145216): Use style method to fetch the list of style.
+    @Style.Type
     private var styleList =
         if (themeStyleEnabled)
             arrayOf(Style.TONAL_SPOT, Style.SPRITZ, Style.VIBRANT, Style.EXPRESSIVE)
@@ -338,6 +339,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                         } catch (e: Resources.NotFoundException) {
                             null
                         }
+                    @Style.Type
                     val style =
                         try {
                             if (styleName != null) Style.valueOf(styleName) else Style.TONAL_SPOT
@@ -374,7 +376,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
     private fun buildPreset(
         bundleName: String,
         index: Int,
-        style: Style? = null,
+        @Style.Type style: Int? = null,
         type: ColorType = ColorType.PRESET_COLOR,
     ): ColorOptionImpl {
         val builder = ColorOptionImpl.Builder()

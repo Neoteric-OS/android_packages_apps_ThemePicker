@@ -72,7 +72,7 @@ class ColorOptionTest {
         testColorOptionStyle(Style.EXPRESSIVE)
     }
 
-    private fun testColorOptionStyle(style: Style) {
+    private fun testColorOptionStyle(@Style.Type style: Int) {
         val colorOption: ColorOption =
             ColorOptionImpl(
                 "fake color",

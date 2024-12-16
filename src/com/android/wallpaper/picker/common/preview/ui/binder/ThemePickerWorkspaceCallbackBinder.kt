@@ -25,13 +25,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.customization.model.grid.DefaultShapeGridManager.Companion.COL_GRID_NAME
 import com.android.customization.model.grid.DefaultShapeGridManager.Companion.COL_SHAPE_KEY
+import com.android.customization.picker.clock.shared.ClockSize
+import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.customization.picker.color.data.util.MaterialColorsGenerator
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.CLOCK_SIZE_DYNAMIC
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.CLOCK_SIZE_SMALL
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_CLOCK_SIZE
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_HIDE_SMART_SPACE
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_INITIALLY_SELECTED_SLOT_ID
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_QUICK_AFFORDANCE_ID
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_SLOT_ID
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.MESSAGE_ID_DEFAULT_PREVIEW
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.MESSAGE_ID_HIDE_SMART_SPACE
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.MESSAGE_ID_PREVIEW_CLOCK_SIZE
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.MESSAGE_ID_PREVIEW_QUICK_AFFORDANCE_SELECTED
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.MESSAGE_ID_SLOT_SELECTED
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.MESSAGE_ID_START_CUSTOMIZING_QUICK_AFFORDANCES
@@ -60,6 +68,7 @@ constructor(
         colorUpdateViewModel: ColorUpdateViewModel,
         screen: Screen,
         lifecycleOwner: LifecycleOwner,
+        clockViewFactory: ClockViewFactory,
     ) {
         defaultWorkspaceCallbackBinder.bind(
             workspaceCallback = workspaceCallback,
@@ -67,6 +76,7 @@ constructor(
             colorUpdateViewModel = colorUpdateViewModel,
             screen = screen,
             lifecycleOwner = lifecycleOwner,
+            clockViewFactory = clockViewFactory,
         )
 
         if (viewModel !is ThemePickerCustomizationOptionsViewModel) {
@@ -135,6 +145,48 @@ constructor(
                                     }
                                 }
                         }
+
+                        launch {
+                            combine(
+                                    viewModel.clockPickerViewModel.previewingClock,
+                                    viewModel.clockPickerViewModel.previewingClockSize,
+                                    ::Pair,
+                                )
+                                .collect { (previewingClock, previewingClockSize) ->
+                                    val hideSmartspace =
+                                        clockViewFactory
+                                            .getController(previewingClock.clockId)
+                                            .let {
+                                                when (previewingClockSize) {
+                                                    ClockSize.DYNAMIC ->
+                                                        it.largeClock.config
+                                                            .hasCustomWeatherDataDisplay
+                                                    ClockSize.SMALL ->
+                                                        it.smallClock.config
+                                                            .hasCustomWeatherDataDisplay
+                                                }
+                                            }
+                                    workspaceCallback.sendMessage(
+                                        MESSAGE_ID_HIDE_SMART_SPACE,
+                                        Bundle().apply {
+                                            putBoolean(KEY_HIDE_SMART_SPACE, hideSmartspace)
+                                        },
+                                    )
+
+                                    workspaceCallback.sendMessage(
+                                        MESSAGE_ID_PREVIEW_CLOCK_SIZE,
+                                        Bundle().apply {
+                                            putString(
+                                                KEY_CLOCK_SIZE,
+                                                when (previewingClockSize) {
+                                                    ClockSize.DYNAMIC -> CLOCK_SIZE_DYNAMIC
+                                                    ClockSize.SMALL -> CLOCK_SIZE_SMALL
+                                                },
+                                            )
+                                        },
+                                    )
+                                }
+                        }
                     }
                 }
             Screen.HOME_SCREEN ->
@@ -159,13 +211,18 @@ constructor(
                         }
 
                         launch {
+                            colorUpdateViewModel.systemColorsUpdated.collect {
+                                viewModel.colorPickerViewModel2.onApplyComplete()
+                            }
+                        }
+
+                        launch {
                             combine(
                                     viewModel.colorPickerViewModel2.previewingColorOption,
                                     viewModel.darkModeViewModel.overridingIsDarkMode,
-                                    colorUpdateViewModel.systemColorsUpdated,
-                                    ::Triple,
+                                    ::Pair,
                                 )
-                                .collect { (colorModel, darkMode, _) ->
+                                .collect { (colorModel, darkMode) ->
                                     val bundle =
                                         Bundle().apply {
                                             if (colorModel != null) {

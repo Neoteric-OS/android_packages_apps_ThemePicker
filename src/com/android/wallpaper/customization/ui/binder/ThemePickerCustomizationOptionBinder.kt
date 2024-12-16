@@ -34,6 +34,7 @@ import com.android.customization.picker.clock.ui.view.ClockConstraintLayoutHostV
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.customization.picker.grid.ui.binder.GridIconViewBinder
 import com.android.systemui.plugins.clocks.ClockFontAxisSetting
+import com.android.systemui.plugins.clocks.ClockPreviewConfig
 import com.android.systemui.shared.Flags
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
@@ -51,7 +52,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 @Singleton
@@ -258,7 +258,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     combine(
-                            clockPickerViewModel.previewingClock.filterNotNull(),
+                            clockPickerViewModel.previewingClock,
                             clockPickerViewModel.previewingClockSize,
                         ) { clock, size ->
                             clock to size
@@ -271,12 +271,21 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     ->
                                     addClockViews(clockController, clockHostView, size)
                                     val cs = ConstraintSet()
+                                    // TODO(b/379348167): get correct isShadeLayoutWide from picker
                                     clockController.largeClock.layout.applyPreviewConstraints(
-                                        context,
+                                        ClockPreviewConfig(
+                                            previewContext = context,
+                                            isShadeLayoutWide = false,
+                                            isSceneContainerFlagEnabled = false,
+                                        ),
                                         cs,
                                     )
                                     clockController.smallClock.layout.applyPreviewConstraints(
-                                        context,
+                                        ClockPreviewConfig(
+                                            previewContext = context,
+                                            isShadeLayoutWide = false,
+                                            isSceneContainerFlagEnabled = false,
+                                        ),
                                         cs,
                                     )
                                     cs.applyTo(clockHostView)

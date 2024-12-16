@@ -27,6 +27,7 @@ import com.android.customization.picker.grid.ui.viewmodel.GridIconViewModel
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
+import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -159,7 +160,7 @@ class ShapeGridPickerViewModelTest {
         testScope.runTest {
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
 
-            assertOptionItem(
+            assertGridItem(
                 optionItem = selectedGridOption(),
                 key = "normal",
                 payload = GridIconViewModel(5, 5, iconShapePath),
@@ -183,7 +184,7 @@ class ShapeGridPickerViewModelTest {
             onPracticalOptionClick()?.invoke()
             onApply()?.invoke()
 
-            assertOptionItem(
+            assertGridItem(
                 optionItem = selectedGridOption(),
                 key = "practical",
                 payload = GridIconViewModel(4, 5, iconShapePath),
@@ -199,7 +200,7 @@ class ShapeGridPickerViewModelTest {
         testScope.runTest {
             val optionItems = collectLastValue(underTest.gridOptions)
 
-            assertOptionItem(
+            assertGridItem(
                 optionItem = optionItems()?.get(0),
                 key = "normal",
                 payload = GridIconViewModel(5, 5, iconShapePath),
@@ -208,7 +209,7 @@ class ShapeGridPickerViewModelTest {
                 isSelected = true,
                 isEnabled = true,
             )
-            assertOptionItem(
+            assertGridItem(
                 optionItem = optionItems()?.get(1),
                 key = "practical",
                 payload = GridIconViewModel(4, 5, iconShapePath),
@@ -229,7 +230,7 @@ class ShapeGridPickerViewModelTest {
 
             onPracticalOptionClick()?.invoke()
 
-            assertOptionItem(
+            assertGridItem(
                 optionItem = optionItems()?.get(0),
                 key = "normal",
                 payload = GridIconViewModel(5, 5, iconShapePath),
@@ -238,7 +239,7 @@ class ShapeGridPickerViewModelTest {
                 isSelected = false,
                 isEnabled = true,
             )
-            assertOptionItem(
+            assertGridItem(
                 optionItem = optionItems()?.get(1),
                 key = "practical",
                 payload = GridIconViewModel(4, 5, iconShapePath),
@@ -267,8 +268,8 @@ class ShapeGridPickerViewModelTest {
         assertThat(optionItem.isEnabled).isEqualTo(isEnabled)
     }
 
-    private fun TestScope.assertOptionItem(
-        optionItem: OptionItemViewModel<GridIconViewModel>?,
+    private fun TestScope.assertGridItem(
+        optionItem: OptionItemViewModel2<GridIconViewModel>?,
         key: String,
         payload: GridIconViewModel?,
         text: Text,

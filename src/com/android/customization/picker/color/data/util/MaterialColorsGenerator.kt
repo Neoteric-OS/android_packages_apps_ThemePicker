@@ -70,7 +70,7 @@ constructor(
      *
      * @return a list of color resource IDs and a corresponding list of their color values
      */
-    fun generate(colorSeed: Int, style: Style): Pair<IntArray, IntArray> {
+    fun generate(colorSeed: Int, @Style.Type style: Int): Pair<IntArray, IntArray> {
         val isDarkMode =
             (applicationContext.resources.configuration.uiMode and
                 Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
@@ -94,7 +94,8 @@ constructor(
         )
     }
 
-    private suspend fun fetchThemeStyleFromSetting(): Style {
+    @Style.Type
+    private suspend fun fetchThemeStyleFromSetting(): Int {
         val overlayPackageJson =
             secureSettingsRepository.getString(Settings.Secure.THEME_CUSTOMIZATION_OVERLAY_PACKAGES)
         return if (!overlayPackageJson.isNullOrEmpty()) {

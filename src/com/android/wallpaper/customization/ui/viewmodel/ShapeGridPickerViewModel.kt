@@ -29,6 +29,7 @@ import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
+import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -126,7 +127,7 @@ constructor(
             overridingGridOptionKey ?: selectedGridOption.key.value
         }
 
-    val gridOptions: Flow<List<OptionItemViewModel<GridIconViewModel>>> =
+    val gridOptions: Flow<List<OptionItemViewModel2<GridIconViewModel>>> =
         interactor.gridOptions
             .filterNotNull()
             .map { gridOptions -> gridOptions.map { toGridOptionItemViewModel(it) } }
@@ -184,7 +185,7 @@ constructor(
 
     private fun toGridOptionItemViewModel(
         option: GridOptionModel
-    ): OptionItemViewModel<GridIconViewModel> {
+    ): OptionItemViewModel2<GridIconViewModel> {
         val iconShapePath =
             context.resources.getString(
                 Resources.getSystem()
@@ -203,7 +204,7 @@ constructor(
                     initialValue = false,
                 )
 
-        return OptionItemViewModel(
+        return OptionItemViewModel2(
             key = MutableStateFlow(option.key),
             payload =
                 GridIconViewModel(columns = option.cols, rows = option.rows, path = iconShapePath),

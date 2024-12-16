@@ -161,7 +161,7 @@ class FakeColorPickerRepository(private val context: Context) : ColorPickerRepos
         return builder.build()
     }
 
-    fun buildPresetOption(style: Style, seedColor: Int): ColorOptionImpl {
+    fun buildPresetOption(@Style.Type style: Int, seedColor: Int): ColorOptionImpl {
         val builder = ColorOptionImpl.Builder()
         builder.lightColors =
             intArrayOf(Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT)
@@ -197,7 +197,11 @@ class FakeColorPickerRepository(private val context: Context) : ColorPickerRepos
         return builder.build()
     }
 
-    fun buildWallpaperOption(source: String, style: Style, seedColor: Int): ColorOptionImpl {
+    fun buildWallpaperOption(
+        source: String,
+        @Style.Type style: Int,
+        seedColor: Int,
+    ): ColorOptionImpl {
         val builder = ColorOptionImpl.Builder()
         builder.lightColors =
             intArrayOf(Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT)

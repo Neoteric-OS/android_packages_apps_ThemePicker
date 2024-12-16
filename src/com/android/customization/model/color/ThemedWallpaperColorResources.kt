@@ -38,11 +38,7 @@ class ThemedWallpaperColorResources(
     override suspend fun apply(context: Context, callback: () -> Unit) {
         withContext(Dispatchers.IO) {
             val wallpaperColorScheme =
-                ColorScheme(
-                    wallpaperColors,
-                    false,
-                    fetchThemeStyleFromSetting(),
-                )
+                ColorScheme(wallpaperColors, false, fetchThemeStyleFromSetting())
             with<ColorScheme, Unit>(wallpaperColorScheme) {
                 addOverlayColor(neutral1, R.color.system_neutral1_10)
                 addOverlayColor(neutral2, R.color.system_neutral2_10)
@@ -55,7 +51,8 @@ class ThemedWallpaperColorResources(
         }
     }
 
-    private suspend fun fetchThemeStyleFromSetting(): Style {
+    @Style.Type
+    private suspend fun fetchThemeStyleFromSetting(): Int {
         val overlayPackageJson =
             secureSettingsRepository.getString(Settings.Secure.THEME_CUSTOMIZATION_OVERLAY_PACKAGES)
         return if (!overlayPackageJson.isNullOrEmpty()) {

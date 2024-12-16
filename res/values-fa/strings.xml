@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"بزرگ"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"کوچک"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"ساعت کوچکی در گوشه صفحه‌نمایش شما نشان داده می‌شود"</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"اعمال تغییرات قلم ساعت"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"واگرد کردن تغییرات قلم ساعت"</string>
     <string name="grid_title" msgid="1688173478777254123">"شبکه برنامه‌ها"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"شکل و چیدمان برنامه"</string>
     <string name="grid_layout" msgid="370175667652663686">"چیدمان"</string>

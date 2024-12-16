@@ -65,13 +65,23 @@ import com.android.systemui.shared.settings.data.repository.SystemSettingsReposi
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.module.FragmentFactory
+import com.android.wallpaper.module.NetworkStatusNotifier
+import com.android.wallpaper.module.PackageStatusNotifier
+import com.android.wallpaper.module.PartnerProvider
 import com.android.wallpaper.module.WallpaperPicker2Injector
+import com.android.wallpaper.module.WallpaperPreferences
+import com.android.wallpaper.module.logging.UserEventLogger
+import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.CustomizationPickerActivity
+import com.android.wallpaper.picker.category.wrapper.WallpaperCategoryWrapper
+import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
+import com.android.wallpaper.system.UiModeManagerWrapper
+import com.android.wallpaper.util.DisplayUtils
 import dagger.Lazy
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -85,7 +95,48 @@ constructor(
     @MainDispatcher private val mainScope: CoroutineScope,
     @BackgroundDispatcher private val bgScope: CoroutineScope,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
-) : WallpaperPicker2Injector(mainScope), CustomizationInjector {
+    private val colorContrastSectionViewModelFactory: Lazy<ColorContrastSectionViewModel.Factory>,
+    private val keyguardQuickAffordancePickerInteractor:
+        Lazy<KeyguardQuickAffordancePickerInteractor>,
+    private val keyguardQuickAffordanceSnapshotRestorer:
+        Lazy<KeyguardQuickAffordanceSnapshotRestorer>,
+    private val themesUserEventLogger: Lazy<ThemesUserEventLogger>,
+    private val colorPickerInteractor: Lazy<ColorPickerInteractor>,
+    private val colorPickerSnapshotRestorer: Lazy<ColorPickerSnapshotRestorer>,
+    private val clockRegistry: Lazy<ClockRegistry>,
+    private val secureSettingsRepository: Lazy<SecureSettingsRepository>,
+    private val systemSettingsRepository: Lazy<SystemSettingsRepository>,
+    private val clockPickerInteractor: Lazy<ClockPickerInteractor>,
+    private val clockPickerSnapshotRestorer: Lazy<ClockPickerSnapshotRestorer>,
+    displayUtils: Lazy<DisplayUtils>,
+    requester: Lazy<Requester>,
+    networkStatusNotifier: Lazy<NetworkStatusNotifier>,
+    partnerProvider: Lazy<PartnerProvider>,
+    val uiModeManager: Lazy<UiModeManagerWrapper>,
+    userEventLogger: Lazy<UserEventLogger>,
+    injectedWallpaperClient: Lazy<WallpaperClient>,
+    private val injectedWallpaperInteractor: Lazy<WallpaperInteractor>,
+    prefs: Lazy<WallpaperPreferences>,
+    wallpaperColorsRepository: Lazy<WallpaperColorsRepository>,
+    defaultWallpaperCategoryWrapper: Lazy<WallpaperCategoryWrapper>,
+    packageNotifier: Lazy<PackageStatusNotifier>,
+) :
+    WallpaperPicker2Injector(
+        mainScope,
+        displayUtils,
+        requester,
+        networkStatusNotifier,
+        partnerProvider,
+        uiModeManager,
+        userEventLogger,
+        injectedWallpaperClient,
+        injectedWallpaperInteractor,
+        prefs,
+        wallpaperColorsRepository,
+        defaultWallpaperCategoryWrapper,
+        packageNotifier,
+    ),
+    CustomizationInjector {
     private var customizationSections: CustomizationSections? = null
     private var keyguardQuickAffordancePickerViewModelFactory:
         KeyguardQuickAffordancePickerViewModel.Factory? =
@@ -105,24 +156,6 @@ constructor(
     private var gridInteractor: GridInteractor? = null
     private var gridSnapshotRestorer: GridSnapshotRestorer? = null
     private var gridScreenViewModelFactory: GridScreenViewModel.Factory? = null
-
-    // Injected objects, sorted by type
-    @Inject
-    lateinit var colorContrastSectionViewModelFactory: Lazy<ColorContrastSectionViewModel.Factory>
-    @Inject
-    lateinit var keyguardQuickAffordancePickerInteractor:
-        Lazy<KeyguardQuickAffordancePickerInteractor>
-    @Inject
-    lateinit var keyguardQuickAffordanceSnapshotRestorer:
-        Lazy<KeyguardQuickAffordanceSnapshotRestorer>
-    @Inject lateinit var themesUserEventLogger: Lazy<ThemesUserEventLogger>
-    @Inject lateinit var colorPickerInteractor: Lazy<ColorPickerInteractor>
-    @Inject lateinit var colorPickerSnapshotRestorer: Lazy<ColorPickerSnapshotRestorer>
-    @Inject lateinit var clockRegistry: Lazy<ClockRegistry>
-    @Inject lateinit var secureSettingsRepository: Lazy<SecureSettingsRepository>
-    @Inject lateinit var systemSettingsRepository: Lazy<SystemSettingsRepository>
-    @Inject lateinit var clockPickerInteractor: Lazy<ClockPickerInteractor>
-    @Inject lateinit var clockPickerSnapshotRestorer: Lazy<ClockPickerSnapshotRestorer>
 
     override fun getCustomizationSections(activity: ComponentActivity): CustomizationSections {
         val appContext = activity.applicationContext

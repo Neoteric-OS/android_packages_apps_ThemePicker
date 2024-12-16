@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2024 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/clock_floating_sheet_font_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/floating_sheet_content_vertical_padding"
+    android:paddingHorizontal="@dimen/floating_sheet_content_horizontal_padding"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <TextView
+        android:id="@+id/clock_axis_slider_name1"
+        android:layout_width="@dimen/clock_font_axis_name_width"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/barrier1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/clock_axis_slider1"
+        android:layout_marginVertical="@dimen/clock_axis_control_slider_row_margin_vertical"
+        android:layout_marginEnd="@dimen/clock_axis_control_text_margin_end"
+        android:lines="1"
+        android:ellipsize="end"
+        style="@style/CustomizationOptionEntryTitleTextStyle"
+        android:text="@string/tab_placeholder_text" />
+
+    <SeekBar
+        android:id="@+id/clock_axis_slider1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/accessibility_min_height"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/barrier1"
+        app:layout_constraintStart_toEndOf="@+id/clock_axis_slider_name1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginVertical="@dimen/clock_axis_control_slider_row_margin_vertical"
+        android:background="@null"
+        android:progressDrawable="@drawable/saturation_progress_drawable"
+        android:splitTrack="false"
+        android:thumb="@null" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="clock_axis_slider1,clock_axis_slider_name1" />
+
+    <TextView
+        android:id="@+id/clock_axis_slider_name2"
+        android:layout_width="@dimen/clock_font_axis_name_width"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/barrier1"
+        app:layout_constraintBottom_toTopOf="@+id/barrier2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/clock_axis_slider2"
+        android:layout_marginVertical="@dimen/clock_axis_control_slider_row_margin_vertical"
+        android:layout_marginEnd="@dimen/clock_axis_control_text_margin_end"
+        android:lines="1"
+        android:ellipsize="end"
+        style="@style/CustomizationOptionEntryTitleTextStyle"
+        android:text="@string/tab_placeholder_text" />
+
+    <SeekBar
+        android:id="@+id/clock_axis_slider2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/accessibility_min_height"
+        app:layout_constraintTop_toBottomOf="@+id/barrier1"
+        app:layout_constraintBottom_toTopOf="@+id/barrier2"
+        app:layout_constraintStart_toEndOf="@+id/clock_axis_slider_name2"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginVertical="@dimen/clock_axis_control_slider_row_margin_vertical"
+        android:background="@null"
+        android:progressDrawable="@drawable/saturation_progress_drawable"
+        android:splitTrack="false"
+        android:thumb="@null" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="clock_axis_slider2,clock_axis_slider_name2" />
+
+    <TextView
+        android:id="@+id/clock_axis_switch_name1"
+        android:layout_width="@dimen/clock_font_axis_name_width"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/barrier2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginVertical="@dimen/clock_axis_control_switch_row_margin_vertical"
+        android:lines="1"
+        android:ellipsize="end"
+        style="@style/CustomizationOptionEntryTitleTextStyle"
+        android:text="@string/tab_placeholder_text" />
+
+    <Switch
+        android:id="@+id/clock_axis_switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/barrier2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/clock_axis_switch_name1"
+        android:layout_marginVertical="@dimen/clock_axis_control_switch_row_margin_vertical"
+        android:layout_marginStart="@dimen/clock_axis_control_text_margin_end"
+        style="@style/Switch.SettingsLib" />
+
+    <ImageView
+        android:id="@+id/divider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/barrier2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:src="@drawable/clock_font_switch_divider"
+        android:importantForAccessibility="no" />
+
+    <TextView
+        android:id="@+id/clock_axis_switch_name2"
+        android:layout_width="@dimen/clock_font_axis_name_width"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/barrier2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/clock_axis_switch2"
+        android:layout_marginVertical="@dimen/clock_axis_control_switch_row_margin_vertical"
+        android:layout_marginEnd="@dimen/clock_axis_control_text_margin_end"
+        android:lines="1"
+        android:ellipsize="end"
+        style="@style/CustomizationOptionEntryTitleTextStyle"
+        android:text="@string/tab_placeholder_text" />
+
+    <Switch
+        android:id="@+id/clock_axis_switch2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/barrier2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginVertical="@dimen/clock_axis_control_switch_row_margin_vertical"
+        style="@style/Switch.SettingsLib" />
+</androidx.constraintlayout.widget.ConstraintLayout>

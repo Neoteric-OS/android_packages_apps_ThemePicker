@@ -29,7 +29,7 @@ import com.android.customization.picker.color.shared.model.ColorType
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.systemui.monet.Style
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
-import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
+import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import com.android.wallpaper.testing.FakeSnapshotStore
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
@@ -205,7 +205,7 @@ class ColorPickerViewModel2Test {
 
     /** Simulates a user selecting the affordance at the given index, if that is clickable. */
     private fun TestScope.selectColorOption(
-        colorOptions: () -> List<OptionItemViewModel<ColorOptionIconViewModel>>?,
+        colorOptions: () -> List<OptionItemViewModel2<ColorOptionIconViewModel>>?,
         index: Int,
     ) {
         val onClickedFlow = colorOptions()?.get(index)?.onClicked
@@ -235,7 +235,7 @@ class ColorPickerViewModel2Test {
      */
     private fun TestScope.assertPickerUiState(
         colorTypes: List<FloatingToolbarTabViewModel>?,
-        colorOptions: List<OptionItemViewModel<ColorOptionIconViewModel>>?,
+        colorOptions: List<OptionItemViewModel2<ColorOptionIconViewModel>>?,
         selectedColorTypeText: String,
         selectedColorOptionIndex: Int,
     ) {
@@ -260,7 +260,7 @@ class ColorPickerViewModel2Test {
      *   -1 stands for no color option should be selected
      */
     private fun TestScope.assertColorOptionUiState(
-        colorOptions: List<OptionItemViewModel<ColorOptionIconViewModel>>?,
+        colorOptions: List<OptionItemViewModel2<ColorOptionIconViewModel>>?,
         selectedColorOptionIndex: Int,
     ) {
         var foundSelectedColorOption = false

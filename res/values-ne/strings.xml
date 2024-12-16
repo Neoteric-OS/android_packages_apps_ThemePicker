@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"ठुलो"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"सानो"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"तपाईंको स्क्रिनको कुनामा सानो घडी देखा पर्छ"</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"घडीको फन्टमा गरिएका परिवर्तनहरू लागू गर्नुहोस्"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"घडीको फन्टमा गरिएका परिवर्तनहरू अन्डू गर्नुहोस्"</string>
     <string name="grid_title" msgid="1688173478777254123">"एप ग्रिड"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"एपको आकार र लेआउट"</string>
     <string name="grid_layout" msgid="370175667652663686">"लेआउट"</string>

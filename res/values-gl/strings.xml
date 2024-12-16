@@ -43,8 +43,10 @@
     <string name="clock_size_large" msgid="3143248715744138979">"Grande"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Pequeno"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Un pequeno reloxo móstrase na esquina da pantalla"</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"Aplicar os cambios ao tipo de letra do reloxo"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"Desfacer os cambios no tipo de letra do reloxo"</string>
     <string name="grid_title" msgid="1688173478777254123">"Grade de apps"</string>
-    <string name="shape_and_grid_title" msgid="9092477491363761054">"Deseño e forma da app"</string>
+    <string name="shape_and_grid_title" msgid="9092477491363761054">"Deseño e forma"</string>
     <string name="grid_layout" msgid="370175667652663686">"Deseño"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Aplicar"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Toca para editar"</string>

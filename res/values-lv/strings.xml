@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"Liels"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Mazs"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Jūsu ekrāna stūrī tiek rādīts neliels pulkstenis."</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"Lietot pulksteņa fonta izmaiņas"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"Atsaukt pulksteņa fonta izmaiņas"</string>
     <string name="grid_title" msgid="1688173478777254123">"Lietotņu režģis"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Lietotnes forma un izkārtojums"</string>
     <string name="grid_layout" msgid="370175667652663686">"Izkārtojums"</string>

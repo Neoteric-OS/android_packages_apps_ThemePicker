@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"크게"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"작게"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"작은 시계가 화면 모서리에 표시됩니다."</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"시계 글꼴 변경사항 적용"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"시계 글꼴 변경사항 실행취소"</string>
     <string name="grid_title" msgid="1688173478777254123">"앱 그리드"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"앱 모양 및 레이아웃"</string>
     <string name="grid_layout" msgid="370175667652663686">"레이아웃"</string>
@@ -129,8 +131,8 @@
     <string name="keyguard_affordance_enablement_dialog_action_template" msgid="8117011931337357438">"<xliff:g id="APPNAME">%1$s</xliff:g> 열기"</string>
     <string name="keyguard_affordance_enablement_dialog_message" msgid="6136286758939253570">"<xliff:g id="APPNAME">%1$s</xliff:g> 앱을 바로가기로 추가하려면 다음을 확인하세요."</string>
     <string name="keyguard_affordance_enablement_dialog_dismiss_button" msgid="629754625264422508">"완료"</string>
-    <string name="keyguard_quick_affordance_title" msgid="4242813186995735584">"단축키"</string>
-    <string name="keyguard_quick_affordance_section_title" msgid="2806304242671717309">"단축키"</string>
+    <string name="keyguard_quick_affordance_title" msgid="4242813186995735584">"바로가기"</string>
+    <string name="keyguard_quick_affordance_section_title" msgid="2806304242671717309">"바로가기"</string>
     <string name="color_contrast_section_title" msgid="7194809124718896091">"색상 대비"</string>
     <string name="color_contrast_default_title" msgid="7954235103549276978">"기본값"</string>
     <string name="color_contrast_medium_title" msgid="8071574793250090215">"중간"</string>

@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"Lớn"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Nhỏ"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Một chiếc đồng hồ nhỏ hiển thị ở góc màn hình"</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"Áp dụng các thay đổi về phông chữ đồng hồ"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"Huỷ các thay đổi về phông chữ đồng hồ"</string>
     <string name="grid_title" msgid="1688173478777254123">"Lưới ứng dụng"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Hình dạng ứng dụng và bố cục"</string>
     <string name="grid_layout" msgid="370175667652663686">"Bố cục"</string>

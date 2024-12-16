@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"ធំ"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"តូច"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"នាឡិកា​តូចមួយ​បង្ហាញ​នៅជ្រុងនៃ​អេក្រង់​របស់អ្នក"</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"អនុវត្តការផ្លាស់ប្ដូរពុម្ពអក្សរនាឡិកា"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"ត្រឡប់ការផ្លាស់ប្ដូរពុម្ពអក្សរនាឡិកាវិញ"</string>
     <string name="grid_title" msgid="1688173478777254123">"ក្រឡា​កម្មវិធី"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"រូបរាង និងប្លង់កម្មវិធី"</string>
     <string name="grid_layout" msgid="370175667652663686">"ប្លង់"</string>

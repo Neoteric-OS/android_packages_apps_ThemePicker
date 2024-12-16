@@ -16,7 +16,6 @@
 
 package com.android.wallpaper.picker.common.preview.ui.binder
 
-import android.app.WallpaperManager
 import android.os.Bundle
 import android.os.Message
 import androidx.core.os.bundleOf
@@ -24,6 +23,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.customization.model.grid.DefaultShapeGridManager.Companion.COL_GRID_NAME
+import com.android.customization.model.grid.DefaultShapeGridManager.Companion.COL_SHAPE_KEY
 import com.android.customization.picker.color.data.util.MaterialColorsGenerator
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START
@@ -38,16 +39,17 @@ import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptio
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.common.preview.ui.binder.WorkspaceCallbackBinder.Companion.sendMessage
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 @Singleton
 class ThemePickerWorkspaceCallbackBinder
 @Inject
 constructor(
-    private val wallpaperManager: WallpaperManager,
     private val defaultWorkspaceCallbackBinder: DefaultWorkspaceCallbackBinder,
     private val materialColorsGenerator: MaterialColorsGenerator,
 ) : WorkspaceCallbackBinder {
@@ -55,12 +57,14 @@ constructor(
     override fun bind(
         workspaceCallback: Message,
         viewModel: CustomizationOptionsViewModel,
+        colorUpdateViewModel: ColorUpdateViewModel,
         screen: Screen,
         lifecycleOwner: LifecycleOwner,
     ) {
         defaultWorkspaceCallbackBinder.bind(
             workspaceCallback = workspaceCallback,
             viewModel = viewModel,
+            colorUpdateViewModel = colorUpdateViewModel,
             screen = screen,
             lifecycleOwner = lifecycleOwner,
         )
@@ -137,34 +141,49 @@ constructor(
                 lifecycleOwner.lifecycleScope.launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         launch {
-                            viewModel.shapeGridPickerViewModel.previewingGridOptionKey.collect {
+                            viewModel.shapeGridPickerViewModel.previewingShapeKey.collect {
                                 workspaceCallback.sendMessage(
-                                    MESSAGE_ID_UPDATE_GRID,
-                                    bundleOf(KEY_GRID_NAME to it),
+                                    MESSAGE_ID_UPDATE_SHAPE,
+                                    bundleOf(COL_SHAPE_KEY to it),
                                 )
                             }
                         }
 
                         launch {
-                            viewModel.colorPickerViewModel2.previewingColorOption.collect {
-                                if (it == null) {
-                                    workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, Bundle())
-                                    return@collect
-                                }
-                                val seedColor = it.colorOption.seedColor
-                                val (ids, colors) =
-                                    materialColorsGenerator.generate(
-                                        seedColor,
-                                        it.colorOption.style,
-                                    )
+                            viewModel.shapeGridPickerViewModel.previewingGridKey.collect {
                                 workspaceCallback.sendMessage(
-                                    MESSAGE_ID_UPDATE_COLOR,
-                                    Bundle().apply {
-                                        putIntArray(KEY_COLOR_RESOURCE_IDS, ids)
-                                        putIntArray(KEY_COLOR_VALUES, colors)
-                                    },
+                                    MESSAGE_ID_UPDATE_GRID,
+                                    bundleOf(COL_GRID_NAME to it),
                                 )
                             }
+                        }
+
+                        launch {
+                            combine(
+                                    viewModel.colorPickerViewModel2.previewingColorOption,
+                                    viewModel.darkModeViewModel.overridingIsDarkMode,
+                                    colorUpdateViewModel.systemColorsUpdated,
+                                    ::Triple,
+                                )
+                                .collect { (colorModel, darkMode, _) ->
+                                    val bundle =
+                                        Bundle().apply {
+                                            if (colorModel != null) {
+                                                val (ids, colors) =
+                                                    materialColorsGenerator.generate(
+                                                        colorModel.colorOption.seedColor,
+                                                        colorModel.colorOption.style,
+                                                    )
+                                                putIntArray(KEY_COLOR_RESOURCE_IDS, ids)
+                                                putIntArray(KEY_COLOR_VALUES, colors)
+                                            }
+
+                                            if (darkMode != null) {
+                                                putBoolean(KEY_DARK_MODE, darkMode)
+                                            }
+                                        }
+                                    workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, bundle)
+                                }
                         }
                     }
                 }
@@ -172,11 +191,12 @@ constructor(
     }
 
     companion object {
+        const val MESSAGE_ID_UPDATE_SHAPE = 2586
         const val MESSAGE_ID_UPDATE_GRID = 7414
-        const val KEY_GRID_NAME = "grid_name"
 
         const val MESSAGE_ID_UPDATE_COLOR = 856
         const val KEY_COLOR_RESOURCE_IDS: String = "color_resource_ids"
         const val KEY_COLOR_VALUES: String = "color_values"
+        const val KEY_DARK_MODE: String = "use_dark_mode"
     }
 }

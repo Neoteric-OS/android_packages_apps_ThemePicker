@@ -25,13 +25,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder
-import com.android.customization.picker.color.ui.view.ColorOptionIconView
+import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder2
+import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
-import com.android.customization.picker.common.ui.view.DoubleRowListItemSpacing
+import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.customization.picker.mode.ui.binder.DarkModeBinder
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
@@ -39,7 +38,7 @@ import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomization
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
-import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter
+import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.launch
 
@@ -110,35 +109,36 @@ object ColorsFloatingSheetBinder {
     private fun createOptionItemAdapter(
         uiMode: Int,
         lifecycleOwner: LifecycleOwner,
-    ): OptionItemAdapter<ColorOptionIconViewModel> =
-        OptionItemAdapter(
-            layoutResourceId = R.layout.color_option,
+    ): OptionItemAdapter2<ColorOptionIconViewModel> =
+        OptionItemAdapter2(
+            layoutResourceId = R.layout.color_option2,
             lifecycleOwner = lifecycleOwner,
-            bindIcon = { foregroundView: View, colorIcon: ColorOptionIconViewModel ->
-                val colorOptionIconView = foregroundView as? ColorOptionIconView
+            bindPayload = { itemView: View, colorIcon: ColorOptionIconViewModel ->
+                val colorOptionIconView =
+                    itemView.requireViewById<ColorOptionIconView2>(
+                        com.android.wallpaper.R.id.background
+                    )
                 val night = uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
-                colorOptionIconView?.let { ColorOptionIconBinder.bind(it, colorIcon, night) }
+                ColorOptionIconBinder2.bind(colorOptionIconView, colorIcon, night)
+                // Return null since it does not need the lifecycleOwner to launch any job for later
+                // disposal when rebind.
+                return@OptionItemAdapter2 null
             },
         )
 
     private fun RecyclerView.initColorsList(
         context: Context,
-        adapter: OptionItemAdapter<ColorOptionIconViewModel>,
+        adapter: OptionItemAdapter2<ColorOptionIconViewModel>,
     ) {
         apply {
             this.adapter = adapter
-            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             addItemDecoration(
-                DoubleRowListItemSpacing(
+                SingleRowListItemSpacing(
                     context.resources.getDimensionPixelSize(
                         R.dimen.floating_sheet_content_horizontal_padding
                     ),
-                    context.resources.getDimensionPixelSize(
-                        R.dimen.floating_sheet_list_item_horizontal_space
-                    ),
-                    context.resources.getDimensionPixelSize(
-                        R.dimen.floating_sheet_list_item_vertical_space
-                    ),
+                    0,
                 )
             )
         }

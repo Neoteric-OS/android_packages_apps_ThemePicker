@@ -20,6 +20,7 @@ package com.android.customization.picker.clock.shared.model
 import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import com.android.customization.picker.clock.shared.ClockSize
+import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 
 /** Models application state for a clock option in a picker experience. */
 data class ClockSnapshotModel(
@@ -28,4 +29,5 @@ data class ClockSnapshotModel(
     val selectedColorId: String? = null,
     @IntRange(from = 0, to = 100) val colorToneProgress: Int? = null,
     @ColorInt val seedColor: Int? = null,
+    val axisSettings: List<ClockFontAxisSetting>? = null,
 )

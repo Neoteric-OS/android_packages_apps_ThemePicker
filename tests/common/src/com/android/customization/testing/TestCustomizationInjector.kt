@@ -14,10 +14,18 @@ import com.android.customization.picker.clock.ui.viewmodel.ClockCarouselViewMode
 import com.android.customization.picker.clock.ui.viewmodel.ClockSettingsViewModel
 import com.android.customization.picker.color.ui.viewmodel.ColorPickerViewModel
 import com.android.customization.picker.quickaffordance.domain.interactor.KeyguardQuickAffordancePickerInteractor
+import com.android.wallpaper.module.NetworkStatusNotifier
+import com.android.wallpaper.module.PartnerProvider
+import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.UserEventLogger
+import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.category.wrapper.WallpaperCategoryWrapper
 import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
+import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.TestInjector
+import com.android.wallpaper.testing.TestPackageStatusNotifier
+import com.android.wallpaper.util.DisplayUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,7 +35,29 @@ open class TestCustomizationInjector
 constructor(
     private val customPrefs: TestDefaultCustomizationPreferences,
     private val themesUserEventLogger: ThemesUserEventLogger,
-) : TestInjector(themesUserEventLogger), CustomizationInjector {
+    displayUtils: DisplayUtils,
+    requester: Requester,
+    networkStatusNotifier: NetworkStatusNotifier,
+    partnerProvider: PartnerProvider,
+    wallpaperClient: FakeWallpaperClient,
+    injectedWallpaperInteractor: WallpaperInteractor,
+    prefs: WallpaperPreferences,
+    private val fakeWallpaperCategoryWrapper: WallpaperCategoryWrapper,
+    private val testStatusNotifier: TestPackageStatusNotifier,
+) :
+    TestInjector(
+        themesUserEventLogger,
+        displayUtils,
+        requester,
+        networkStatusNotifier,
+        partnerProvider,
+        wallpaperClient,
+        injectedWallpaperInteractor,
+        prefs,
+        fakeWallpaperCategoryWrapper,
+        testStatusNotifier,
+    ),
+    CustomizationInjector {
     /////////////////
     // CustomizationInjector implementations
     /////////////////
@@ -82,6 +112,6 @@ constructor(
     }
 
     override fun getWallpaperCategoryWrapper(): WallpaperCategoryWrapper {
-        return super.fakeWallpaperCategoryWrapper
+        return fakeWallpaperCategoryWrapper
     }
 }

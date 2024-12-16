@@ -30,7 +30,7 @@ import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
-import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
+import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -149,7 +149,7 @@ class KeyguardQuickAffordancePickerViewModel2Test {
                         KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START to
                             FakeCustomizationProviderClient.AFFORDANCE_1,
                         KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END to
-                            FakeCustomizationProviderClient.AFFORDANCE_2
+                            FakeCustomizationProviderClient.AFFORDANCE_2,
                     )
                 )
 
@@ -203,7 +203,7 @@ class KeyguardQuickAffordancePickerViewModel2Test {
                 icon =
                     Icon.Loaded(
                         FakeCustomizationProviderClient.ICON_1,
-                        Text.Loaded("Right shortcut")
+                        Text.Loaded("Right shortcut"),
                     ),
                 text = "Right shortcut",
                 isSelected = true,
@@ -399,7 +399,7 @@ class KeyguardQuickAffordancePickerViewModel2Test {
 
     private fun assertQuickAffordance(
         testScope: TestScope,
-        quickAffordance: OptionItemViewModel<Icon>?,
+        quickAffordance: OptionItemViewModel2<Icon>?,
         key: String,
         icon: Icon,
         text: Text,

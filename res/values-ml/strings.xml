@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"വലുത്"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"ചെറുത്"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"സ്ക്രീനിന്റെ മൂലയിൽ ഒരു ചെറിയ ക്ലോക്ക് കാണിക്കുന്നു"</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"ക്ലോക്ക് ഫോണ്ട് മാറ്റങ്ങൾ ബാധകമാക്കുക"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"ക്ലോക്ക് ഫോണ്ട് മാറ്റങ്ങൾ പഴയപടിയാക്കുക"</string>
     <string name="grid_title" msgid="1688173478777254123">"ആപ്പ് ഗ്രിഡ്"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"ആപ്പ് രൂപവും ലേഔട്ടും"</string>
     <string name="grid_layout" msgid="370175667652663686">"ലേഔട്ട്"</string>

@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"大"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"小"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"在畫面角落顯示小型時鐘"</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"套用時鐘字型變更"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"取消時鐘字型變更"</string>
     <string name="grid_title" msgid="1688173478777254123">"應用程式排列顯示"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"應用程式的形狀和版面配置"</string>
     <string name="grid_layout" msgid="370175667652663686">"版面配置"</string>

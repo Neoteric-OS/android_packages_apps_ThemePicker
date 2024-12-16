@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"Besar"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Kecil"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Jam kecil ditampilkan di sudut layar"</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"Terapkan perubahan font jam"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"Urungkan perubahan font jam"</string>
     <string name="grid_title" msgid="1688173478777254123">"Petak aplikasi"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Bentuk &amp; tata letak aplikasi"</string>
     <string name="grid_layout" msgid="370175667652663686">"Tata letak"</string>

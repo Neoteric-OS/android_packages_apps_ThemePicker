@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"Velika"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Majhna"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"V kotu zaslona je prikazana majhna ura."</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"Uporabi spremembe pisave ure"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"Razveljavi spremembe pisave ure"</string>
     <string name="grid_title" msgid="1688173478777254123">"Mreža aplikacij"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Oblika in postavitev aplikacije"</string>
     <string name="grid_layout" msgid="370175667652663686">"Postavitev"</string>

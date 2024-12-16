@@ -122,8 +122,6 @@
     <!-- For a corner radius of this size or larger, we'll preview a rounded qsb widget. -->
     <dimen name="roundCornerThreshold">16dp</dimen>
 
-    <dimen name="min_taptarget_height">48dp</dimen>
-
     <!--  For the style info preview sheet. -->
     <dimen name="theme_info_margin">12dp</dimen>
     <dimen name="theme_info_icon_size">24dp</dimen>
@@ -168,6 +166,7 @@
     <dimen name="clock_carousel_item_card_width">100dp</dimen>
     <dimen name="clock_carousel_item_card_height">108dp</dimen>
     <dimen name="clock_carousel_guideline_margin_for_2_pane_small_width">122dp</dimen>
+    <item name="clock_carousel_scale" format="float" type="dimen">0.5</item>
 
     <!-- Clock color and size button -->
     <dimen name="clock_color_size_button_min_height">32dp</dimen>
@@ -183,13 +182,33 @@
     <!-- Floating sheet dimensions -->
     <dimen name="floating_sheet_content_vertical_padding">20dp</dimen>
     <dimen name="floating_sheet_content_horizontal_padding">20dp</dimen>
+    <dimen name="floating_sheet_clock_style_content_top_padding">2dp</dimen>
+    <dimen name="floating_sheet_clock_style_content_bottom_padding">20dp</dimen>
     <dimen name="floating_sheet_horizontal_padding">16dp</dimen>
     <dimen name="floating_sheet_tab_toolbar_vertical_margin">8dp</dimen>
+    <dimen name="floating_sheet_tab_clock_font_toolbar_top_margin">16dp</dimen>
+    <dimen name="floating_sheet_tab_clock_font_toolbar_bottom_margin">8dp</dimen>
     <dimen name="floating_sheet_list_item_horizontal_space">4dp</dimen>
     <dimen name="floating_sheet_list_item_vertical_space">4dp</dimen>
-    <dimen name="floating_sheet_clock_style_option_size">82dp</dimen>
+    <dimen name="floating_sheet_clock_style_option_list_margin_bottom">8dp</dimen>
+    <dimen name="floating_sheet_clock_style_option_width">80dp</dimen>
+    <dimen name="floating_sheet_clock_style_option_height">98dp</dimen>
+    <dimen name="floating_sheet_clock_style_option_background_size">80dp</dimen>
+    <dimen name="floating_sheet_clock_style_option_thumbnail_size">56dp</dimen>
     <dimen name="floating_sheet_clock_edit_icon_size">48dp</dimen>
-    <dimen name="floating_sheet_clock_style_thumbnail_margin">12dp</dimen>
+    <dimen name="floating_sheet_clock_edit_icon_margin">-18dp</dimen>
+    <dimen name="floating_sheet_clock_style_thumbnail_margin_bottom">12dp</dimen>
     <dimen name="floating_sheet_clock_style_clock_size_text_margin_end">16dp</dimen>
+    <dimen name="floating_sheet_clock_color_option_list_bottom_margin">12dp</dimen>
+    <dimen name="floating_sheet_color_option_size">54dp</dimen>
+    <dimen name="floating_sheet_color_option_stroke_width">3dp</dimen>
     <dimen name="customization_option_entry_shortcut_icon_size">20dp</dimen>
+    <dimen name="customization_option_entry_clock_icon_size">44dp</dimen>
+
+    <!-- Clock font control dimensions -->
+    <dimen name="clock_font_axis_name_width">64dp</dimen>
+    <dimen name="clock_axis_control_text_margin_end">16dp</dimen>
+    <dimen name="clock_axis_control_slider_row_margin_vertical">10dp</dimen>
+    <dimen name="clock_axis_control_switch_row_margin_vertical">8dp</dimen>
+    <dimen name="clock_font_apply_padding_start">8dp</dimen>
 </resources>

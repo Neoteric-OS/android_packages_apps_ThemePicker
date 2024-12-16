@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"Stor"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Lille"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Et lille ur vises i hjørnet af skærmen"</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"Anvend ændringerne af urets skrifttype"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"Fortryd ændringerne af urets skrifttype"</string>
     <string name="grid_title" msgid="1688173478777254123">"Appgitter"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Appform og layout"</string>
     <string name="grid_layout" msgid="370175667652663686">"Layout"</string>

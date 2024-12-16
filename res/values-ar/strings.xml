@@ -43,6 +43,8 @@
     <string name="clock_size_large" msgid="3143248715744138979">"كبير"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"صغير"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"تظهر ساعة صغيرة في زاوية الشاشة"</string>
+    <string name="clock_font_editor_apply" msgid="5965611025879105293">"تطبيق التغييرات على خط الساعة"</string>
+    <string name="clock_font_editor_revert" msgid="5307491447405753061">"التراجع عن التغييرات على خط الساعة"</string>
     <string name="grid_title" msgid="1688173478777254123">"شبكة التطبيقات"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"شكل التطبيق وتصميمه"</string>
     <string name="grid_layout" msgid="370175667652663686">"التصميم"</string>

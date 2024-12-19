@@ -18,6 +18,7 @@
 package com.android.customization.picker.color.ui.viewmodel
 
 import android.annotation.ColorInt
+import com.android.customization.model.color.ColorOptionImpl
 
 data class ColorOptionIconViewModel(
     @ColorInt val lightThemeColor0: Int,
@@ -28,4 +29,21 @@ data class ColorOptionIconViewModel(
     @ColorInt val darkThemeColor1: Int,
     @ColorInt val darkThemeColor2: Int,
     @ColorInt val darkThemeColor3: Int,
-)
+) {
+    companion object {
+        fun fromColorOption(colorOption: ColorOptionImpl): ColorOptionIconViewModel {
+            val lightThemeColors = colorOption.previewInfo.resolveColors(/* darkTheme= */ false)
+            val darkThemeColors = colorOption.previewInfo.resolveColors(/* darkTheme= */ true)
+            return ColorOptionIconViewModel(
+                lightThemeColor0 = lightThemeColors[0],
+                lightThemeColor1 = lightThemeColors[1],
+                lightThemeColor2 = lightThemeColors[2],
+                lightThemeColor3 = lightThemeColors[3],
+                darkThemeColor0 = darkThemeColors[0],
+                darkThemeColor1 = darkThemeColors[1],
+                darkThemeColor2 = darkThemeColors[2],
+                darkThemeColor3 = darkThemeColors[3],
+            )
+        }
+    }
+}

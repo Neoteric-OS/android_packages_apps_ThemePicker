@@ -17,7 +17,6 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
-import androidx.lifecycle.viewModelScope
 import com.android.customization.model.color.ColorOption
 import com.android.customization.model.color.ColorOptionImpl
 import com.android.customization.module.logging.ThemesUserEventLogger
@@ -56,6 +55,7 @@ constructor(
     private val logger: ThemesUserEventLogger,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
+    val selectedColorOption = interactor.selectedColorOption
 
     private val overridingColorOption = MutableStateFlow<ColorOption?>(null)
     val previewingColorOption = overridingColorOption.asStateFlow()
@@ -120,12 +120,8 @@ constructor(
                     colorOptionEntry.key to
                         colorOptionEntry.value.map { colorOption ->
                             colorOption as ColorOptionImpl
-                            val lightThemeColors =
-                                colorOption.previewInfo.resolveColors(/* darkTheme= */ false)
-                            val darkThemeColors =
-                                colorOption.previewInfo.resolveColors(/* darkTheme= */ true)
                             val isSelectedFlow: StateFlow<Boolean> =
-                                combine(previewingColorOption, interactor.selectedColorOption) {
+                                combine(previewingColorOption, selectedColorOption) {
                                         previewing,
                                         selected ->
                                         previewing?.isEquivalent(colorOption)
@@ -137,17 +133,7 @@ constructor(
                                 "${colorOption.type}::${colorOption.style}::${colorOption.serializedPackages}"
                             OptionItemViewModel2<ColorOptionIconViewModel>(
                                 key = MutableStateFlow(key) as StateFlow<String>,
-                                payload =
-                                    ColorOptionIconViewModel(
-                                        lightThemeColor0 = lightThemeColors[0],
-                                        lightThemeColor1 = lightThemeColors[1],
-                                        lightThemeColor2 = lightThemeColors[2],
-                                        lightThemeColor3 = lightThemeColors[3],
-                                        darkThemeColor0 = darkThemeColors[0],
-                                        darkThemeColor1 = darkThemeColors[1],
-                                        darkThemeColor2 = darkThemeColors[2],
-                                        darkThemeColor3 = darkThemeColors[3],
-                                    ),
+                                payload = ColorOptionIconViewModel.fromColorOption(colorOption),
                                 text =
                                     Text.Loaded(
                                         colorOption.getContentDescription(context).toString()
@@ -177,7 +163,7 @@ constructor(
      * change updates, which are applied with a latency.
      */
     val onApply: Flow<(suspend () -> Unit)?> =
-        combine(previewingColorOption, interactor.selectedColorOption) { previewing, selected ->
+        combine(previewingColorOption, selectedColorOption) { previewing, selected ->
             previewing?.let {
                 if (previewing.isEquivalent(selected)) {
                     null

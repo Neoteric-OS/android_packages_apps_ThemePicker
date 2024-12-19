@@ -26,6 +26,7 @@ import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewMo
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import dagger.assisted.Assisted
@@ -33,8 +34,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
-import kotlin.coroutines.resume
-import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,14 +42,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 
 /** Models UI state for a color picker experience. */
 class ColorPickerViewModel2
 @AssistedInject
 constructor(
     @ApplicationContext context: Context,
+    private val colorUpdateViewModel: ColorUpdateViewModel,
     private val interactor: ColorPickerInteractor,
     private val logger: ThemesUserEventLogger,
     @Assisted private val viewModelScope: CoroutineScope,
@@ -60,7 +60,6 @@ constructor(
     val previewingColorOption = overridingColorOption.asStateFlow()
 
     private val selectedColorTypeTabId = MutableStateFlow<ColorType?>(null)
-    private var onApplyContinuation: CancellableContinuation<Unit>? = null
 
     /** View-models for each color tab. */
     val colorTypeTabs: Flow<List<FloatingToolbarTabViewModel>> =
@@ -181,11 +180,9 @@ constructor(
                 } else {
                     {
                         interactor.select(it)
-                        // Suspend until onApplyComplete is called, e.g. on configuration change
-                        suspendCancellableCoroutine { continuation: CancellableContinuation<Unit> ->
-                            onApplyContinuation?.cancel()
-                            onApplyContinuation = continuation
-                            continuation.invokeOnCancellation { onApplyContinuation = null }
+                        // Suspend until first color update
+                        colorUpdateViewModel.systemColorsUpdatedNoReplay.take(1).collect {
+                            return@collect
                         }
                         logger.logThemeColorApplied(
                             previewingColorOption.colorOption.sourceForLogging,
@@ -199,12 +196,6 @@ constructor(
 
     fun resetPreview() {
         overridingColorOption.value = null
-    }
-
-    /** Resumes the onApply function if apply is in progress, otherwise no-op */
-    fun onApplyComplete() {
-        onApplyContinuation?.resume(Unit)
-        onApplyContinuation = null
     }
 
     /** The list of all available color options for the selected Color Type. */

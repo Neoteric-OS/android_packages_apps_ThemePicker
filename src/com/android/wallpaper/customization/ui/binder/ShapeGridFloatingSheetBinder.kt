@@ -42,9 +42,7 @@ import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomization
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
-import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
-import com.android.wallpaper.picker.option.ui.binder.OptionItemBinder
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -90,7 +88,7 @@ object ShapeGridFloatingSheetBinder {
 
         val shapeContent = view.requireViewById<View>(R.id.app_shape_container)
         val shapeOptionListAdapter =
-            createShapeOptionItemAdapter(view.context, lifecycleOwner, backgroundDispatcher)
+            createShapeOptionItemAdapter(lifecycleOwner, backgroundDispatcher)
         val shapeOptionList =
             view.requireViewById<RecyclerView>(R.id.shape_options).also {
                 it.initShapeOptionList(view.context, shapeOptionListAdapter)
@@ -209,30 +207,23 @@ object ShapeGridFloatingSheetBinder {
     }
 
     private fun createShapeOptionItemAdapter(
-        context: Context,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
-    ): OptionItemAdapter<ShapeIconViewModel> =
-        OptionItemAdapter(
-            layoutResourceId = R.layout.shape_option,
+    ): OptionItemAdapter2<ShapeIconViewModel> =
+        OptionItemAdapter2(
+            layoutResourceId = R.layout.shape_option2,
             lifecycleOwner = lifecycleOwner,
             backgroundDispatcher = backgroundDispatcher,
-            foregroundTintSpec =
-                OptionItemBinder.TintSpec(
-                    selectedColor =
-                        context.getColor(com.android.wallpaper.R.color.system_on_surface),
-                    unselectedColor =
-                        context.getColor(com.android.wallpaper.R.color.system_on_surface),
-                ),
-            bindIcon = { foregroundView: View, shapeIcon: ShapeIconViewModel ->
-                val imageView = foregroundView as? ImageView
+            bindPayload = { view: View, shapeIcon: ShapeIconViewModel ->
+                val imageView = view.findViewById(R.id.foreground) as? ImageView
                 imageView?.let { ShapeIconViewBinder.bind(imageView, shapeIcon) }
+                return@OptionItemAdapter2 null
             },
         )
 
     private fun RecyclerView.initShapeOptionList(
         context: Context,
-        adapter: OptionItemAdapter<ShapeIconViewModel>,
+        adapter: OptionItemAdapter2<ShapeIconViewModel>,
     ) {
         apply {
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)

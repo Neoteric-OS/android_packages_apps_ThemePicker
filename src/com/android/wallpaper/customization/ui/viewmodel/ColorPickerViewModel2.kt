@@ -17,10 +17,11 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.viewModelScope
+import com.android.customization.model.color.ColorOption
 import com.android.customization.model.color.ColorOptionImpl
 import com.android.customization.module.logging.ThemesUserEventLogger
-import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor
-import com.android.customization.picker.color.shared.model.ColorOptionModel
+import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor2
 import com.android.customization.picker.color.shared.model.ColorType
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.themepicker.R
@@ -51,12 +52,12 @@ class ColorPickerViewModel2
 constructor(
     @ApplicationContext context: Context,
     private val colorUpdateViewModel: ColorUpdateViewModel,
-    private val interactor: ColorPickerInteractor,
+    private val interactor: ColorPickerInteractor2,
     private val logger: ThemesUserEventLogger,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
 
-    private val overridingColorOption = MutableStateFlow<ColorOptionModel?>(null)
+    private val overridingColorOption = MutableStateFlow<ColorOption?>(null)
     val previewingColorOption = overridingColorOption.asStateFlow()
 
     private val selectedColorTypeTabId = MutableStateFlow<ColorType?>(null)
@@ -117,22 +118,25 @@ constructor(
             colorOptions
                 .map { colorOptionEntry ->
                     colorOptionEntry.key to
-                        colorOptionEntry.value.map { colorOptionModel ->
-                            val colorOption: ColorOptionImpl =
-                                colorOptionModel.colorOption as ColorOptionImpl
+                        colorOptionEntry.value.map { colorOption ->
+                            colorOption as ColorOptionImpl
                             val lightThemeColors =
                                 colorOption.previewInfo.resolveColors(/* darkTheme= */ false)
                             val darkThemeColors =
                                 colorOption.previewInfo.resolveColors(/* darkTheme= */ true)
                             val isSelectedFlow: StateFlow<Boolean> =
-                                previewingColorOption
-                                    .map {
-                                        it?.colorOption?.isEquivalent(colorOptionModel.colorOption)
-                                            ?: colorOptionModel.isSelected
+                                combine(previewingColorOption, interactor.selectedColorOption) {
+                                        previewing,
+                                        selected ->
+                                        previewing?.isEquivalent(colorOption)
+                                            ?: selected?.isEquivalent(colorOption)
+                                            ?: false
                                     }
                                     .stateIn(viewModelScope)
+                            val key =
+                                "${colorOption.type}::${colorOption.style}::${colorOption.serializedPackages}"
                             OptionItemViewModel2<ColorOptionIconViewModel>(
-                                key = MutableStateFlow(colorOptionModel.key) as StateFlow<String>,
+                                key = MutableStateFlow(key) as StateFlow<String>,
                                 payload =
                                     ColorOptionIconViewModel(
                                         lightThemeColor0 = lightThemeColors[0],
@@ -157,7 +161,7 @@ constructor(
                                         } else {
                                             {
                                                 viewModelScope.launch {
-                                                    overridingColorOption.value = colorOptionModel
+                                                    overridingColorOption.value = colorOption
                                                 }
                                             }
                                         }
@@ -173,9 +177,9 @@ constructor(
      * change updates, which are applied with a latency.
      */
     val onApply: Flow<(suspend () -> Unit)?> =
-        previewingColorOption.map { previewingColorOption ->
-            previewingColorOption?.let {
-                if (it.isSelected) {
+        combine(previewingColorOption, interactor.selectedColorOption) { previewing, selected ->
+            previewing?.let {
+                if (previewing.isEquivalent(selected)) {
                     null
                 } else {
                     {
@@ -185,9 +189,9 @@ constructor(
                             return@collect
                         }
                         logger.logThemeColorApplied(
-                            previewingColorOption.colorOption.sourceForLogging,
-                            previewingColorOption.colorOption.styleForLogging,
-                            previewingColorOption.colorOption.seedColor,
+                            it.sourceForLogging,
+                            it.styleForLogging,
+                            it.seedColor,
                         )
                     }
                 }

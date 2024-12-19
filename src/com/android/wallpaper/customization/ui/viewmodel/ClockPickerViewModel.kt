@@ -19,15 +19,14 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.ColorUtils
+import com.android.customization.model.color.ColorOption
 import com.android.customization.model.color.ColorOptionImpl
 import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.clock.domain.interactor.ClockPickerInteractor
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.customization.picker.clock.ui.viewmodel.ClockColorViewModel
-import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor
-import com.android.customization.picker.color.shared.model.ColorOptionModel
-import com.android.customization.picker.color.shared.model.ColorType
+import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.themepicker.R
@@ -67,7 +66,7 @@ constructor(
     @ApplicationContext context: Context,
     resources: Resources,
     private val clockPickerInteractor: ClockPickerInteractor,
-    colorPickerInteractor: ColorPickerInteractor,
+    colorPickerInteractor: ColorPickerInteractor2,
     private val logger: ThemesUserEventLogger,
     @BackgroundDispatcher private val backgroundDispatcher: CoroutineDispatcher,
     @Assisted private val viewModelScope: CoroutineScope,
@@ -292,19 +291,12 @@ constructor(
         }
 
     val clockColorOptions: Flow<List<OptionItemViewModel<ColorOptionIconViewModel>>> =
-        colorPickerInteractor.colorOptions.map { colorOptions ->
+        colorPickerInteractor.selectedColorOption.map { selectedColorOption ->
             // Use mapLatest and delay(100) here to prevent too many selectedClockColor update
             // events from ClockRegistry upstream, caused by sliding the saturation level bar.
             delay(COLOR_OPTIONS_EVENT_UPDATE_DELAY_MILLIS)
             buildList {
-                val defaultThemeColorOptionViewModel =
-                    (colorOptions[ColorType.WALLPAPER_COLOR]?.find { it.isSelected })
-                        ?.toOptionItemViewModel(context)
-                        ?: (colorOptions[ColorType.PRESET_COLOR]?.find { it.isSelected })
-                            ?.toOptionItemViewModel(context)
-                if (defaultThemeColorOptionViewModel != null) {
-                    add(defaultThemeColorOptionViewModel)
-                }
+                selectedColorOption?.let { add(it.toOptionItemViewModel(context)) }
 
                 colorMap.values.forEachIndexed { index, colorModel ->
                     val isSelectedFlow =
@@ -352,23 +344,24 @@ constructor(
             }
         }
 
-    private suspend fun ColorOptionModel.toOptionItemViewModel(
+    private suspend fun ColorOption.toOptionItemViewModel(
         context: Context
     ): OptionItemViewModel<ColorOptionIconViewModel> {
         val lightThemeColors =
-            (colorOption as ColorOptionImpl)
+            (this as ColorOptionImpl)
                 .previewInfo
                 .resolveColors(
                     /** darkTheme= */
                     false
                 )
         val darkThemeColors =
-            colorOption.previewInfo.resolveColors(
+            this.previewInfo.resolveColors(
                 /** darkTheme= */
                 true
             )
         val isSelectedFlow =
             previewingClockColorId.map { it == DEFAULT_CLOCK_COLOR_ID }.stateIn(viewModelScope)
+        val key = "${this.type}::${this.style}::${this.serializedPackages}"
         return OptionItemViewModel<ColorOptionIconViewModel>(
             key = MutableStateFlow(key) as StateFlow<String>,
             payload =

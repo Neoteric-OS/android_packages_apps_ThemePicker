@@ -28,7 +28,6 @@ import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
-import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -105,7 +104,7 @@ constructor(
             overridingShapeOptionKey ?: selectedShapeKey
         }
 
-    val shapeOptions: Flow<List<OptionItemViewModel<ShapeIconViewModel>>> =
+    val shapeOptions: Flow<List<OptionItemViewModel2<ShapeIconViewModel>>> =
         interactor.shapeOptions
             .filterNotNull()
             .map { shapeOptions -> shapeOptions.map { toShapeOptionItemViewModel(it) } }
@@ -157,7 +156,7 @@ constructor(
 
     private fun toShapeOptionItemViewModel(
         option: ShapeOptionModel
-    ): OptionItemViewModel<ShapeIconViewModel> {
+    ): OptionItemViewModel2<ShapeIconViewModel> {
         val isSelected =
             previewingShapeKey
                 .map { it == option.key }
@@ -167,7 +166,7 @@ constructor(
                     initialValue = false,
                 )
 
-        return OptionItemViewModel(
+        return OptionItemViewModel2(
             key = MutableStateFlow(option.key),
             payload = ShapeIconViewModel(option.key, option.path),
             text = Text.Loaded(option.title),

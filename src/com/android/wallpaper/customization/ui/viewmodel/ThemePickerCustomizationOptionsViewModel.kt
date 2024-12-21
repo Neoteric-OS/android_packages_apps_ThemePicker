@@ -48,6 +48,7 @@ constructor(
     shapeGridPickerViewModelFactory: ShapeGridPickerViewModel.Factory,
     val colorContrastSectionViewModel: ColorContrastSectionViewModel2,
     val darkModeViewModel: DarkModeViewModel,
+    val themedIconViewModel: ThemedIconViewModel,
     @Assisted private val viewModelScope: CoroutineScope,
 ) : CustomizationOptionsViewModel {
 

@@ -43,6 +43,9 @@ class TestThemesUserEventLogger @Inject constructor() :
     var useDarkTheme: Boolean = false
         private set
 
+    var useThemedIcon: Boolean = false
+        private set
+
     override fun logThemeColorApplied(@ColorSource source: Int, style: Int, seedColor: Int) {
         this.themeColorSource = source
         this.themeColorStyle = style
@@ -59,7 +62,9 @@ class TestThemesUserEventLogger @Inject constructor() :
         this.clockSize = clockSize
     }
 
-    override fun logThemedIconApplied(useThemeIcon: Boolean) {}
+    override fun logThemedIconApplied(useThemeIcon: Boolean) {
+        this.useThemedIcon = useThemeIcon
+    }
 
     override fun logLockScreenNotificationApplied(showLockScreenNotifications: Boolean) {}
 

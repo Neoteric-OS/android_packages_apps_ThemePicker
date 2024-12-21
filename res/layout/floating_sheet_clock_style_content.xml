@@ -80,7 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/floating_sheet_content_horizontal_padding"
         android:layout_marginEnd="@dimen/floating_sheet_clock_style_clock_size_text_margin_end"
-        android:text="@string/clock_size_dynamic_description"
+        android:text="@string/clock_size_large_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/clock_style_clock_size_switch"
         app:layout_constraintTop_toBottomOf="@+id/clock_style_clock_size_title"

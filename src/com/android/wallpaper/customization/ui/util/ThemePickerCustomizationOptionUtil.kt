@@ -49,8 +49,9 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
 
     enum class ThemePickerHomeCustomizationOption : CustomizationOptionUtil.CustomizationOption {
         COLORS,
-        APP_SHAPE_GRID,
         THEMED_ICONS,
+        APP_SHAPE_GRID,
+        COLOR_CONTRAST,
     }
 
     override fun getOptionEntries(
@@ -109,6 +110,14 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
                             )
                     )
                     add(
+                        ThemePickerHomeCustomizationOption.THEMED_ICONS to
+                            layoutInflater.inflate(
+                                R.layout.customization_option_entry_themed_icons,
+                                optionContainer,
+                                false,
+                            )
+                    )
+                    add(
                         ThemePickerHomeCustomizationOption.APP_SHAPE_GRID to
                             layoutInflater.inflate(
                                 R.layout.customization_option_entry_app_shape_grid,
@@ -117,9 +126,9 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
                             )
                     )
                     add(
-                        ThemePickerHomeCustomizationOption.THEMED_ICONS to
+                        ThemePickerHomeCustomizationOption.COLOR_CONTRAST to
                             layoutInflater.inflate(
-                                R.layout.customization_option_entry_themed_icons,
+                                R.layout.customization_option_entry_color_contrast,
                                 optionContainer,
                                 false,
                             )

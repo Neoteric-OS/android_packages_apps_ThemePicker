@@ -26,7 +26,6 @@ import com.android.customization.picker.grid.domain.interactor.ShapeGridInteract
 import com.android.customization.picker.grid.ui.viewmodel.GridIconViewModel
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
-import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
@@ -251,7 +250,7 @@ class ShapeGridPickerViewModelTest {
         }
 
     private fun TestScope.assertShapeItem(
-        optionItem: OptionItemViewModel<ShapeIconViewModel>?,
+        optionItem: OptionItemViewModel2<ShapeIconViewModel>?,
         key: String,
         payload: ShapeIconViewModel?,
         text: Text,

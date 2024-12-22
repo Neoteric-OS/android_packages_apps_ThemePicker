@@ -30,18 +30,25 @@
         android:text="@string/color_picker_title"
         android:layout_marginEnd="@dimen/customization_option_entry_text_margin_end"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/option_entry_clock_icon"
+        app:layout_constraintEnd_toStartOf="@+id/option_entry_colors_icon_container"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <FrameLayout
-        android:id="@+id/option_entry_clock_icon"
+        android:id="@+id/option_entry_colors_icon_container"
         android:layout_width="@dimen/customization_option_entry_icon_size"
         android:layout_height="@dimen/customization_option_entry_icon_size"
         android:orientation="horizontal"
         android:background="@drawable/customization_option_entry_icon_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.android.customization.picker.color.ui.view.ColorOptionIconView2
+            android:id="@+id/option_entry_colors_icon"
+            android:layout_width="@dimen/customization_option_entry_color_icon_size"
+            android:layout_height="@dimen/customization_option_entry_color_icon_size"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

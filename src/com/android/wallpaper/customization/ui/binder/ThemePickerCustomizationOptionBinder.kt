@@ -28,10 +28,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.customization.model.color.ColorOptionImpl
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.ui.view.ClockConstraintLayoutHostView
 import com.android.customization.picker.clock.ui.view.ClockConstraintLayoutHostView.Companion.addClockViews
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
+import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder2
+import com.android.customization.picker.color.ui.view.ColorOptionIconView2
+import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.grid.ui.binder.GridIconViewBinder
 import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.systemui.plugins.clocks.ClockPreviewConfig
@@ -108,6 +112,8 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             homeScreenCustomizationOptionEntries
                 .find { it.first == ThemePickerHomeCustomizationOption.COLORS }
                 ?.second
+        val optionColorsIcon =
+            optionColors?.findViewById<ColorOptionIconView2>(R.id.option_entry_colors_icon)
 
         val optionShapeGrid =
             homeScreenCustomizationOptionEntries
@@ -189,6 +195,22 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     com.android.wallpaper.R.color.system_on_surface_variant,
                                 )
                             )
+                        }
+                    }
+                }
+
+                launch {
+                    optionsViewModel.colorPickerViewModel2.selectedColorOption.collect { colorOption
+                        ->
+                        (colorOption as? ColorOptionImpl)?.let {
+                            optionColorsIcon?.let {
+                                ColorOptionIconBinder2.bind(
+                                    view = it,
+                                    viewModel =
+                                        ColorOptionIconViewModel.fromColorOption(colorOption),
+                                    darkTheme = view.resources.configuration.isNightModeActive,
+                                )
+                            }
                         }
                     }
                 }

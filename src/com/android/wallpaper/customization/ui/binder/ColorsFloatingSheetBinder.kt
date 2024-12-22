@@ -93,11 +93,11 @@ object ColorsFloatingSheetBinder {
                 }
 
                 launch {
-                    viewModel.previewingColorOption.collect { colorModel ->
-                        if (colorModel != null) {
+                    viewModel.previewingColorOption.collect { colorOption ->
+                        if (colorOption != null) {
                             colorUpdateViewModel.previewColors(
-                                colorModel.colorOption.seedColor,
-                                colorModel.colorOption.style,
+                                colorOption.seedColor,
+                                colorOption.style,
                             )
                         } else colorUpdateViewModel.resetPreview()
                     }

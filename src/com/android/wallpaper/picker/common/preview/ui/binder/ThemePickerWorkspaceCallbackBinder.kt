@@ -222,6 +222,12 @@ constructor(
                                 workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, bundle)
                             }
                     }
+
+                    launch {
+                        viewModel.themedIconViewModel.isActivated.collect {
+                            workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, Bundle.EMPTY)
+                        }
+                    }
                 }
         }
     }

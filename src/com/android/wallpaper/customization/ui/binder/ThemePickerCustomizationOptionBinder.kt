@@ -20,6 +20,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -141,6 +142,13 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         val optionColorContrastIcon: ImageView =
             optionColorContrast.requireViewById(R.id.option_entry_color_contrast_icon)
 
+        val optionThemedIcons =
+            homeScreenCustomizationOptionEntries
+                .find { it.first == ThemePickerHomeCustomizationOption.THEMED_ICONS }
+                ?.second
+        val optionThemedIconsSwitch =
+            optionThemedIcons?.findViewById<Switch>(R.id.option_entry_themed_icons_switch)
+
         val optionsViewModel =
             viewModel.customizationOptionsViewModel as ThemePickerCustomizationOptionsViewModel
         lifecycleOwner.lifecycleScope.launch {
@@ -243,6 +251,28 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                         }
                     }
                 }
+
+                if (optionThemedIconsSwitch != null) {
+                    launch {
+                        optionsViewModel.themedIconViewModel.isAvailable.collect { isAvailable ->
+                            optionThemedIconsSwitch.isEnabled = isAvailable
+                        }
+                    }
+
+                    launch {
+                        optionsViewModel.themedIconViewModel.isActivated.collect {
+                            optionThemedIconsSwitch.isChecked = it
+                        }
+                    }
+
+                    launch {
+                        optionsViewModel.themedIconViewModel.toggleThemedIcon.collect {
+                            optionThemedIconsSwitch.setOnCheckedChangeListener { _, _ ->
+                                launch { it.invoke() }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -325,7 +355,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     // TODO(b/379348167): get correct isShadeLayoutWide from picker
                                     clockController.largeClock.layout.applyPreviewConstraints(
                                         ClockPreviewConfig(
-                                            previewContext = context,
+                                            context = context,
                                             isShadeLayoutWide = false,
                                             isSceneContainerFlagEnabled = false,
                                         ),
@@ -333,7 +363,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     )
                                     clockController.smallClock.layout.applyPreviewConstraints(
                                         ClockPreviewConfig(
-                                            previewContext = context,
+                                            context = context,
                                             isShadeLayoutWide = false,
                                             isSceneContainerFlagEnabled = false,
                                         ),

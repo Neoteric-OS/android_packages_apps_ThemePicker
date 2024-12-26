@@ -19,10 +19,6 @@ package com.android.wallpaper.picker.common.preview.ui.binder
 import android.os.Bundle
 import android.os.Message
 import androidx.core.os.bundleOf
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.android.customization.model.grid.DefaultShapeGridManager.Companion.COL_GRID_NAME
 import com.android.customization.model.grid.DefaultShapeGridManager.Companion.COL_SHAPE_KEY
 import com.android.customization.picker.clock.shared.ClockSize
@@ -51,6 +47,7 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewMo
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
@@ -62,12 +59,11 @@ constructor(
     private val materialColorsGenerator: MaterialColorsGenerator,
 ) : WorkspaceCallbackBinder {
 
-    override fun bind(
+    override suspend fun bind(
         workspaceCallback: Message,
         viewModel: CustomizationOptionsViewModel,
         colorUpdateViewModel: ColorUpdateViewModel,
         screen: Screen,
-        lifecycleOwner: LifecycleOwner,
         clockViewFactory: ClockViewFactory,
     ) {
         defaultWorkspaceCallbackBinder.bind(
@@ -75,7 +71,6 @@ constructor(
             viewModel = viewModel,
             colorUpdateViewModel = colorUpdateViewModel,
             screen = screen,
-            lifecycleOwner = lifecycleOwner,
             clockViewFactory = clockViewFactory,
         )
 
@@ -87,155 +82,145 @@ constructor(
 
         when (screen) {
             Screen.LOCK_SCREEN ->
-                lifecycleOwner.lifecycleScope.launch {
-                    lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        launch {
-                            viewModel.selectedOption.collect {
-                                when (it) {
-                                    ThemePickerLockCustomizationOption.SHORTCUTS ->
-                                        workspaceCallback.sendMessage(
-                                            MESSAGE_ID_START_CUSTOMIZING_QUICK_AFFORDANCES,
-                                            Bundle().apply {
-                                                putString(
-                                                    KEY_INITIALLY_SELECTED_SLOT_ID,
-                                                    SLOT_ID_BOTTOM_START,
-                                                )
-                                            },
-                                        )
-                                    else ->
-                                        workspaceCallback.sendMessage(
-                                            MESSAGE_ID_DEFAULT_PREVIEW,
-                                            Bundle.EMPTY,
-                                        )
-                                }
-                            }
-                        }
-
-                        launch {
-                            viewModel.keyguardQuickAffordancePickerViewModel2.selectedSlotId
-                                .collect {
+                coroutineScope {
+                    launch {
+                        viewModel.selectedOption.collect {
+                            when (it) {
+                                ThemePickerLockCustomizationOption.SHORTCUTS ->
                                     workspaceCallback.sendMessage(
-                                        MESSAGE_ID_SLOT_SELECTED,
-                                        Bundle().apply { putString(KEY_SLOT_ID, it) },
-                                    )
-                                }
-                        }
-
-                        launch {
-                            viewModel.keyguardQuickAffordancePickerViewModel2
-                                .previewingQuickAffordances
-                                .collect {
-                                    it[SLOT_ID_BOTTOM_START]?.let {
-                                        workspaceCallback.sendMessage(
-                                            MESSAGE_ID_PREVIEW_QUICK_AFFORDANCE_SELECTED,
-                                            Bundle().apply {
-                                                putString(KEY_SLOT_ID, SLOT_ID_BOTTOM_START)
-                                                putString(KEY_QUICK_AFFORDANCE_ID, it)
-                                            },
-                                        )
-                                    }
-                                    it[SLOT_ID_BOTTOM_END]?.let {
-                                        workspaceCallback.sendMessage(
-                                            MESSAGE_ID_PREVIEW_QUICK_AFFORDANCE_SELECTED,
-                                            Bundle().apply {
-                                                putString(KEY_SLOT_ID, SLOT_ID_BOTTOM_END)
-                                                putString(KEY_QUICK_AFFORDANCE_ID, it)
-                                            },
-                                        )
-                                    }
-                                }
-                        }
-
-                        launch {
-                            combine(
-                                    viewModel.clockPickerViewModel.previewingClock,
-                                    viewModel.clockPickerViewModel.previewingClockSize,
-                                    ::Pair,
-                                )
-                                .collect { (previewingClock, previewingClockSize) ->
-                                    val hideSmartspace =
-                                        clockViewFactory
-                                            .getController(previewingClock.clockId)
-                                            .let {
-                                                when (previewingClockSize) {
-                                                    ClockSize.DYNAMIC ->
-                                                        it.largeClock.config
-                                                            .hasCustomWeatherDataDisplay
-                                                    ClockSize.SMALL ->
-                                                        it.smallClock.config
-                                                            .hasCustomWeatherDataDisplay
-                                                }
-                                            }
-                                    workspaceCallback.sendMessage(
-                                        MESSAGE_ID_HIDE_SMART_SPACE,
-                                        Bundle().apply {
-                                            putBoolean(KEY_HIDE_SMART_SPACE, hideSmartspace)
-                                        },
-                                    )
-
-                                    workspaceCallback.sendMessage(
-                                        MESSAGE_ID_PREVIEW_CLOCK_SIZE,
+                                        MESSAGE_ID_START_CUSTOMIZING_QUICK_AFFORDANCES,
                                         Bundle().apply {
                                             putString(
-                                                KEY_CLOCK_SIZE,
-                                                when (previewingClockSize) {
-                                                    ClockSize.DYNAMIC -> CLOCK_SIZE_DYNAMIC
-                                                    ClockSize.SMALL -> CLOCK_SIZE_SMALL
-                                                },
+                                                KEY_INITIALLY_SELECTED_SLOT_ID,
+                                                SLOT_ID_BOTTOM_START,
                                             )
                                         },
                                     )
-                                }
+                                else ->
+                                    workspaceCallback.sendMessage(
+                                        MESSAGE_ID_DEFAULT_PREVIEW,
+                                        Bundle.EMPTY,
+                                    )
+                            }
                         }
+                    }
+
+                    launch {
+                        viewModel.keyguardQuickAffordancePickerViewModel2.selectedSlotId.collect {
+                            workspaceCallback.sendMessage(
+                                MESSAGE_ID_SLOT_SELECTED,
+                                Bundle().apply { putString(KEY_SLOT_ID, it) },
+                            )
+                        }
+                    }
+
+                    launch {
+                        viewModel.keyguardQuickAffordancePickerViewModel2.previewingQuickAffordances
+                            .collect {
+                                it[SLOT_ID_BOTTOM_START]?.let {
+                                    workspaceCallback.sendMessage(
+                                        MESSAGE_ID_PREVIEW_QUICK_AFFORDANCE_SELECTED,
+                                        Bundle().apply {
+                                            putString(KEY_SLOT_ID, SLOT_ID_BOTTOM_START)
+                                            putString(KEY_QUICK_AFFORDANCE_ID, it)
+                                        },
+                                    )
+                                }
+                                it[SLOT_ID_BOTTOM_END]?.let {
+                                    workspaceCallback.sendMessage(
+                                        MESSAGE_ID_PREVIEW_QUICK_AFFORDANCE_SELECTED,
+                                        Bundle().apply {
+                                            putString(KEY_SLOT_ID, SLOT_ID_BOTTOM_END)
+                                            putString(KEY_QUICK_AFFORDANCE_ID, it)
+                                        },
+                                    )
+                                }
+                            }
+                    }
+
+                    launch {
+                        combine(
+                                viewModel.clockPickerViewModel.previewingClock,
+                                viewModel.clockPickerViewModel.previewingClockSize,
+                                ::Pair,
+                            )
+                            .collect { (previewingClock, previewingClockSize) ->
+                                val hideSmartspace =
+                                    clockViewFactory.getController(previewingClock.clockId).let {
+                                        when (previewingClockSize) {
+                                            ClockSize.DYNAMIC ->
+                                                it.largeClock.config.hasCustomWeatherDataDisplay
+                                            ClockSize.SMALL ->
+                                                it.smallClock.config.hasCustomWeatherDataDisplay
+                                        }
+                                    }
+                                workspaceCallback.sendMessage(
+                                    MESSAGE_ID_HIDE_SMART_SPACE,
+                                    Bundle().apply {
+                                        putBoolean(KEY_HIDE_SMART_SPACE, hideSmartspace)
+                                    },
+                                )
+
+                                workspaceCallback.sendMessage(
+                                    MESSAGE_ID_PREVIEW_CLOCK_SIZE,
+                                    Bundle().apply {
+                                        putString(
+                                            KEY_CLOCK_SIZE,
+                                            when (previewingClockSize) {
+                                                ClockSize.DYNAMIC -> CLOCK_SIZE_DYNAMIC
+                                                ClockSize.SMALL -> CLOCK_SIZE_SMALL
+                                            },
+                                        )
+                                    },
+                                )
+                            }
                     }
                 }
             Screen.HOME_SCREEN ->
-                lifecycleOwner.lifecycleScope.launch {
-                    lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        launch {
-                            viewModel.shapeGridPickerViewModel.previewingShapeKey.collect {
-                                workspaceCallback.sendMessage(
-                                    MESSAGE_ID_UPDATE_SHAPE,
-                                    bundleOf(COL_SHAPE_KEY to it),
-                                )
-                            }
+                coroutineScope {
+                    launch {
+                        viewModel.shapeGridPickerViewModel.previewingShapeKey.collect {
+                            workspaceCallback.sendMessage(
+                                MESSAGE_ID_UPDATE_SHAPE,
+                                bundleOf(COL_SHAPE_KEY to it),
+                            )
                         }
+                    }
 
-                        launch {
-                            viewModel.shapeGridPickerViewModel.previewingGridKey.collect {
-                                workspaceCallback.sendMessage(
-                                    MESSAGE_ID_UPDATE_GRID,
-                                    bundleOf(COL_GRID_NAME to it),
-                                )
-                            }
+                    launch {
+                        viewModel.shapeGridPickerViewModel.previewingGridKey.collect {
+                            workspaceCallback.sendMessage(
+                                MESSAGE_ID_UPDATE_GRID,
+                                bundleOf(COL_GRID_NAME to it),
+                            )
                         }
+                    }
 
-                        launch {
-                            combine(
-                                    viewModel.colorPickerViewModel2.previewingColorOption,
-                                    viewModel.darkModeViewModel.overridingIsDarkMode,
-                                    ::Pair,
-                                )
-                                .collect { (colorOption, darkMode) ->
-                                    val bundle =
-                                        Bundle().apply {
-                                            if (colorOption != null) {
-                                                val (ids, colors) =
-                                                    materialColorsGenerator.generate(
-                                                        colorOption.seedColor,
-                                                        colorOption.style,
-                                                    )
-                                                putIntArray(KEY_COLOR_RESOURCE_IDS, ids)
-                                                putIntArray(KEY_COLOR_VALUES, colors)
-                                            }
-
-                                            if (darkMode != null) {
-                                                putBoolean(KEY_DARK_MODE, darkMode)
-                                            }
+                    launch {
+                        combine(
+                                viewModel.colorPickerViewModel2.previewingColorOption,
+                                viewModel.darkModeViewModel.overridingIsDarkMode,
+                                ::Pair,
+                            )
+                            .collect { (colorOption, darkMode) ->
+                                val bundle =
+                                    Bundle().apply {
+                                        if (colorOption != null) {
+                                            val (ids, colors) =
+                                                materialColorsGenerator.generate(
+                                                    colorOption.seedColor,
+                                                    colorOption.style,
+                                                )
+                                            putIntArray(KEY_COLOR_RESOURCE_IDS, ids)
+                                            putIntArray(KEY_COLOR_VALUES, colors)
                                         }
-                                    workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, bundle)
-                                }
-                        }
+
+                                        if (darkMode != null) {
+                                            putBoolean(KEY_DARK_MODE, darkMode)
+                                        }
+                                    }
+                                workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, bundle)
+                            }
                     }
                 }
         }

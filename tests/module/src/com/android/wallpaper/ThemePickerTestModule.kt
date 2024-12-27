@@ -30,6 +30,8 @@ import com.android.customization.picker.color.data.repository.ColorPickerReposit
 import com.android.customization.picker.color.data.repository.ColorPickerRepository2
 import com.android.customization.picker.color.data.repository.ColorPickerRepositoryImpl
 import com.android.customization.picker.color.data.repository.FakeColorPickerRepository2
+import com.android.customization.picker.themedicon.data.repository.FakeThemedIconRepository
+import com.android.customization.picker.themedicon.data.repository.ThemedIconRepository
 import com.android.customization.testing.TestCustomizationInjector
 import com.android.customization.testing.TestDefaultCustomizationPreferences
 import com.android.systemui.shared.clocks.ClockRegistry
@@ -97,6 +99,10 @@ abstract class ThemePickerTestModule {
     abstract fun bindColorPickerRepository2(
         impl: FakeColorPickerRepository2
     ): ColorPickerRepository2
+
+    @Binds
+    @Singleton
+    abstract fun bindThemedIconRepository(impl: FakeThemedIconRepository): ThemedIconRepository
 
     @Binds
     @Singleton

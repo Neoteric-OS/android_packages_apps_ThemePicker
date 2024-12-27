@@ -43,7 +43,7 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
     enum class ThemePickerLockCustomizationOption : CustomizationOptionUtil.CustomizationOption {
         CLOCK,
         SHORTCUTS,
-        SHOW_NOTIFICATIONS,
+        LOCK_SCREEN_NOTIFICATIONS,
         MORE_LOCK_SCREEN_SETTINGS,
     }
 
@@ -82,9 +82,9 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
                             )
                     )
                     add(
-                        ThemePickerLockCustomizationOption.SHOW_NOTIFICATIONS to
+                        ThemePickerLockCustomizationOption.LOCK_SCREEN_NOTIFICATIONS to
                             layoutInflater.inflate(
-                                R.layout.customization_option_entry_show_notifications,
+                                R.layout.customization_option_entry_lock_screen_notifications,
                                 optionContainer,
                                 false,
                             )

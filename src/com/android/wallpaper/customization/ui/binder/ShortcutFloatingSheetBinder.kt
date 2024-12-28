@@ -19,7 +19,9 @@ package com.android.wallpaper.customization.ui.binder
 import android.app.Dialog
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +36,7 @@ import com.android.wallpaper.picker.common.dialog.ui.viewbinder.DialogViewBinder
 import com.android.wallpaper.picker.common.dialog.ui.viewmodel.DialogViewModel
 import com.android.wallpaper.picker.common.icon.ui.viewbinder.IconViewBinder
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
@@ -56,20 +59,45 @@ object ShortcutFloatingSheetBinder {
         lifecycleOwner: LifecycleOwner,
     ) {
         val viewModel = optionsViewModel.keyguardQuickAffordancePickerViewModel2
+        val isFloatingSheetActive = { optionsViewModel.selectedOption.value == SHORTCUTS }
+
+        val tabs = view.requireViewById<FloatingToolbar>(R.id.floating_toolbar)
+        val tabContainer =
+            tabs.findViewById<ViewGroup>(com.android.wallpaper.R.id.floating_toolbar_tab_container)
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                DrawableCompat.setTint(DrawableCompat.wrap(tabContainer.background), color)
+            },
+            color = colorUpdateViewModel.floatingToolbarBackground,
+            shouldAnimate = isFloatingSheetActive,
+            lifecycleOwner = lifecycleOwner,
+        )
+        val tabAdapter =
+            FloatingToolbarTabAdapter(
+                    colorUpdateViewModel = WeakReference(colorUpdateViewModel),
+                    shouldAnimateColor = isFloatingSheetActive,
+                )
+                .also { tabs.setAdapter(it) }
+
+        val floatingSheetContainer =
+            view.requireViewById<ViewGroup>(R.id.floating_sheet_content_container)
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                DrawableCompat.setTint(
+                    DrawableCompat.wrap(floatingSheetContainer.background),
+                    color,
+                )
+            },
+            color = colorUpdateViewModel.colorSurfaceBright,
+            shouldAnimate = isFloatingSheetActive,
+            lifecycleOwner = lifecycleOwner,
+        )
 
         val quickAffordanceAdapter = createOptionItemAdapter(lifecycleOwner)
         val quickAffordanceList =
             view.requireViewById<RecyclerView>(R.id.quick_affordance_horizontal_list).also {
                 it.initQuickAffordanceList(view.context.applicationContext, quickAffordanceAdapter)
             }
-
-        val tabs = view.requireViewById<FloatingToolbar>(R.id.floating_toolbar)
-        val tabAdapter =
-            FloatingToolbarTabAdapter(
-                    colorUpdateViewModel = WeakReference(colorUpdateViewModel),
-                    shouldAnimateColor = { optionsViewModel.selectedOption.value == SHORTCUTS },
-                )
-                .also { tabs.setAdapter(it) }
 
         var dialog: Dialog? = null
 

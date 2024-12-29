@@ -47,7 +47,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @Singleton
@@ -131,6 +130,24 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
             lifecycleOwner = lifecycleOwner,
         )
 
+        ColorUpdateBinder.bind(
+            setColor = { color -> applyButton.setTextColor(color) },
+            color =
+                combine(
+                    viewModel.isApplyButtonEnabled,
+                    colorUpdateViewModel.colorOnPrimary,
+                    colorUpdateViewModel.colorOnSurface,
+                ) { enabled, onPrimary, onSurface ->
+                    if (enabled) {
+                        onPrimary
+                    } else {
+                        ColorUtils.setAlphaComponent(onSurface, 97) // 97 for 38% transparent
+                    }
+                },
+            shouldAnimate = { false },
+            lifecycleOwner = lifecycleOwner,
+        )
+
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -146,22 +163,6 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
                         applyButton.isEnabled = it
                         applyButton.background.alpha =
                             if (it) 255 else 31 // 255 for 100%, 31 for 12% transparent
-                        ColorUpdateBinder.bind(
-                            setColor = { color -> applyButton.setTextColor(color) },
-                            color =
-                                if (it) {
-                                    colorUpdateViewModel.colorOnPrimary
-                                } else {
-                                    colorUpdateViewModel.colorOnSurface.map { color: Int ->
-                                        ColorUtils.setAlphaComponent(
-                                            color,
-                                            97,
-                                        ) // 97 for 38% transparent
-                                    }
-                                },
-                            shouldAnimate = { true },
-                            lifecycleOwner = lifecycleOwner,
-                        )
                     }
                 }
 

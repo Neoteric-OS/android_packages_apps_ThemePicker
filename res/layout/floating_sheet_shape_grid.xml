@@ -21,7 +21,7 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/shape_grid_floating_sheet_content_container"
+        android:id="@+id/floating_sheet_content_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/floating_sheet_content_background"

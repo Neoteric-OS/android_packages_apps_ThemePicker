@@ -19,7 +19,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name" msgid="1647136562008520313">"Wallpaper and style"</string>
     <string name="theme_title" msgid="2144932106319405101">"Style"</string>
-    <string name="clock_title" msgid="1974314575211361352">"Custom Clock"</string>
+    <string name="clock_title" msgid="2126046720254613991">"Clock"</string>
     <string name="clock_description" msgid="3563839327378948">"Pick a custom clock"</string>
     <string name="clock_picker_entry_content_description" msgid="8377139273468595734">"Change a custom clock"</string>
     <string name="select_clock_action_description" msgid="5025888763471843648">"Clock face option <xliff:g id="ID_1">%1$s</xliff:g>"</string>
@@ -41,6 +41,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Dynamic"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"Clock size changes according to lock screen content"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"Large"</string>
+    <string name="clock_size_large_description" msgid="1171001745473029918">"Shown when notifications aren\'t visible"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Small"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"A small clock shows in the corner of your screen"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Apply clock font changes"</string>
@@ -124,6 +125,7 @@
     <string name="color_changed" msgid="7029571720331641235">"Color changed"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dynamic"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"System colors"</string>
+    <string name="system_colors_title" msgid="8011422955674152731">"Colors"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Left shortcut"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Right shortcut"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"None"</string>
@@ -140,7 +142,7 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"None"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Show notifications on the lock screen"</string>
-    <string name="more_settings_section_title" msgid="1331425454775815958">"More lock screen options"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"More lock screen settings"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Privacy, Now Playing, and more"</string>
     <string name="more_colors" msgid="3191071655353004591">"More Colors"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Primary dynamic theme"</string>

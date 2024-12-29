@@ -492,6 +492,22 @@
     <string name="show_notifications_on_lock_screen">Show notifications on the lock screen</string>
 
     <!--
+    Title for a section in a list of sections that leads to notifications on lock screen settings.
+
+    [CHAR LIMIT=32].
+    -->
+    <string name="lock_screen_notifications_section_title">Notifications on lock screen</string>
+
+
+    <!--
+    Description for a section in a list of sections that leads to notifications on lock screen
+    settings.
+
+    [CHAR LIMIT=64].
+    -->
+    <string name="lock_screen_notifications_section_description">Manage how notifications appear and what to show</string>
+
+    <!--
     Title for a section in a list of sections in the settings app that allows the user to access
     additional settings related to lock screen behaviour.
 

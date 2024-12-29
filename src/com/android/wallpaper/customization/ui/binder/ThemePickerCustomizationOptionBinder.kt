@@ -77,6 +77,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         navigateToWallpaperCategoriesScreen: (screen: Screen) -> Unit,
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,
+        navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
     ) {
         defaultCustomizationOptionsBinder.bind(
             view,
@@ -89,6 +90,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToWallpaperCategoriesScreen,
             navigateToMoreLockScreenSettingsActivity,
             navigateToColorContrastSettingsActivity,
+            navigateToLockScreenNotificationsSettingsActivity,
         )
 
         val optionClock: View =
@@ -107,6 +109,14 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             optionShortcut.requireViewById(R.id.option_entry_keyguard_quick_affordance_icon_1)
         val optionShortcutIcon2: ImageView =
             optionShortcut.requireViewById(R.id.option_entry_keyguard_quick_affordance_icon_2)
+
+        val optionLockScreenNotificationsSettings: View =
+            lockScreenCustomizationOptionEntries
+                .first { it.first == ThemePickerLockCustomizationOption.LOCK_SCREEN_NOTIFICATIONS }
+                .second
+        optionLockScreenNotificationsSettings.setOnClickListener {
+            navigateToLockScreenNotificationsSettingsActivity.invoke()
+        }
 
         val optionMoreLockScreenSettings: View =
             lockScreenCustomizationOptionEntries

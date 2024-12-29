@@ -19,7 +19,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name" msgid="1647136562008520313">"வால்பேப்பரும் ஸ்டைலும்"</string>
     <string name="theme_title" msgid="2144932106319405101">"ஸ்டைல்"</string>
-    <string name="clock_title" msgid="1974314575211361352">"பிரத்தியேகக் கடிகாரம்"</string>
+    <string name="clock_title" msgid="2126046720254613991">"கடிகாரம்"</string>
     <string name="clock_description" msgid="3563839327378948">"பிரத்தியேகக் கடிகாரத்தைத் தேர்வுசெய்க"</string>
     <string name="clock_picker_entry_content_description" msgid="8377139273468595734">"பிரத்தியேகக் கடிகாரத்தை மாற்றும்"</string>
     <string name="select_clock_action_description" msgid="5025888763471843648">"கடிகார முகப்புக்கான விருப்பம் <xliff:g id="ID_1">%1$s</xliff:g>"</string>
@@ -41,6 +41,8 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"டைனமிக்"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"பூட்டுத் திரையில் உள்ள உள்ளடக்கத்தைப் பொறுத்து கடிகாரத்தின் அளவு மாறுபடும்"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"பெரியது"</string>
+    <!-- no translation found for clock_size_large_description (1171001745473029918) -->
+    <skip />
     <string name="clock_size_small" msgid="2280449912094164133">"சிறியது"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"உங்கள் திரையின் மூலையில் ஒரு சிறிய கடிகாரம் காட்டப்படும்"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"கடிகார எழுத்து வடிவ மாற்றங்களைப் பயன்படுத்தும்"</string>
@@ -124,6 +126,8 @@
     <string name="color_changed" msgid="7029571720331641235">"வண்ணம் மாற்றப்பட்டது"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"டைனமிக்"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"சிஸ்டம் வண்ணங்கள்"</string>
+    <!-- no translation found for system_colors_title (8011422955674152731) -->
+    <skip />
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"இடது ஷார்ட்கட்"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"வலது ஷார்ட்கட்"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"ஏதுமில்லை"</string>
@@ -140,7 +144,8 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"ஏதுமில்லை"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"பூட்டுத் திரையில் அறிவிப்புகளைக் காட்டு"</string>
-    <string name="more_settings_section_title" msgid="1331425454775815958">"கூடுதல் பூட்டுத் திரை விருப்பம்"</string>
+    <!-- no translation found for more_settings_section_title (6854797937797818510) -->
+    <skip />
     <string name="more_settings_section_description" msgid="1860115709122398325">"தனியுரிமை, பாடல் விவரம் மற்றும் பல"</string>
     <string name="more_colors" msgid="3191071655353004591">"கூடுதல் வண்ணங்கள்"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"முதன்மையான டைனமிக் தீம்"</string>

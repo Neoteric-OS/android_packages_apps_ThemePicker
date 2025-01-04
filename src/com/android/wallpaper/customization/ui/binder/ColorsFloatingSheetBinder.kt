@@ -91,7 +91,12 @@ object ColorsFloatingSheetBinder {
         val subhead = view.requireViewById<TextView>(R.id.color_type_tab_subhead)
 
         val colorsAdapter =
-            createOptionItemAdapter(view.resources.configuration.uiMode, lifecycleOwner)
+            createOptionItemAdapter(
+                uiMode = view.resources.configuration.uiMode,
+                colorUpdateViewModel = colorUpdateViewModel,
+                shouldAnimateColor = isFloatingSheetActive,
+                lifecycleOwner = lifecycleOwner,
+            )
         val colorsList =
             view.requireViewById<RecyclerView>(R.id.colors_horizontal_list).also {
                 it.initColorsList(view.context.applicationContext, colorsAdapter)
@@ -136,6 +141,8 @@ object ColorsFloatingSheetBinder {
 
     private fun createOptionItemAdapter(
         uiMode: Int,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
     ): OptionItemAdapter2<ColorOptionIconViewModel> =
         OptionItemAdapter2(
@@ -152,6 +159,8 @@ object ColorsFloatingSheetBinder {
                 // disposal when rebind.
                 return@OptionItemAdapter2 null
             },
+            colorUpdateViewModel = WeakReference(colorUpdateViewModel),
+            shouldAnimateColor = shouldAnimateColor,
         )
 
     private fun RecyclerView.initColorsList(

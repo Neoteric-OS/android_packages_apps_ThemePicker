@@ -55,6 +55,9 @@ constructor(
     private val defaultCustomizationOptionsViewModel =
         defaultCustomizationOptionsViewModelFactory.create(viewModelScope)
 
+    override val wallpaperCarouselViewModel =
+        defaultCustomizationOptionsViewModel.wallpaperCarouselViewModel
+
     val clockPickerViewModel = clockPickerViewModelFactory.create(viewModelScope = viewModelScope)
     val keyguardQuickAffordancePickerViewModel2 =
         keyguardQuickAffordancePickerViewModel2Factory.create(viewModelScope = viewModelScope)

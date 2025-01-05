@@ -41,8 +41,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Dynamic"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"Mga pagbabago sa laki ng orasan ayon sa content ng lock screen"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"Malaki"</string>
-    <!-- no translation found for clock_size_large_description (1171001745473029918) -->
-    <skip />
+    <string name="clock_size_large_description" msgid="1171001745473029918">"Ipinapakita kapag hindi nakikita ang mga notification"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Maliit"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"May makikitang maliit na orasan sa sulok ng iyong screen"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Ilapat ang mga pagbabago sa font ng orasan"</string>
@@ -143,6 +142,10 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Wala"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Ipakita ang mga notification sa lock screen"</string>
+    <!-- no translation found for lock_screen_notifications_section_title (906673283764252102) -->
+    <skip />
+    <!-- no translation found for lock_screen_notifications_section_description (3321937285144466046) -->
+    <skip />
     <string name="more_settings_section_title" msgid="6854797937797818510">"Higit pang lock screen setting"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Privacy, Nagpe-play Ngayon, at higit pa"</string>
     <string name="more_colors" msgid="3191071655353004591">"Higit Pang Kulay"</string>

@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.customization.ui.binder
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +53,7 @@ import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptions
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -415,6 +417,18 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
             }
         }
+    }
+
+    override fun bindDiscardChangesDialog(
+        customizationOptionsViewModel: CustomizationOptionsViewModel,
+        lifecycleOwner: LifecycleOwner,
+        activity: Activity,
+    ) {
+        defaultCustomizationOptionsBinder.bindDiscardChangesDialog(
+            customizationOptionsViewModel,
+            lifecycleOwner,
+            activity,
+        )
     }
 
     data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)

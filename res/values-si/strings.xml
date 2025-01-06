@@ -19,7 +19,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name" msgid="1647136562008520313">"වෝල්පේපරය සහ මෝස්තරය"</string>
     <string name="theme_title" msgid="2144932106319405101">"විලාසය"</string>
-    <string name="clock_title" msgid="1974314575211361352">"අභිරුචි ඔරලෝසුව"</string>
+    <string name="clock_title" msgid="2126046720254613991">"ඔරලෝසුව"</string>
     <string name="clock_description" msgid="3563839327378948">"අභිරුචි ඔරලෝසුවක් තෝරන්න"</string>
     <string name="clock_picker_entry_content_description" msgid="8377139273468595734">"අභිරුචි ඔරලෝසුවක් වෙනස් කරන්න"</string>
     <string name="select_clock_action_description" msgid="5025888763471843648">"ඔරලෝසු මුහුණත් විකල්පය <xliff:g id="ID_1">%1$s</xliff:g>"</string>
@@ -41,6 +41,8 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"ගතික"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"අගුළු තිරයේ අන්තර්ගතය අනුව ඔරලෝසුවේ තරම වෙනස් වේ"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"විශාල"</string>
+    <!-- no translation found for clock_size_large_description (1171001745473029918) -->
+    <skip />
     <string name="clock_size_small" msgid="2280449912094164133">"කුඩා"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"ඔබේ තිරයේ කෙළවරේ කුඩා ඔරලෝසුවක් පෙන්වයි"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"ඔරලෝසු අකුරු වෙනස් කිරීම් යොදන්න"</string>
@@ -124,6 +126,8 @@
     <string name="color_changed" msgid="7029571720331641235">"වර්ණය වෙනස් විය"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"ගතික"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"පද්ධති වර්ණ"</string>
+    <!-- no translation found for system_colors_title (8011422955674152731) -->
+    <skip />
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"වම් කෙටිමඟ"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"දකුණු කෙටිමඟ"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"කිසිත් නැත"</string>
@@ -140,7 +144,8 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"කිසිවක් නැත"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"අගුළු තිරය මත දැනුම්දීම් පෙන්වන්න"</string>
-    <string name="more_settings_section_title" msgid="1331425454775815958">"තවත් අගුලු තිර විකල්ප"</string>
+    <!-- no translation found for more_settings_section_title (6854797937797818510) -->
+    <skip />
     <string name="more_settings_section_description" msgid="1860115709122398325">"පෞද්ගලිකත්වය, Now Playing, සහ තවත් දේ"</string>
     <string name="more_colors" msgid="3191071655353004591">"තවත් වර්ණ"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"මූලික ගතික තේමාව"</string>

@@ -48,6 +48,7 @@ import com.android.customization.model.ResourceConstants;
 import com.android.customization.model.color.ColorOptionsProvider.ColorSource;
 import com.android.customization.model.theme.OverlayManagerCompat;
 import com.android.customization.module.logging.ThemesUserEventLogger;
+import com.android.systemui.monet.Style;
 import com.android.themepicker.R;
 
 import org.json.JSONArray;
@@ -164,7 +165,7 @@ public class ColorCustomizationManager implements CustomizationManager<ColorOpti
                 overlaysJson.put(OVERLAY_COLOR_SOURCE, colorOption.getSource());
                 overlaysJson.put(OVERLAY_COLOR_INDEX, String.valueOf(colorOption.getIndex()));
                 overlaysJson.put(OVERLAY_THEME_STYLE,
-                        String.valueOf(colorOption.getStyle().toString()));
+                        String.valueOf(Style.toString(colorOption.getStyle())));
 
                 // OVERLAY_COLOR_BOTH is only for wallpaper color case, not preset.
                 if (!COLOR_SOURCE_PRESET.equals(colorOption.getSource())) {

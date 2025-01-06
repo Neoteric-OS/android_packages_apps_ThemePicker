@@ -189,6 +189,7 @@
     <dimen name="floating_sheet_tab_clock_font_toolbar_top_margin">16dp</dimen>
     <dimen name="floating_sheet_tab_clock_font_toolbar_bottom_margin">8dp</dimen>
     <dimen name="floating_sheet_list_item_horizontal_space">4dp</dimen>
+    <dimen name="floating_sheet_grid_list_item_horizontal_space">10dp</dimen>
     <dimen name="floating_sheet_list_item_vertical_space">4dp</dimen>
     <dimen name="floating_sheet_clock_style_option_list_margin_bottom">8dp</dimen>
     <dimen name="floating_sheet_clock_style_option_width">80dp</dimen>

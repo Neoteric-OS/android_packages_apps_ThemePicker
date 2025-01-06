@@ -34,7 +34,7 @@ class ColorOptionImpl(
     isDefault: Boolean,
     private val source: String?,
     seedColor: Int,
-    style: Style,
+    @Style.Type style: Int,
     index: Int,
     private val previewInfo: PreviewInfo,
     val type: ColorType,
@@ -77,7 +77,7 @@ class ColorOptionImpl(
         }
     }
 
-    override fun getStyleForLogging(): Int = style.toString().hashCode()
+    override fun getStyleForLogging(): Int = Style.toString(style).hashCode()
 
     class Builder {
         var title: String? = null
@@ -89,7 +89,7 @@ class ColorOptionImpl(
         @ColorSource var source: String? = null
         var isDefault = false
         @ColorInt var seedColor = 0
-        var style = Style.TONAL_SPOT
+        @Style.Type var style = Style.TONAL_SPOT
         var index = 0
         var packages: MutableMap<String, String?> = HashMap()
         var type = ColorType.WALLPAPER_COLOR

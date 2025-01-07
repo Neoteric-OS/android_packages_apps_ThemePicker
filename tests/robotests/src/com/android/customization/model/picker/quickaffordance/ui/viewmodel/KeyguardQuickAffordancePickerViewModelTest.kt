@@ -35,7 +35,6 @@ import com.android.themepicker.R
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.module.NetworkStatusNotifier
 import com.android.wallpaper.module.PartnerProvider
-import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.category.wrapper.WallpaperCategoryWrapper
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
@@ -43,8 +42,9 @@ import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
+import com.android.wallpaper.testing.FakeCurrentWallpaperInfoFactory
 import com.android.wallpaper.testing.FakeWallpaperClient
-import com.android.wallpaper.testing.TestCurrentWallpaperInfoFactory
+import com.android.wallpaper.testing.FakeWallpaperRefresher
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestPackageStatusNotifier
 import com.android.wallpaper.testing.TestWallpaperPreferences
@@ -90,6 +90,9 @@ class KeyguardQuickAffordancePickerViewModelTest {
         testScope = TestScope(testDispatcher)
         Dispatchers.setMain(testDispatcher)
         client = FakeCustomizationProviderClient()
+        val prefs = TestWallpaperPreferences()
+        val refresher = FakeWallpaperRefresher(prefs)
+        val wallpaperInfoFactory = FakeCurrentWallpaperInfoFactory(refresher)
 
         quickAffordanceInteractor =
             KeyguardQuickAffordancePickerInteractor(
@@ -107,7 +110,7 @@ class KeyguardQuickAffordancePickerViewModelTest {
                     WallpaperRepository(
                         scope = testScope.backgroundScope,
                         client = FakeWallpaperClient(),
-                        wallpaperPreferences = TestWallpaperPreferences(),
+                        wallpaperPreferences = prefs,
                         backgroundDispatcher = testDispatcher,
                     )
             )
@@ -121,9 +124,11 @@ class KeyguardQuickAffordancePickerViewModelTest {
                 mock(PartnerProvider::class.java),
                 FakeWallpaperClient(),
                 wallpaperInteractor,
-                mock(WallpaperPreferences::class.java),
+                prefs,
                 mock(WallpaperCategoryWrapper::class.java),
                 testPackageStatusNotifier,
+                wallpaperInfoFactory,
+                refresher,
             )
         )
         underTest =
@@ -131,7 +136,7 @@ class KeyguardQuickAffordancePickerViewModelTest {
                     context = context,
                     quickAffordanceInteractor = quickAffordanceInteractor,
                     wallpaperInteractor = wallpaperInteractor,
-                    wallpaperInfoFactory = TestCurrentWallpaperInfoFactory(context),
+                    wallpaperInfoFactory = wallpaperInfoFactory,
                     logger = logger,
                 )
                 .create(KeyguardQuickAffordancePickerViewModel::class.java)

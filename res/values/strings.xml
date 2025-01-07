@@ -22,9 +22,9 @@
         device. [CHAR LIMIT=15] -->
     <string name="theme_title">Style</string>
 
-    <!-- Title of a section of the customization picker where the user can select a Clock face.
+    <!-- Title of a customization picker section where the user can customize lock screen clock.
         [CHAR LIMIT=15] -->
-    <string name="clock_title">Custom Clock</string>
+    <string name="clock_title">Clock</string>
 
     <!-- Description of a section of the customization picker where the user can select a Clock
         face. [CHAR LIMIT=15] -->
@@ -89,6 +89,9 @@
 
     <!-- Title of a radio button to apply clock size large. [CHAR LIMIT=15] -->
     <string name="clock_size_large">Large</string>
+
+    <!-- Description for toggling on large clock on the lock screen -->
+    <string name="clock_size_large_description">Shown when notifications aren\'t visible</string>
 
     <!-- Title of a radio button to apply clock size small. [CHAR LIMIT=15] -->
     <string name="clock_size_small">Small</string>
@@ -370,6 +373,13 @@
     <string name="color_picker_title">System colors</string>
 
     <!--
+    Title for a customization picker section where the user can configure the system colors by
+    selecting from a list of color options.
+    [CHAR LIMIT=32].
+    -->
+    <string name="system_colors_title">Colors</string>
+
+    <!--
     Name of the slot on the "start" side of the bottom of the lock screen, where lock screen
     shortcuts can be added to the lock screen. In left-to-right languages, this is the left-hand
     side button. In right-to-left languages, this is the right-hand side button. [CHAR LIMIT=16].
@@ -487,7 +497,7 @@
 
     [CHAR LIMIT=32].
     -->
-    <string name="more_settings_section_title">More lock screen options</string>
+    <string name="more_settings_section_title">More lock screen settings</string>
 
     <!--
     Summary for a setting that lets the user access additional settings related to lock screen

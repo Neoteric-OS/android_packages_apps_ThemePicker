@@ -88,6 +88,7 @@ public class ColorCustomizationManager implements CustomizationManager<ColorOpti
     private String mCurrentStyle;
     private WallpaperColors mHomeWallpaperColors;
     private WallpaperColors mLockWallpaperColors;
+    private SettingsChangedListener mListener;
 
     /** Returns the {@link ColorCustomizationManager} instance. */
     public static ColorCustomizationManager getInstance(Context context,
@@ -116,6 +117,7 @@ public class ColorCustomizationManager implements CustomizationManager<ColorOpti
         mProvider = provider;
         mContentResolver = contentResolver;
         mExecutorService = executorService;
+        mListener = null;
         ContentObserver observer = new ContentObserver(/* handler= */ null) {
             @Override
             public void onChange(boolean selfChange, Uri uri) {
@@ -127,6 +129,9 @@ public class ColorCustomizationManager implements CustomizationManager<ColorOpti
                     mCurrentOverlays = null;
                     mCurrentStyle = null;
                     mCurrentSource = null;
+                    if (mListener != null) {
+                        mListener.onSettingsChanged();
+                    }
                 }
             }
         };
@@ -313,5 +318,20 @@ public class ColorCustomizationManager implements CustomizationManager<ColorOpti
             }
         }
         return overlayPackages;
+    }
+
+    /**
+     * Sets a listener that is called when ColorCustomizationManager is updated.
+     */
+    public void setListener(SettingsChangedListener listener) {
+        mListener = listener;
+    }
+
+    /**
+     * A listener for listening to when ColorCustomizationManager is updated.
+     */
+    public interface SettingsChangedListener {
+        /** */
+        void onSettingsChanged();
     }
 }

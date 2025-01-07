@@ -46,6 +46,7 @@ constructor(
     colorPickerViewModel2Factory: ColorPickerViewModel2.Factory,
     clockPickerViewModelFactory: ClockPickerViewModel.Factory,
     shapeGridPickerViewModelFactory: ShapeGridPickerViewModel.Factory,
+    val colorContrastSectionViewModel: ColorContrastSectionViewModel2,
     val darkModeViewModel: DarkModeViewModel,
     @Assisted private val viewModelScope: CoroutineScope,
 ) : CustomizationOptionsViewModel {
@@ -75,19 +76,17 @@ constructor(
             return true
         }
 
-        val isBackPressedHandled = defaultCustomizationOptionsViewModel.handleBackPressed()
+        return defaultCustomizationOptionsViewModel.handleBackPressed()
+    }
 
-        if (isBackPressedHandled) {
-            // If isBackPressedHandled is handled by DefaultCustomizationOptionsViewModel, it means
-            // we navigate back to the main screen from a secondary screen. Reset preview.
-            keyguardQuickAffordancePickerViewModel2.resetPreview()
-            shapeGridPickerViewModel.resetPreview()
-            clockPickerViewModel.resetPreview()
-            colorPickerViewModel2.resetPreview()
-            darkModeViewModel.resetPreview()
-        }
+    override fun resetPreview() {
+        defaultCustomizationOptionsViewModel.resetPreview()
 
-        return isBackPressedHandled
+        keyguardQuickAffordancePickerViewModel2.resetPreview()
+        shapeGridPickerViewModel.resetPreview()
+        clockPickerViewModel.resetPreview()
+        colorPickerViewModel2.resetPreview()
+        darkModeViewModel.resetPreview()
     }
 
     val onCustomizeClockClicked: Flow<(() -> Unit)?> =

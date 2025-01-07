@@ -19,7 +19,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name" msgid="1647136562008520313">"വാൾപേപ്പറും സ്‌റ്റൈലും"</string>
     <string name="theme_title" msgid="2144932106319405101">"സ്‌റ്റൈൽ"</string>
-    <string name="clock_title" msgid="1974314575211361352">"കസ്റ്റം ക്ലോക്ക്"</string>
+    <string name="clock_title" msgid="2126046720254613991">"ക്ലോക്ക്"</string>
     <string name="clock_description" msgid="3563839327378948">"കസ്റ്റം ക്ലോക്ക് തിരഞ്ഞെടുക്കൂ"</string>
     <string name="clock_picker_entry_content_description" msgid="8377139273468595734">"ഇഷ്‌ടാനുസൃത  ക്ലോക്ക് മാറ്റൂ"</string>
     <string name="select_clock_action_description" msgid="5025888763471843648">"ക്ലോക്ക് ഫെയ്‌സ് ഓപ്‌ഷൻ <xliff:g id="ID_1">%1$s</xliff:g>"</string>
@@ -41,6 +41,8 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"ഡൈനാമിക്"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"ലോക്ക് സ്‌ക്രീൻ ഉള്ളടക്കത്തിനനുസരിച്ച് ക്ലോക്കിന്റെ വലുപ്പം മാറുന്നു"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"വലുത്"</string>
+    <!-- no translation found for clock_size_large_description (1171001745473029918) -->
+    <skip />
     <string name="clock_size_small" msgid="2280449912094164133">"ചെറുത്"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"സ്ക്രീനിന്റെ മൂലയിൽ ഒരു ചെറിയ ക്ലോക്ക് കാണിക്കുന്നു"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"ക്ലോക്ക് ഫോണ്ട് മാറ്റങ്ങൾ ബാധകമാക്കുക"</string>
@@ -124,6 +126,7 @@
     <string name="color_changed" msgid="7029571720331641235">"നിറം മാറ്റി"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"ഡൈനാമിക്"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"സിസ്റ്റം നിറങ്ങൾ"</string>
+    <string name="system_colors_title" msgid="8011422955674152731">"നിറങ്ങൾ"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"ഇടത് കുറുക്കുവഴി"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"വലത് കുറുക്കുവഴി"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"ഒന്നുമില്ല"</string>
@@ -140,7 +143,7 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"ഒന്നുമില്ല"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"ലോക്ക് സ്ക്രീനിൽ അറിയിപ്പുകൾ കാണിക്കുക"</string>
-    <string name="more_settings_section_title" msgid="1331425454775815958">"കൂടുതൽ ലോക്ക് സ്‌ക്രീൻ ഓപ്‌ഷനുകൾ"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"കൂടുതൽ ലോക്ക്‌സ്ക്രീൻ ക്രമീകരണം"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"സ്വകാര്യത, ഇപ്പോൾ കേൾക്കുന്നത്, എന്നിവയും മറ്റും"</string>
     <string name="more_colors" msgid="3191071655353004591">"കൂടുതൽ നിറങ്ങൾ"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"പ്രാഥമിക ഡൈനാമിക് തീം"</string>

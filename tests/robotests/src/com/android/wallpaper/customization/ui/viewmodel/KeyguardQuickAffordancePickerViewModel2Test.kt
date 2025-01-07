@@ -26,6 +26,7 @@ import com.android.customization.picker.quickaffordance.domain.interactor.Keygua
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.FakeCustomizationProviderClient
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
@@ -123,7 +124,15 @@ class KeyguardQuickAffordancePickerViewModel2Test {
             val quickAffordances = collectLastValue(underTest.quickAffordances)
 
             // Default selectedQuickAffordances is an empty map
-            assertThat(previewingQuickAffordances()).isEqualTo(emptyMap<String, String>())
+            assertThat(previewingQuickAffordances())
+                .isEqualTo(
+                    mapOf(
+                        KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START to
+                            KeyguardPreviewConstants.KEYGUARD_QUICK_AFFORDANCE_ID_NONE,
+                        KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END to
+                            KeyguardPreviewConstants.KEYGUARD_QUICK_AFFORDANCE_ID_NONE,
+                    )
+                )
 
             // Click on quick affordance 1 when selected slot ID is bottom_start
             val onClickAffordance1 =
@@ -133,7 +142,9 @@ class KeyguardQuickAffordancePickerViewModel2Test {
                 .isEqualTo(
                     mapOf(
                         KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START to
-                            FakeCustomizationProviderClient.AFFORDANCE_1
+                            FakeCustomizationProviderClient.AFFORDANCE_1,
+                        KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END to
+                            KeyguardPreviewConstants.KEYGUARD_QUICK_AFFORDANCE_ID_NONE,
                     )
                 )
 
@@ -154,7 +165,15 @@ class KeyguardQuickAffordancePickerViewModel2Test {
                 )
 
             underTest.resetPreview()
-            assertThat(previewingQuickAffordances()).isEqualTo(emptyMap<String, String>())
+            assertThat(previewingQuickAffordances())
+                .isEqualTo(
+                    mapOf(
+                        KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START to
+                            KeyguardPreviewConstants.KEYGUARD_QUICK_AFFORDANCE_ID_NONE,
+                        KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END to
+                            KeyguardPreviewConstants.KEYGUARD_QUICK_AFFORDANCE_ID_NONE,
+                    )
+                )
         }
 
     @Test

@@ -41,6 +41,7 @@ import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolba
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import java.lang.ref.WeakReference
+import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.launch
 
 object ColorsFloatingSheetBinder {
@@ -158,10 +159,16 @@ object ColorsFloatingSheetBinder {
                         com.android.wallpaper.R.id.background
                     )
                 val night = uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
-                ColorOptionIconBinder2.bind(colorOptionIconView, colorIcon, night)
-                // Return null since it does not need the lifecycleOwner to launch any job for later
-                // disposal when rebind.
-                return@OptionItemAdapter2 null
+                val binding =
+                    ColorOptionIconBinder2.bind(
+                        view = colorOptionIconView,
+                        viewModel = colorIcon,
+                        darkTheme = night,
+                        colorUpdateViewModel = colorUpdateViewModel,
+                        shouldAnimateColor = shouldAnimateColor,
+                        lifecycleOwner = lifecycleOwner,
+                    )
+                return@OptionItemAdapter2 DisposableHandle { binding.destroy() }
             },
             colorUpdateViewModel = WeakReference(colorUpdateViewModel),
             shouldAnimateColor = shouldAnimateColor,

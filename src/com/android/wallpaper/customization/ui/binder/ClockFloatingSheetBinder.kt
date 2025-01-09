@@ -20,7 +20,8 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
-import android.content.res.Configuration
+import android.content.res.Configuration.UI_MODE_NIGHT_MASK
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -36,8 +37,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.clock.shared.ClockSize
-import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder
-import com.android.customization.picker.color.ui.view.ColorOptionIconView
+import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder2
+import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.systemui.plugins.clocks.AxisType
@@ -54,7 +55,6 @@ import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
-import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.DisposableHandle
@@ -144,10 +144,17 @@ object ClockFloatingSheetBinder {
         // Clock color
         val clockColorContent = view.requireViewById<View>(R.id.clock_floating_sheet_color_content)
         val clockColorAdapter =
-            createClockColorOptionItemAdapter(view.resources.configuration.uiMode, lifecycleOwner)
+            createClockColorOptionItemAdapter(
+                uiMode = view.resources.configuration.uiMode,
+                colorUpdateViewModel = colorUpdateViewModel,
+                shouldAnimateColor = isFloatingSheetActive,
+                lifecycleOwner = lifecycleOwner,
+            )
         val clockColorList =
             view.requireViewById<RecyclerView>(R.id.clock_color_list).apply {
-                initColorList(appContext, clockColorAdapter)
+                adapter = clockColorAdapter
+                layoutManager =
+                    LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
             }
         val clockColorSlider: SeekBar = view.requireViewById(R.id.clock_color_slider)
         clockColorSlider.setOnSeekBarChangeListener(
@@ -468,38 +475,33 @@ object ClockFloatingSheetBinder {
 
     private fun createClockColorOptionItemAdapter(
         uiMode: Int,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
-    ): OptionItemAdapter<ColorOptionIconViewModel> =
-        OptionItemAdapter(
-            layoutResourceId = R.layout.color_option,
+    ): OptionItemAdapter2<ColorOptionIconViewModel> =
+        OptionItemAdapter2(
+            layoutResourceId = R.layout.color_option2,
             lifecycleOwner = lifecycleOwner,
-            bindIcon = { foregroundView: View, colorIcon: ColorOptionIconViewModel ->
-                val colorOptionIconView = foregroundView as? ColorOptionIconView
-                val night =
-                    uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-                colorOptionIconView?.let { ColorOptionIconBinder.bind(it, colorIcon, night) }
+            bindPayload = { itemView: View, colorIcon: ColorOptionIconViewModel ->
+                val colorOptionIconView =
+                    itemView.requireViewById<ColorOptionIconView2>(
+                        com.android.wallpaper.R.id.background
+                    )
+                val night = uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
+                val binding =
+                    ColorOptionIconBinder2.bind(
+                        view = colorOptionIconView,
+                        viewModel = colorIcon,
+                        darkTheme = night,
+                        colorUpdateViewModel = colorUpdateViewModel,
+                        shouldAnimateColor = shouldAnimateColor,
+                        lifecycleOwner = lifecycleOwner,
+                    )
+                return@OptionItemAdapter2 DisposableHandle { binding.destroy() }
             },
+            colorUpdateViewModel = WeakReference(colorUpdateViewModel),
+            shouldAnimateColor = shouldAnimateColor,
         )
-
-    private fun RecyclerView.initColorList(
-        context: Context,
-        adapter: OptionItemAdapter<ColorOptionIconViewModel>,
-    ) {
-        apply {
-            this.adapter = adapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            addItemDecoration(
-                SingleRowListItemSpacing(
-                    context.resources.getDimensionPixelSize(
-                        R.dimen.floating_sheet_content_horizontal_padding
-                    ),
-                    context.resources.getDimensionPixelSize(
-                        R.dimen.floating_sheet_list_item_horizontal_space
-                    ),
-                )
-            )
-        }
-    }
 
     // Alpha is 1 when current height is from height, and 0 when current height is to height.
     private fun getAlpha(fromHeight: Int, toHeight: Int, currentHeight: Int): Float =

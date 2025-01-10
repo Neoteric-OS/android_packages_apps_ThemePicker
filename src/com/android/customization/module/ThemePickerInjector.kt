@@ -378,7 +378,6 @@ constructor(
     override fun getClockSettingsViewModelFactory(
         context: Context,
         wallpaperColorsRepository: WallpaperColorsRepository,
-        clockViewFactory: ClockViewFactory,
     ): ClockSettingsViewModel.Factory {
         return clockSettingsViewModelFactory
             ?: ClockSettingsViewModel.Factory(
@@ -387,8 +386,7 @@ constructor(
                     colorPickerInteractor.get(),
                     getUserEventLogger(),
                 ) { clockId ->
-                    clockId?.let { clockViewFactory.getController(clockId).config.isReactiveToTone }
-                        ?: false
+                    clockId?.let { clockPickerInteractor.get().isReactiveToTone(it) } ?: false
                 }
                 .also { clockSettingsViewModelFactory = it }
     }

@@ -23,12 +23,29 @@
     android:clipToPadding="false"
     android:clipChildren="false">
 
+    <TextView
+        android:id="@+id/clock_color_title"
+        style="@style/CustomizationOptionEntryTitleTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/clock_color_title"
+        android:paddingHorizontal="@dimen/floating_sheet_content_horizontal_padding" />
+
+    <TextView
+        android:id="@+id/clock_color_description"
+        style="@style/CustomizationOptionEntrySubtitleTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/floating_sheet_content_horizontal_padding"
+        android:text="@string/clock_color_description"
+        android:layout_marginBottom="16dp" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:clipChildren="false"
-        android:layout_marginBottom="@dimen/floating_sheet_clock_color_option_list_bottom_margin">
+        android:layout_marginBottom="20dp">
 
         <!--
         This is an invisible placeholder put in place so that the parent keeps its height

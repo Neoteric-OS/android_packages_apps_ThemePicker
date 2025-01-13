@@ -16,7 +16,6 @@
 
 package com.android.wallpaper.customization.ui.binder
 
-import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.view.View
@@ -32,7 +31,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder2
 import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
-import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.customization.picker.mode.ui.binder.DarkModeBinder
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
@@ -98,8 +96,14 @@ object ColorsFloatingSheetBinder {
                 lifecycleOwner = lifecycleOwner,
             )
         val colorsList =
-            view.requireViewById<RecyclerView>(R.id.colors_horizontal_list).also {
-                it.initColorsList(view.context.applicationContext, colorsAdapter)
+            view.requireViewById<RecyclerView>(R.id.colors_horizontal_list).apply {
+                adapter = colorsAdapter
+                layoutManager =
+                    LinearLayoutManager(
+                        view.context.applicationContext,
+                        LinearLayoutManager.HORIZONTAL,
+                        false,
+                    )
             }
 
         DarkModeBinder.bind(
@@ -162,22 +166,4 @@ object ColorsFloatingSheetBinder {
             colorUpdateViewModel = WeakReference(colorUpdateViewModel),
             shouldAnimateColor = shouldAnimateColor,
         )
-
-    private fun RecyclerView.initColorsList(
-        context: Context,
-        adapter: OptionItemAdapter2<ColorOptionIconViewModel>,
-    ) {
-        apply {
-            this.adapter = adapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            addItemDecoration(
-                SingleRowListItemSpacing(
-                    context.resources.getDimensionPixelSize(
-                        R.dimen.floating_sheet_content_horizontal_padding
-                    ),
-                    0,
-                )
-            )
-        }
-    }
 }

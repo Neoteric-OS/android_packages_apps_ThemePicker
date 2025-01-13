@@ -95,6 +95,11 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToLockScreenNotificationsSettingsActivity,
         )
 
+        val optionsViewModel =
+            viewModel.customizationOptionsViewModel as ThemePickerCustomizationOptionsViewModel
+
+        val isOnMainScreen = { optionsViewModel.selectedOption.value == null }
+
         val optionClock: View =
             lockScreenCustomizationOptionEntries
                 .first { it.first == ThemePickerLockCustomizationOption.CLOCK }
@@ -161,8 +166,6 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         val optionThemedIconsSwitch =
             optionThemedIcons?.findViewById<Switch>(R.id.option_entry_themed_icons_switch)
 
-        val optionsViewModel =
-            viewModel.customizationOptionsViewModel as ThemePickerCustomizationOptionsViewModel
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -252,14 +255,21 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
 
                 launch {
+                    var binding: ColorOptionIconBinder2.Binding? = null
                     optionsViewModel.colorPickerViewModel2.selectedColorOption.collect { colorOption
                         ->
                         (colorOption as? ColorOptionImpl)?.let {
-                            ColorOptionIconBinder2.bind(
-                                view = optionColorsIcon,
-                                viewModel = ColorOptionIconViewModel.fromColorOption(colorOption),
-                                darkTheme = view.resources.configuration.isNightModeActive,
-                            )
+                            binding?.destroy()
+                            binding =
+                                ColorOptionIconBinder2.bind(
+                                    view = optionColorsIcon,
+                                    viewModel =
+                                        ColorOptionIconViewModel.fromColorOption(colorOption),
+                                    darkTheme = view.resources.configuration.isNightModeActive,
+                                    colorUpdateViewModel = colorUpdateViewModel,
+                                    shouldAnimateColor = isOnMainScreen,
+                                    lifecycleOwner = lifecycleOwner,
+                                )
                         }
                     }
                 }

@@ -40,15 +40,14 @@
         It's critical for any TextViews inside the included layout to have text.
         -->
         <include
-            layout="@layout/color_option"
-            android:layout_width="@dimen/option_item_size"
-            android:layout_height="@dimen/option_item_size"
+            layout="@layout/color_option2"
             android:visibility="invisible" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/clock_color_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/floating_sheet_content_horizontal_padding"
             android:clipChildren="false"
             android:clipToPadding="false" />
     </FrameLayout>

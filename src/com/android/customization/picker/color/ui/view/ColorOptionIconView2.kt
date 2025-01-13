@@ -55,17 +55,20 @@ class ColorOptionIconView2(context: Context, attrs: AttributeSet) :
      * @param color3 the color in the bottom right quadrant
      */
     fun bindColor(
-        @ColorInt strokeColor: Int,
         @ColorInt color0: Int,
         @ColorInt color1: Int,
         @ColorInt color2: Int,
         @ColorInt color3: Int,
     ) {
-        this.strokeColor = strokeColor
         this.color0 = color0
         this.color1 = color1
         this.color2 = color2
         this.color3 = color3
+        invalidate()
+    }
+
+    fun bindStrokeColor(@ColorInt strokeColor: Int) {
+        this.strokeColor = strokeColor
         invalidate()
     }
 

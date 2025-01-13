@@ -41,8 +41,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Dinámico"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"El tamaño del reloj cambia según el contenido de la pantalla de bloqueo"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"Grande"</string>
-    <!-- no translation found for clock_size_large_description (1171001745473029918) -->
-    <skip />
+    <string name="clock_size_large_description" msgid="1171001745473029918">"Se muestra cuando las notificaciones no son visibles"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Pequeño"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Aparece un reloj pequeño en la esquina de tu pantalla"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Aplica cambios a la fuente del reloj"</string>
@@ -126,8 +125,7 @@
     <string name="color_changed" msgid="7029571720331641235">"Se cambió el color"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dinámico"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Colores del sistema"</string>
-    <!-- no translation found for system_colors_title (8011422955674152731) -->
-    <skip />
+    <string name="system_colors_title" msgid="8011422955674152731">"Colores"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Acceso izquierdo"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Acceso derecho"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Ninguno"</string>
@@ -144,8 +142,11 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Ninguno"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Mostrar las notificaciones en la pantalla de bloqueo"</string>
-    <!-- no translation found for more_settings_section_title (6854797937797818510) -->
+    <!-- no translation found for lock_screen_notifications_section_title (906673283764252102) -->
     <skip />
+    <!-- no translation found for lock_screen_notifications_section_description (3321937285144466046) -->
+    <skip />
+    <string name="more_settings_section_title" msgid="6854797937797818510">"Más opciones de pant. de bloqueo"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Privacidad, Está sonando y más"</string>
     <string name="more_colors" msgid="3191071655353004591">"Más colores"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Tema dinámico principal"</string>

@@ -41,8 +41,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"ଡାଇନାମିକ"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"ଘଣ୍ଟାର ଆକାର ଲକ ସ୍କ୍ରିନର ବିଷୟବସ୍ତୁ ଅନୁସାରେ ପରିବର୍ତ୍ତନ ହୋଇଥାଏ"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"ବଡ଼"</string>
-    <!-- no translation found for clock_size_large_description (1171001745473029918) -->
-    <skip />
+    <string name="clock_size_large_description" msgid="1171001745473029918">"ବିଜ୍ଞପ୍ତିଗୁଡ଼ିକ ଦେଖାନଯିବା ସମୟରେ ଦେଖାଯାଇଥାଏ"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"ଛୋଟ"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"ଆପଣଙ୍କ ସ୍କ୍ରିନର କୋଣରେ ଏକ ଛୋଟ ଘଣ୍ଟା ଦେଖାଯାଏ"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"ଘଡ଼ିର ଫଣ୍ଟରେ କରାଯାଇଥିବା ପରିବର୍ତ୍ତନକୁ ଲାଗୁ କରନ୍ତୁ"</string>
@@ -126,8 +125,7 @@
     <string name="color_changed" msgid="7029571720331641235">"ରଙ୍ଗ ପରିବର୍ତ୍ତନ କରାଯାଇଛି"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"ଡାଇନାମିକ"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"ସିଷ୍ଟମ ରଙ୍ଗ"</string>
-    <!-- no translation found for system_colors_title (8011422955674152731) -->
-    <skip />
+    <string name="system_colors_title" msgid="8011422955674152731">"ରଙ୍ଗ"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"ବାମ ସର୍ଟକଟ"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"ଡାହାଣ ସର୍ଟକଟ"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"କିଛି ନାହିଁ"</string>
@@ -144,8 +142,11 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"କିଛି ନାହିଁ"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"ଲକ ସ୍କ୍ରିନରେ ବିଜ୍ଞପ୍ତିଗୁଡ଼ିକୁ ଦେଖାନ୍ତୁ"</string>
-    <!-- no translation found for more_settings_section_title (6854797937797818510) -->
+    <!-- no translation found for lock_screen_notifications_section_title (906673283764252102) -->
     <skip />
+    <!-- no translation found for lock_screen_notifications_section_description (3321937285144466046) -->
+    <skip />
+    <string name="more_settings_section_title" msgid="6854797937797818510">"ଅଧିକ ଲକ ସ୍କ୍ରିନ ସେଟିଂସ"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"ଗୋପନୀୟତା, ବର୍ତ୍ତମାନ ପ୍ଲେ ହେଉଛି ଏବଂ ଆହୁରି ଅନେକ କିଛି"</string>
     <string name="more_colors" msgid="3191071655353004591">"ଅଧିକ ରଙ୍ଗ"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"ପ୍ରାଥମିକ ଡାଇନାମିକ ଥିମ"</string>

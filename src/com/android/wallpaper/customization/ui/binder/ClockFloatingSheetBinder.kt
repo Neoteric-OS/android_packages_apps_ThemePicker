@@ -119,7 +119,12 @@ object ClockFloatingSheetBinder {
 
         // Clock style
         val clockStyleContent = view.requireViewById<View>(R.id.clock_floating_sheet_style_content)
-        val clockStyleAdapter = createClockStyleOptionItemAdapter(lifecycleOwner)
+        val clockStyleAdapter =
+            createClockStyleOptionItemAdapter(
+                colorUpdateViewModel = colorUpdateViewModel,
+                shouldAnimateColor = isFloatingSheetActive,
+                lifecycleOwner = lifecycleOwner,
+            )
         val clockStyleList =
             view.requireViewById<RecyclerView>(R.id.clock_style_list).apply {
                 initStyleList(appContext, clockStyleAdapter)
@@ -418,7 +423,9 @@ object ClockFloatingSheetBinder {
     }
 
     private fun createClockStyleOptionItemAdapter(
-        lifecycleOwner: LifecycleOwner
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
+        lifecycleOwner: LifecycleOwner,
     ): OptionItemAdapter2<ClockStyleModel> =
         OptionItemAdapter2(
             layoutResourceId = R.layout.clock_style_option,
@@ -437,6 +444,8 @@ object ClockFloatingSheetBinder {
                     }
                 return@OptionItemAdapter2 DisposableHandle { job.cancel() }
             },
+            colorUpdateViewModel = WeakReference(colorUpdateViewModel),
+            shouldAnimateColor = shouldAnimateColor,
         )
 
     private fun RecyclerView.initStyleList(

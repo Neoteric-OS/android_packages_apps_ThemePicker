@@ -25,6 +25,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.Switch
@@ -445,11 +446,25 @@ object ClockFloatingSheetBinder {
                     lifecycleOwner.lifecycleScope.launch {
                         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                             styleModel.showEditButton.collect {
-                                view.findViewById<ImageView>(R.id.edit_icon)?.isVisible = it
+                                view.findViewById<FrameLayout>(R.id.edit_icon)?.isVisible = it
                             }
                         }
                     }
-                return@OptionItemAdapter2 DisposableHandle { job.cancel() }
+                val binding =
+                    ColorUpdateBinder.bind(
+                        setColor = { color ->
+                            view.findViewById<ImageView>(R.id.edit_icon_background)?.drawable?.let {
+                                DrawableCompat.setTint(DrawableCompat.wrap(it), color)
+                            }
+                        },
+                        color = colorUpdateViewModel.colorOnPrimaryFixedVariant,
+                        shouldAnimate = shouldAnimateColor,
+                        lifecycleOwner = lifecycleOwner,
+                    )
+                return@OptionItemAdapter2 DisposableHandle {
+                    job.cancel()
+                    binding.destroy()
+                }
             },
             colorUpdateViewModel = WeakReference(colorUpdateViewModel),
             shouldAnimateColor = shouldAnimateColor,

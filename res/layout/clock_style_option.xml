@@ -42,15 +42,29 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:src="@drawable/ic_clock_24px" />
 
-    <ImageView
+    <FrameLayout
         android:id="@+id/edit_icon"
         android:layout_width="@dimen/floating_sheet_clock_edit_icon_size"
         android:layout_height="@dimen/floating_sheet_clock_edit_icon_size"
         android:layout_marginTop="@dimen/floating_sheet_clock_edit_icon_margin"
         android:layout_marginEnd="@dimen/floating_sheet_clock_edit_icon_margin"
-        android:src="@drawable/edit_icon"
         app:layout_constraintEnd_toEndOf="@+id/background"
-        app:layout_constraintTop_toTopOf="@+id/background"
-        android:importantForAccessibility="no" />
+        app:layout_constraintTop_toTopOf="@+id/background" >
+        <ImageView
+            android:id="@+id/edit_icon_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/edit_icon_background"
+            android:importantForAccessibility="no" />
+
+        <ImageView
+            android:id="@+id/edit_icon_foreground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/edit_icon_foreground"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

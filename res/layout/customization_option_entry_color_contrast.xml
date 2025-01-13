@@ -24,31 +24,31 @@
     android:clickable="true">
 
     <TextView
-        android:id="@+id/option_entry_color_contrast_title"
+        android:id="@+id/option_entry_title"
         style="@style/CustomizationOptionEntryTitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/color_contrast_section_title"
         android:layout_marginEnd="@dimen/customization_option_entry_text_margin_end"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/option_entry_color_contrast_icon_container"
-        app:layout_constraintBottom_toTopOf="@+id/option_entry_color_contrast_description"
+        app:layout_constraintEnd_toStartOf="@+id/option_entry_icon_container"
+        app:layout_constraintBottom_toTopOf="@+id/option_entry_description"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/option_entry_color_contrast_description"
+        android:id="@+id/option_entry_description"
         style="@style/CustomizationOptionEntrySubtitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/customization_option_entry_text_margin_end"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/option_entry_color_contrast_icon_container"
+        app:layout_constraintEnd_toStartOf="@+id/option_entry_icon_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/option_entry_color_contrast_title" />
+        app:layout_constraintTop_toBottomOf="@+id/option_entry_title" />
 
     <FrameLayout
-        android:id="@+id/option_entry_color_contrast_icon_container"
+        android:id="@+id/option_entry_icon_container"
         android:layout_width="@dimen/customization_option_entry_icon_size"
         android:layout_height="@dimen/customization_option_entry_icon_size"
         android:padding="@dimen/customization_option_entry_icon_padding"
@@ -58,7 +58,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
-            android:id="@+id/option_entry_color_contrast_icon"
+            android:id="@+id/option_entry_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/grid_preview_card_content_description" />

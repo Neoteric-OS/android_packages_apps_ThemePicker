@@ -49,10 +49,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.take
 
 class KeyguardQuickAffordancePickerViewModel2
 @AssistedInject
@@ -82,9 +83,15 @@ constructor(
             )
     private val overridingQuickAffordances = MutableStateFlow<Map<String, String>>(emptyMap())
     private val selectedQuickAffordancesGroupBySlotId =
-        quickAffordanceInteractor.selections.map {
-            it.groupBy { selectionModel -> selectionModel.slotId }
-        }
+        quickAffordanceInteractor.selections
+            .map { it.groupBy { selectionModel -> selectionModel.slotId } }
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+    // optimisticUpdateQuickAffordances updates right after applying button is clicked, while the
+    // actual update of selectedQuickAffordancesGroupBySlotId later updates until the system
+    // completes the update task. This can make sure the apply button state updates before we return
+    // to the previous screen.
+    private val optimisticUpdateQuickAffordances: MutableStateFlow<Map<String, String>?> =
+        MutableStateFlow(null)
 
     val previewingQuickAffordances =
         combine(
@@ -258,19 +265,18 @@ constructor(
         }
 
     val onApply: Flow<(suspend () -> Unit)?> =
-        combine(overridingQuickAffordances, selectedQuickAffordancesGroupBySlotId) {
+        combine(overridingQuickAffordances, optimisticUpdateQuickAffordances) {
             overridingQuickAffordances,
-            selectedQuickAffordancesGroupBySlotId ->
-            // If all overridingQuickAffordances are same as the selected quick affordances, it is
-            // not yet edited
+            optimisticUpdateQuickAffordances ->
+            // If all overridingQuickAffordances is empty or are same as the
+            // optimisticUpdateQuickAffordances, it is not yet edited
             val isQuickAffordancesEdited =
                 (!overridingQuickAffordances.all { (slotId, overridingQuickAffordanceId) ->
-                    selectedQuickAffordancesGroupBySlotId[slotId]?.find {
-                        it.affordanceId == overridingQuickAffordanceId
-                    } != null
+                    optimisticUpdateQuickAffordances?.get(slotId) == overridingQuickAffordanceId
                 })
             if (isQuickAffordancesEdited) {
                 {
+                    this.optimisticUpdateQuickAffordances.value = overridingQuickAffordances
                     overridingQuickAffordances.forEach { entry ->
                         val slotId = entry.key
                         val affordanceId = entry.value
@@ -281,10 +287,6 @@ constructor(
                                 slotId = slotId,
                                 affordanceId = affordanceId,
                             )
-                        }
-                        // Suspend until the next selectedQuickAffordancesGroupBySlotId update
-                        this.selectedQuickAffordancesGroupBySlotId.take(1).collect {
-                            return@collect
                         }
                         logger.logShortcutApplied(shortcut = affordanceId, shortcutSlotId = slotId)
                     }

@@ -26,6 +26,7 @@ import androidx.lifecycle.viewModelScope
 import com.android.customization.model.ResourceConstants
 import com.android.customization.picker.grid.domain.interactor.GridInteractor
 import com.android.customization.picker.grid.shared.model.GridOptionItemsModel
+import com.android.themepicker.R
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
 import kotlinx.coroutines.flow.Flow
@@ -34,10 +35,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class GridScreenViewModel(
-    context: Context,
-    private val interactor: GridInteractor,
-) : ViewModel() {
+class GridScreenViewModel(context: Context, private val interactor: GridInteractor) : ViewModel() {
 
     @SuppressLint("StaticFieldLeak") // We're not leaking this context as it is the app context.
     private val applicationContext = context.applicationContext
@@ -46,7 +44,7 @@ class GridScreenViewModel(
         interactor.options.map { model -> toViewModel(model) }
 
     private fun toViewModel(
-        model: GridOptionItemsModel,
+        model: GridOptionItemsModel
     ): List<OptionItemViewModel<GridIconViewModel>> {
         val iconShapePath =
             applicationContext.resources.getString(
@@ -72,6 +70,14 @@ class GridScreenViewModel(
                                 path = iconShapePath,
                             ),
                         text = text,
+                        contentDescription =
+                            Text.Loaded(
+                                applicationContext.resources.getString(
+                                    R.string.grid_content_description,
+                                    option.cols,
+                                    option.rows,
+                                )
+                            ),
                         isSelected = option.isSelected,
                         onClicked =
                             option.isSelected.map { isSelected ->
@@ -87,20 +93,14 @@ class GridScreenViewModel(
         }
     }
 
-    class Factory(
-        context: Context,
-        private val interactor: GridInteractor,
-    ) : ViewModelProvider.Factory {
+    class Factory(context: Context, private val interactor: GridInteractor) :
+        ViewModelProvider.Factory {
 
         private val applicationContext = context.applicationContext
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return GridScreenViewModel(
-                context = applicationContext,
-                interactor = interactor,
-            )
-                as T
+            return GridScreenViewModel(context = applicationContext, interactor = interactor) as T
         }
     }
 }

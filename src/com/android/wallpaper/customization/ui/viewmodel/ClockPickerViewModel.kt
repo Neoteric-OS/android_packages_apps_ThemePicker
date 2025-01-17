@@ -166,7 +166,7 @@ constructor(
                     } else {
                         fun() {
                             overridingClock.value = this
-                            overrideClockFontAxisMap.value = null
+                            overrideClockFontAxisMap.value = emptyMap()
                         }
                     }
                 },
@@ -174,8 +174,7 @@ constructor(
     }
 
     // Clock Font Axis Editor
-    private val overrideClockFontAxisMap = MutableStateFlow<Map<String, Float>?>(null)
-    private val isFontAxisMapEdited = overrideClockFontAxisMap.map { it != null }
+    private val overrideClockFontAxisMap = MutableStateFlow<Map<String, Float>>(emptyMap())
     val selectedClockFontAxes =
         previewingClock
             .map { clock -> clock.fontAxes }
@@ -184,21 +183,31 @@ constructor(
         selectedClockFontAxes
             .filterNotNull()
             .map { fontAxes -> fontAxes.associate { it.key to it.currentValue } }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+    private val isFontAxisMapEdited =
+        combine(overrideClockFontAxisMap, selectedClockFontAxisMap) {
+            overrideClockFontAxisMap,
+            selectedClockFontAxisMap ->
+            !overrideClockFontAxisMap.all { (key, value) -> selectedClockFontAxisMap[key] == value }
+        }
     val previewingClockFontAxisMap =
         combine(overrideClockFontAxisMap, selectedClockFontAxisMap.filterNotNull()) {
                 overrideAxisMap,
                 selectedAxisMap ->
-                overrideAxisMap?.let {
-                    val mutableMap = selectedAxisMap.toMutableMap()
-                    overrideAxisMap.forEach { (key, value) -> mutableMap[key] = value }
-                    mutableMap.toMap()
-                } ?: selectedAxisMap
+                if (overrideAxisMap.isEmpty()) {
+                    selectedAxisMap
+                } else {
+                    overrideAxisMap.let {
+                        val mutableMap = selectedAxisMap.toMutableMap()
+                        overrideAxisMap.forEach { (key, value) -> mutableMap[key] = value }
+                        mutableMap.toMap()
+                    }
+                }
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
     fun updatePreviewFontAxis(key: String, value: Float) {
-        val axisMap = (overrideClockFontAxisMap.value?.toMutableMap() ?: mutableMapOf())
+        val axisMap = overrideClockFontAxisMap.value.toMutableMap()
         axisMap[key] = value
         overrideClockFontAxisMap.value = axisMap.toMap()
     }
@@ -208,7 +217,7 @@ constructor(
     }
 
     fun cancelFontAxes() {
-        overrideClockFontAxisMap.value = null
+        overrideClockFontAxisMap.value = emptyMap()
         _selectedTab.value = Tab.STYLE
     }
 
@@ -454,7 +463,7 @@ constructor(
         overridingClockSize.value = null
         overridingClockColorId.value = null
         overridingSliderProgress.value = null
-        overrideClockFontAxisMap.value = null
+        overrideClockFontAxisMap.value = emptyMap()
         _selectedTab.value = Tab.STYLE
     }
 

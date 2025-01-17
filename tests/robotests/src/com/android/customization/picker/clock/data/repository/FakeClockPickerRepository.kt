@@ -37,11 +37,13 @@ open class FakeClockPickerRepository(clocks: List<ClockMetadataModel> = fakeCloc
     ClockPickerRepository {
     override val allClocks: Flow<List<ClockMetadataModel>> = MutableStateFlow(clocks).asStateFlow()
 
-    private val selectedClockId = MutableStateFlow(fakeClocks[0].clockId)
-    @ColorInt private val selectedColorId = MutableStateFlow<String?>(null)
-    private val colorTone = MutableStateFlow(ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS)
-    @ColorInt private val seedColor = MutableStateFlow<Int?>(null)
-    private val fontAxes = MutableStateFlow<List<ClockFontAxis>>(listOf(buildFakeAxis(0)))
+    private val selectedClockId: MutableStateFlow<String> = MutableStateFlow(fakeClocks[0].clockId)
+    @ColorInt private val selectedColorId: MutableStateFlow<String?> = MutableStateFlow(null)
+    private val colorTone: MutableStateFlow<Int> =
+        MutableStateFlow(ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS)
+    @ColorInt private val seedColor: MutableStateFlow<Int?> = MutableStateFlow(null)
+    private val fontAxes: MutableStateFlow<List<ClockFontAxis>> =
+        MutableStateFlow(listOf(buildFakeAxis(0)))
     override val selectedClock: Flow<ClockMetadataModel> =
         combine(selectedClockId, selectedColorId, colorTone, seedColor, fontAxes) {
             selectedClockId,

@@ -21,10 +21,8 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Switch
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -40,6 +38,7 @@ import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder2
 import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.grid.ui.binder.GridIconViewBinder
+import com.android.customization.picker.settings.ui.binder.ColorContrastSectionViewBinder2
 import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.systemui.plugins.clocks.ClockPreviewConfig
 import com.android.systemui.shared.Flags
@@ -57,6 +56,7 @@ import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUti
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
+import com.google.android.material.materialswitch.MaterialSwitch
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -195,17 +195,25 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 .first { it.first == ThemePickerHomeCustomizationOption.COLOR_CONTRAST }
                 .second
         optionColorContrast.setOnClickListener { navigateToColorContrastSettingsActivity.invoke() }
-        val optionColorContrastDescription: TextView =
-            optionColorContrast.requireViewById(R.id.option_entry_description)
-        val optionColorContrastIcon: ImageView =
-            optionColorContrast.requireViewById(R.id.option_entry_icon)
 
         val optionThemedIcons =
             homeScreenCustomizationOptionEntries
                 .find { it.first == ThemePickerHomeCustomizationOption.THEMED_ICONS }
                 ?.second
         val optionThemedIconsSwitch =
-            optionThemedIcons?.findViewById<Switch>(R.id.option_entry_switch)
+            optionThemedIcons?.findViewById<MaterialSwitch>(R.id.option_entry_switch)
+
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                optionClockIcon.setColorFilter(color)
+                optionShortcutIcon1.setColorFilter(color)
+                optionShortcutIcon2.setColorFilter(color)
+                optionShapeGridIcon.setColorFilter(color)
+            },
+            color = colorUpdateViewModel.colorOnSurfaceVariant,
+            shouldAnimate = isOnMainScreen,
+            lifecycleOwner = lifecycleOwner,
+        )
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -270,28 +278,23 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                 view = optionShapeGridIcon,
                                 viewModel = gridIconViewModel,
                             )
-                            // TODO(b/363018910): Use ColorUpdateBinder to update color
-                            optionShapeGridIcon.setColorFilter(
-                                ContextCompat.getColor(
-                                    view.context,
-                                    com.android.wallpaper.R.color.system_on_surface_variant,
-                                )
-                            )
                         }
                     }
                 }
 
                 launch {
-                    optionsViewModel.colorContrastSectionViewModel.summary.collectLatest { summary
+                    var binding: ColorContrastSectionViewBinder2.Binding? = null
+                    optionsViewModel.colorContrastSectionViewModel.contrast.collectLatest { contrast
                         ->
-                        TextViewBinder.bind(
-                            view = optionColorContrastDescription,
-                            viewModel = summary.description,
-                        )
-                        summary.icon?.let {
-                            IconViewBinder.bind(view = optionColorContrastIcon, viewModel = it)
-                        }
-                        optionColorContrastIcon.isVisible = summary.icon != null
+                        binding?.destroy()
+                        binding =
+                            ColorContrastSectionViewBinder2.bind(
+                                view = optionColorContrast,
+                                contrast = contrast,
+                                colorUpdateViewModel = colorUpdateViewModel,
+                                shouldAnimateColor = isOnMainScreen,
+                                lifecycleOwner = lifecycleOwner,
+                            )
                     }
                 }
 

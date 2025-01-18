@@ -86,7 +86,7 @@
         app:layout_constraintTop_toBottomOf="@+id/clock_style_clock_size_title"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <Switch
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/clock_style_clock_size_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -94,6 +94,5 @@
         app:layout_constraintTop_toTopOf="@+id/clock_style_clock_size_title"
         app:layout_constraintBottom_toBottomOf="@+id/clock_style_clock_size_description"
         app:layout_constraintEnd_toEndOf="parent"
-        style="@style/Switch.SettingsLib"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
+        android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
 </androidx.constraintlayout.widget.ConstraintLayout>

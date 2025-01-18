@@ -16,16 +16,20 @@
 
 package com.android.customization.picker.mode.ui.binder
 
-import android.widget.Switch
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.customization.picker.mode.ui.viewmodel.DarkModeViewModel
+import com.google.android.material.materialswitch.MaterialSwitch
 import kotlinx.coroutines.launch
 
 object DarkModeBinder {
-    fun bind(darkModeToggle: Switch, viewModel: DarkModeViewModel, lifecycleOwner: LifecycleOwner) {
+    fun bind(
+        darkModeToggle: MaterialSwitch,
+        viewModel: DarkModeViewModel,
+        lifecycleOwner: LifecycleOwner,
+    ) {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isEnabled.collect { darkModeToggle.isEnabled = it } }

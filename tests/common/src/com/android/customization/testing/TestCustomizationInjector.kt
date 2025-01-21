@@ -104,7 +104,6 @@ constructor(
     override fun getClockSettingsViewModelFactory(
         context: Context,
         wallpaperColorsRepository: WallpaperColorsRepository,
-        clockViewFactory: ClockViewFactory,
     ): ClockSettingsViewModel.Factory {
         throw UnsupportedOperationException("not implemented")
     }

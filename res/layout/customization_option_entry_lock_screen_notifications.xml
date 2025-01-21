@@ -24,19 +24,19 @@
     android:clickable="true">
 
     <TextView
-        android:id="@+id/option_entry_lock_screen_notification_title"
+        android:id="@+id/option_entry_title"
         style="@style/CustomizationOptionEntryTitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/lock_screen_notifications_section_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/option_entry_lock_screen_notification_description"
+        app:layout_constraintBottom_toTopOf="@+id/option_entry_description"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/option_entry_lock_screen_notification_description"
+        android:id="@+id/option_entry_description"
         style="@style/CustomizationOptionEntrySubtitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -44,5 +44,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/option_entry_lock_screen_notification_title" />
+        app:layout_constraintTop_toBottomOf="@+id/option_entry_title" />
 </androidx.constraintlayout.widget.ConstraintLayout>

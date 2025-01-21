@@ -41,8 +41,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Dynamique"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"La taille de l\'horloge change selon le contenu de l\'écran de verrouillage"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"Grande"</string>
-    <!-- no translation found for clock_size_large_description (1171001745473029918) -->
-    <skip />
+    <string name="clock_size_large_description" msgid="1171001745473029918">"Affichée lorsque les notifications ne sont pas visibles"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Petite"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Une petite horloge s\'affiche dans le coin de votre écran"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Appliquer les modifications de police de l\'horloge"</string>
@@ -143,6 +142,10 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Aucun"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Afficher les notifications sur l\'écran de verrouillage"</string>
+    <!-- no translation found for lock_screen_notifications_section_title (906673283764252102) -->
+    <skip />
+    <!-- no translation found for lock_screen_notifications_section_description (3321937285144466046) -->
+    <skip />
     <string name="more_settings_section_title" msgid="6854797937797818510">"Autres param. écran verrouillage"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Confidentialité, En écoute et plus"</string>
     <string name="more_colors" msgid="3191071655353004591">"Autres couleurs"</string>

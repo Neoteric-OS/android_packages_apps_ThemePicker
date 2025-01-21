@@ -30,6 +30,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -55,6 +56,9 @@ constructor(
     private val defaultCustomizationOptionsViewModel =
         defaultCustomizationOptionsViewModelFactory.create(viewModelScope)
 
+    override val wallpaperCarouselViewModel =
+        defaultCustomizationOptionsViewModel.wallpaperCarouselViewModel
+
     val clockPickerViewModel = clockPickerViewModelFactory.create(viewModelScope = viewModelScope)
     val keyguardQuickAffordancePickerViewModel2 =
         keyguardQuickAffordancePickerViewModel2Factory.create(viewModelScope = viewModelScope)
@@ -66,6 +70,9 @@ constructor(
 
     override val selectedOption = defaultCustomizationOptionsViewModel.selectedOption
 
+    override val discardChangesDialogViewModel =
+        defaultCustomizationOptionsViewModel.discardChangesDialogViewModel
+
     override fun handleBackPressed(): Boolean {
 
         if (
@@ -74,6 +81,11 @@ constructor(
                 clockPickerViewModel.selectedTab.value == ClockPickerViewModel.Tab.FONT
         ) {
             clockPickerViewModel.cancelFontAxes()
+            return true
+        }
+
+        if (isApplyButtonEnabled.value) {
+            defaultCustomizationOptionsViewModel.showDiscardChangesDialogViewModel()
             return true
         }
 
@@ -190,7 +202,10 @@ constructor(
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val isApplyButtonEnabled: Flow<Boolean> = onApplyButtonClicked.map { it != null }
+    val isApplyButtonEnabled: StateFlow<Boolean> =
+        onApplyButtonClicked
+            .map { it != null }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     val isApplyButtonVisible: Flow<Boolean> = selectedOption.map { it != null }
 

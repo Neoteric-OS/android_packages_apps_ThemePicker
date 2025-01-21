@@ -31,7 +31,7 @@ interface CustomizationInjector : Injector {
     fun getCustomizationPreferences(context: Context): CustomizationPreferences
 
     fun getKeyguardQuickAffordancePickerInteractor(
-        context: Context,
+        context: Context
     ): KeyguardQuickAffordancePickerInteractor
 
     fun getColorPickerViewModelFactory(context: Context): ColorPickerViewModel.Factory
@@ -47,6 +47,5 @@ interface CustomizationInjector : Injector {
     fun getClockSettingsViewModelFactory(
         context: Context,
         wallpaperColorsRepository: WallpaperColorsRepository,
-        clockViewFactory: ClockViewFactory,
     ): ClockSettingsViewModel.Factory
 }

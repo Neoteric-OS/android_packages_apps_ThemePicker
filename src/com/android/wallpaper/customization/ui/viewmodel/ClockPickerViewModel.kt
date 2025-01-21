@@ -34,7 +34,6 @@ import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
-import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -290,7 +289,7 @@ constructor(
             }
         }
 
-    val clockColorOptions: Flow<List<OptionItemViewModel<ColorOptionIconViewModel>>> =
+    val clockColorOptions: Flow<List<OptionItemViewModel2<ColorOptionIconViewModel>>> =
         colorPickerInteractor.selectedColorOption.map { selectedColorOption ->
             // Use mapLatest and delay(100) here to prevent too many selectedClockColor update
             // events from ClockRegistry upstream, caused by sliding the saturation level bar.
@@ -304,7 +303,7 @@ constructor(
                             .map { colorMap.keys.indexOf(it) == index }
                             .stateIn(viewModelScope)
                     add(
-                        OptionItemViewModel<ColorOptionIconViewModel>(
+                        OptionItemViewModel2<ColorOptionIconViewModel>(
                             key = MutableStateFlow(colorModel.colorId) as StateFlow<String>,
                             payload =
                                 ColorOptionIconViewModel(
@@ -346,7 +345,7 @@ constructor(
 
     private suspend fun ColorOption.toOptionItemViewModel(
         context: Context
-    ): OptionItemViewModel<ColorOptionIconViewModel> {
+    ): OptionItemViewModel2<ColorOptionIconViewModel> {
         val lightThemeColors =
             (this as ColorOptionImpl)
                 .previewInfo
@@ -362,7 +361,7 @@ constructor(
         val isSelectedFlow =
             previewingClockColorId.map { it == DEFAULT_CLOCK_COLOR_ID }.stateIn(viewModelScope)
         val key = "${this.type}::${this.style}::${this.serializedPackages}"
-        return OptionItemViewModel<ColorOptionIconViewModel>(
+        return OptionItemViewModel2<ColorOptionIconViewModel>(
             key = MutableStateFlow(key) as StateFlow<String>,
             payload =
                 ColorOptionIconViewModel(

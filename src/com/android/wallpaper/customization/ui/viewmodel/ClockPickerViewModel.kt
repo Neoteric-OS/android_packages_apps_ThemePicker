@@ -83,28 +83,36 @@ constructor(
     private val _selectedTab = MutableStateFlow(Tab.STYLE)
     val selectedTab: StateFlow<Tab> = _selectedTab.asStateFlow()
     val tabs: Flow<List<FloatingToolbarTabViewModel>> =
-        _selectedTab.asStateFlow().map {
+        selectedTab.map {
             listOf(
                 FloatingToolbarTabViewModel(
-                    Icon.Resource(
-                        res = R.drawable.ic_clock_filled_24px,
-                        contentDescription = Text.Resource(R.string.clock_style),
-                    ),
-                    context.getString(R.string.clock_style),
-                    it == Tab.STYLE || it == Tab.FONT,
-                ) {
-                    _selectedTab.value = Tab.STYLE
-                },
+                    icon =
+                        Icon.Resource(
+                            res = R.drawable.ic_clock_filled_24px,
+                            contentDescription = Text.Resource(R.string.clock_style),
+                        ),
+                    text = context.getString(R.string.clock_style),
+                    isSelected = it == Tab.STYLE || it == Tab.FONT,
+                    onClick =
+                        if (it == Tab.STYLE || it == Tab.FONT) null
+                        else {
+                            { _selectedTab.value = Tab.STYLE }
+                        },
+                ),
                 FloatingToolbarTabViewModel(
-                    Icon.Resource(
-                        res = R.drawable.ic_palette_filled_24px,
-                        contentDescription = Text.Resource(R.string.clock_color),
-                    ),
-                    context.getString(R.string.clock_color),
-                    it == Tab.COLOR,
-                ) {
-                    _selectedTab.value = Tab.COLOR
-                },
+                    icon =
+                        Icon.Resource(
+                            res = R.drawable.ic_palette_filled_24px,
+                            contentDescription = Text.Resource(R.string.clock_color),
+                        ),
+                    text = context.getString(R.string.clock_color),
+                    isSelected = it == Tab.COLOR,
+                    onClick =
+                        if (it == Tab.COLOR) null
+                        else {
+                            { _selectedTab.value = Tab.COLOR }
+                        },
+                ),
             )
         }
 
@@ -166,16 +174,15 @@ constructor(
                     } else {
                         fun() {
                             overridingClock.value = this
-                            overrideClockFontAxisMap.value = null
+                            overrideClockFontAxisMap.value = emptyMap()
                         }
                     }
                 },
         )
     }
 
-    // Clock Font Axis Editor
-    private val overrideClockFontAxisMap = MutableStateFlow<Map<String, Float>?>(null)
-    private val isFontAxisMapEdited = overrideClockFontAxisMap.map { it != null }
+    // Clock font axis
+    private val overrideClockFontAxisMap = MutableStateFlow<Map<String, Float>>(emptyMap())
     val selectedClockFontAxes =
         previewingClock
             .map { clock -> clock.fontAxes }
@@ -184,21 +191,31 @@ constructor(
         selectedClockFontAxes
             .filterNotNull()
             .map { fontAxes -> fontAxes.associate { it.key to it.currentValue } }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+    private val isFontAxisMapEdited =
+        combine(overrideClockFontAxisMap, selectedClockFontAxisMap) {
+            overrideClockFontAxisMap,
+            selectedClockFontAxisMap ->
+            !overrideClockFontAxisMap.all { (key, value) -> selectedClockFontAxisMap[key] == value }
+        }
     val previewingClockFontAxisMap =
         combine(overrideClockFontAxisMap, selectedClockFontAxisMap.filterNotNull()) {
                 overrideAxisMap,
                 selectedAxisMap ->
-                overrideAxisMap?.let {
-                    val mutableMap = selectedAxisMap.toMutableMap()
-                    overrideAxisMap.forEach { (key, value) -> mutableMap[key] = value }
-                    mutableMap.toMap()
-                } ?: selectedAxisMap
+                if (overrideAxisMap.isEmpty()) {
+                    selectedAxisMap
+                } else {
+                    overrideAxisMap.let {
+                        val mutableMap = selectedAxisMap.toMutableMap()
+                        overrideAxisMap.forEach { (key, value) -> mutableMap[key] = value }
+                        mutableMap.toMap()
+                    }
+                }
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
     fun updatePreviewFontAxis(key: String, value: Float) {
-        val axisMap = (overrideClockFontAxisMap.value?.toMutableMap() ?: mutableMapOf())
+        val axisMap = overrideClockFontAxisMap.value.toMutableMap()
         axisMap[key] = value
         overrideClockFontAxisMap.value = axisMap.toMap()
     }
@@ -208,7 +225,7 @@ constructor(
     }
 
     fun cancelFontAxes() {
-        overrideClockFontAxisMap.value = null
+        overrideClockFontAxisMap.value = emptyMap()
         _selectedTab.value = Tab.STYLE
     }
 
@@ -237,7 +254,6 @@ constructor(
         }
 
     // Clock color
-    // 0 - 100
     private val overridingClockColorId = MutableStateFlow<String?>(null)
     private val isClockColorIdEdited =
         combine(overridingClockColorId, clockPickerInteractor.selectedColorId) {
@@ -252,6 +268,7 @@ constructor(
             overridingClockColorId ?: selectedColorId ?: DEFAULT_CLOCK_COLOR_ID
         }
 
+    // Clock color slider progress. Range is 0 - 100.
     private val overridingSliderProgress = MutableStateFlow<Int?>(null)
     private val isSliderProgressEdited =
         combine(overridingSliderProgress, clockPickerInteractor.colorToneProgress) {
@@ -395,21 +412,21 @@ constructor(
     private val isEdited =
         combine(
             isClockEdited,
+            isFontAxisMapEdited,
             isClockSizeEdited,
             isClockColorIdEdited,
             isSliderProgressEdited,
-            isFontAxisMapEdited,
         ) {
             isClockEdited,
+            isFontAxisMapEdited,
             isClockSizeEdited,
             isClockColorEdited,
-            isSliderProgressEdited,
-            isFontAxisMapEdited ->
+            isSliderProgressEdited ->
             isClockEdited ||
+                isFontAxisMapEdited ||
                 isClockSizeEdited ||
                 isClockColorEdited ||
-                isSliderProgressEdited ||
-                isFontAxisMapEdited
+                isSliderProgressEdited
         }
 
     val onApply: Flow<(suspend () -> Unit)?> =
@@ -421,12 +438,12 @@ constructor(
             previewingSliderProgress,
             previewingClockFontAxisMap,
         ) { array ->
-            val isEdited = array[0] as Boolean
-            val clock = array[1] as ClockMetadataModel
-            val size = array[2] as ClockSize
-            val previewingColorId = array[3] as String
-            val previewProgress = array[4] as Int
-            val axisMap = array[5] as Map<String, Float>
+            val isEdited: Boolean = array[0] as Boolean
+            val clock: ClockMetadataModel = array[1] as ClockMetadataModel
+            val size: ClockSize = array[2] as ClockSize
+            val previewingColorId: String = array[3] as String
+            val previewProgress: Int = array[4] as Int
+            val axisMap: Map<String, Float> = array[5] as Map<String, Float>
             if (isEdited) {
                 {
                     clockPickerInteractor.applyClock(
@@ -454,7 +471,7 @@ constructor(
         overridingClockSize.value = null
         overridingClockColorId.value = null
         overridingSliderProgress.value = null
-        overrideClockFontAxisMap.value = null
+        overrideClockFontAxisMap.value = emptyMap()
         _selectedTab.value = Tab.STYLE
     }
 

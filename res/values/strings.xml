@@ -204,6 +204,9 @@
     <!--Title for a grid option, describing the number of columns and rows, eg: 4x4 [CHAR LIMIT=10] -->
     <string name="grid_title_pattern"><xliff:g name="num_cols" example="1">%1$d</xliff:g>x<xliff:g name="num_rows" example="1">%2$d</xliff:g></string>
 
+    <!--Copntent description for a grid option, describing the number of columns and rows, eg: 4 by 4 [CHAR LIMIT=10] -->
+    <string name="grid_content_description"><xliff:g name="num_cols" example="1">%1$d</xliff:g> by <xliff:g name="num_rows" example="1">%2$d</xliff:g></string>
+
     <!-- Label of what will happen when user tap on apply button to change grid. [CHAR LIMIT=50] -->
     <string name="apply_grid_btn_note">Changing grid size will reload workspace and may take a few seconds.</string>
 

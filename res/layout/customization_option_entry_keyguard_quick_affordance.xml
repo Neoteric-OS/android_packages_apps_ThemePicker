@@ -25,33 +25,33 @@
     android:clickable="true">
 
     <TextView
-        android:id="@+id/option_entry_keyguard_quick_affordance_title"
+        android:id="@+id/option_entry_title"
         style="@style/CustomizationOptionEntryTitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/keyguard_quick_affordance_title"
         android:layout_marginEnd="@dimen/customization_option_entry_text_margin_end"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/option_entry_keyguard_quick_affordance_icon"
-        app:layout_constraintBottom_toTopOf="@+id/option_entry_keyguard_quick_affordance_description"
+        app:layout_constraintEnd_toStartOf="@+id/option_entry_icon_container"
+        app:layout_constraintBottom_toTopOf="@+id/option_entry_description"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/option_entry_keyguard_quick_affordance_description"
+        android:id="@+id/option_entry_description"
         style="@style/CustomizationOptionEntrySubtitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/customization_option_entry_text_margin_end"
         android:text="None"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/option_entry_keyguard_quick_affordance_icon"
+        app:layout_constraintEnd_toStartOf="@+id/option_entry_icon_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/option_entry_keyguard_quick_affordance_title"
+        app:layout_constraintTop_toBottomOf="@+id/option_entry_title"
         tools:text="Wallet, Nest" />
 
     <LinearLayout
-        android:id="@+id/option_entry_keyguard_quick_affordance_icon"
+        android:id="@+id/option_entry_icon_container"
         android:layout_width="@dimen/customization_option_entry_icon_size"
         android:layout_height="@dimen/customization_option_entry_icon_size"
         android:orientation="horizontal"
@@ -65,14 +65,14 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
-            android:id="@+id/option_entry_keyguard_quick_affordance_icon_1"
+            android:id="@+id/option_entry_icon_1"
             android:layout_width="@dimen/customization_option_entry_shortcut_icon_size"
             android:layout_height="@dimen/customization_option_entry_shortcut_icon_size"
             android:visibility="gone"
             android:tint="@color/system_on_surface" />
 
         <ImageView
-            android:id="@+id/option_entry_keyguard_quick_affordance_icon_2"
+            android:id="@+id/option_entry_icon_2"
             android:layout_width="@dimen/customization_option_entry_shortcut_icon_size"
             android:layout_height="@dimen/customization_option_entry_shortcut_icon_size"
             android:visibility="gone"

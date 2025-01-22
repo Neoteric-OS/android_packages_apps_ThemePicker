@@ -93,7 +93,12 @@ object ShortcutFloatingSheetBinder {
             lifecycleOwner = lifecycleOwner,
         )
 
-        val quickAffordanceAdapter = createOptionItemAdapter(lifecycleOwner)
+        val quickAffordanceAdapter =
+            createOptionItemAdapter(
+                colorUpdateViewModel = colorUpdateViewModel,
+                shouldAnimateColor = isFloatingSheetActive,
+                lifecycleOwner = lifecycleOwner,
+            )
         val quickAffordanceList =
             view.requireViewById<RecyclerView>(R.id.quick_affordance_horizontal_list).also {
                 it.initQuickAffordanceList(view.context.applicationContext, quickAffordanceAdapter)
@@ -176,7 +181,11 @@ object ShortcutFloatingSheetBinder {
         )
     }
 
-    private fun createOptionItemAdapter(lifecycleOwner: LifecycleOwner): OptionItemAdapter2<Icon> =
+    private fun createOptionItemAdapter(
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
+        lifecycleOwner: LifecycleOwner,
+    ): OptionItemAdapter2<Icon> =
         OptionItemAdapter2(
             layoutResourceId = R.layout.quick_affordance_list_item2,
             lifecycleOwner = lifecycleOwner,
@@ -188,6 +197,8 @@ object ShortcutFloatingSheetBinder {
                 // disposal when rebind.
                 return@OptionItemAdapter2 null
             },
+            colorUpdateViewModel = WeakReference(colorUpdateViewModel),
+            shouldAnimateColor = shouldAnimateColor,
         )
 
     private fun RecyclerView.initQuickAffordanceList(

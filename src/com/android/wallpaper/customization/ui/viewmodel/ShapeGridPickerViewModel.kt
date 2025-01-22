@@ -133,18 +133,23 @@ constructor(
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     val onApply: Flow<(suspend () -> Unit)?> =
-        combine(previewingGridKey, selectedGridOption, previewingShapeKey, selectedShapeKey) {
-            previewingGridOptionKey,
+        combine(overridingGridKey, selectedGridOption, overridingShapeKey, selectedShapeKey) {
+            overridingGridKey,
             selectedGridOption,
-            previewingShapeKey,
+            overridingShapeKey,
             selectedShapeKey ->
             if (
-                previewingGridOptionKey == selectedGridOption.key.value &&
-                    previewingShapeKey == selectedShapeKey
+                (overridingGridKey != null && overridingGridKey != selectedGridOption.key.value) ||
+                    (overridingShapeKey != null && overridingShapeKey != selectedShapeKey)
             ) {
-                null
+                {
+                    interactor.applySelectedOption(
+                        overridingShapeKey ?: selectedShapeKey,
+                        overridingGridKey ?: selectedGridOption.key.value,
+                    )
+                }
             } else {
-                { interactor.applySelectedOption(previewingShapeKey, previewingGridOptionKey) }
+                null
             }
         }
 

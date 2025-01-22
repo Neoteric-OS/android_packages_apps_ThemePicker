@@ -57,14 +57,9 @@ class ClockSettingsFragment : AppbarFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        val view =
-            inflater.inflate(
-                R.layout.fragment_clock_settings,
-                container,
-                false,
-            )
+        val view = inflater.inflate(R.layout.fragment_clock_settings, container, false)
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.updateLayoutParams<MarginLayoutParams> {
@@ -93,21 +88,18 @@ class ClockSettingsFragment : AppbarFragment() {
                             authority =
                                 resources.getString(
                                     com.android.wallpaper.R.string
-                                        .lock_screen_preview_provider_authority,
+                                        .lock_screen_preview_provider_authority
                                 ),
                         ),
                     wallpaperInfoProvider = { forceReload ->
                         suspendCancellableCoroutine { continuation ->
                             injector
                                 .getCurrentWallpaperInfoFactory(context)
-                                .createCurrentWallpaperInfos(
-                                    context,
-                                    forceReload,
-                                ) { homeWallpaper, lockWallpaper, _ ->
-                                    continuation.resume(
-                                        lockWallpaper ?: homeWallpaper,
-                                        null,
-                                    )
+                                .createCurrentWallpaperInfos(context, forceReload) {
+                                    homeWallpaper,
+                                    lockWallpaper,
+                                    _ ->
+                                    continuation.resume(lockWallpaper ?: homeWallpaper, null)
                                 }
                         }
                     },
@@ -118,10 +110,7 @@ class ClockSettingsFragment : AppbarFragment() {
                         Bundle().apply {
                             // Hide the clock from the system UI rendered preview so we can
                             // place the carousel on top of it.
-                            putBoolean(
-                                ClockPreviewConstants.KEY_HIDE_CLOCK,
-                                true,
-                            )
+                            putBoolean(ClockPreviewConstants.KEY_HIDE_CLOCK, true)
                         }
                     },
                     wallpaperInteractor = injector.getWallpaperInteractor(requireContext()),
@@ -139,7 +128,6 @@ class ClockSettingsFragment : AppbarFragment() {
                     injector.getClockSettingsViewModelFactory(
                         context,
                         injector.getWallpaperColorsRepository(),
-                        injector.getClockViewFactory(activity),
                     ),
                 )
                 .get(),
@@ -159,7 +147,7 @@ class ClockSettingsFragment : AppbarFragment() {
     override fun getToolbarTextColor(): Int {
         return ContextCompat.getColor(
             requireContext(),
-            com.android.wallpaper.R.color.system_on_surface
+            com.android.wallpaper.R.color.system_on_surface,
         )
     }
 }

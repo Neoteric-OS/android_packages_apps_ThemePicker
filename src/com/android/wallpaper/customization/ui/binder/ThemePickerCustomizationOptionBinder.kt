@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.customization.ui.binder
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -48,10 +50,12 @@ import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomization
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.common.icon.ui.viewbinder.IconViewBinder
 import com.android.wallpaper.picker.common.text.ui.viewbinder.TextViewBinder
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -93,22 +97,67 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToLockScreenNotificationsSettingsActivity,
         )
 
+        val optionsViewModel =
+            viewModel.customizationOptionsViewModel as ThemePickerCustomizationOptionsViewModel
+
+        val isOnMainScreen = { optionsViewModel.selectedOption.value == null }
+
+        val allCustomizationOptionEntries =
+            lockScreenCustomizationOptionEntries + homeScreenCustomizationOptionEntries
+        allCustomizationOptionEntries.forEach { (_, view) ->
+            ColorUpdateBinder.bind(
+                setColor = { color ->
+                    DrawableCompat.setTint(DrawableCompat.wrap(view.background), color)
+                },
+                color = colorUpdateViewModel.colorSurfaceBright,
+                shouldAnimate = isOnMainScreen,
+                lifecycleOwner = lifecycleOwner,
+            )
+            ColorUpdateBinder.bind(
+                setColor = { color ->
+                    view
+                        .findViewById<ViewGroup>(R.id.option_entry_icon_container)
+                        ?.background
+                        ?.let { DrawableCompat.setTint(DrawableCompat.wrap(it), color) }
+                },
+                color = colorUpdateViewModel.colorSurfaceContainerHigh,
+                shouldAnimate = isOnMainScreen,
+                lifecycleOwner = lifecycleOwner,
+            )
+            ColorUpdateBinder.bind(
+                setColor = { color ->
+                    view.findViewById<TextView>(R.id.option_entry_title)?.setTextColor(color)
+                },
+                color = colorUpdateViewModel.colorOnSurface,
+                shouldAnimate = isOnMainScreen,
+                lifecycleOwner = lifecycleOwner,
+            )
+            ColorUpdateBinder.bind(
+                setColor = { color ->
+                    view.findViewById<TextView>(R.id.option_entry_description)?.setTextColor(color)
+                },
+                color = colorUpdateViewModel.colorOnSurfaceVariant,
+                shouldAnimate = isOnMainScreen,
+                lifecycleOwner = lifecycleOwner,
+            )
+        }
+
         val optionClock: View =
             lockScreenCustomizationOptionEntries
                 .first { it.first == ThemePickerLockCustomizationOption.CLOCK }
                 .second
-        val optionClockIcon: ImageView = optionClock.requireViewById(R.id.option_entry_clock_icon)
+        val optionClockIcon: ImageView = optionClock.requireViewById(R.id.option_entry_icon)
 
         val optionShortcut: View =
             lockScreenCustomizationOptionEntries
                 .first { it.first == ThemePickerLockCustomizationOption.SHORTCUTS }
                 .second
         val optionShortcutDescription: TextView =
-            optionShortcut.requireViewById(R.id.option_entry_keyguard_quick_affordance_description)
+            optionShortcut.requireViewById(R.id.option_entry_description)
         val optionShortcutIcon1: ImageView =
-            optionShortcut.requireViewById(R.id.option_entry_keyguard_quick_affordance_icon_1)
+            optionShortcut.requireViewById(R.id.option_entry_icon_1)
         val optionShortcutIcon2: ImageView =
-            optionShortcut.requireViewById(R.id.option_entry_keyguard_quick_affordance_icon_2)
+            optionShortcut.requireViewById(R.id.option_entry_icon_2)
 
         val optionLockScreenNotificationsSettings: View =
             lockScreenCustomizationOptionEntries
@@ -131,16 +180,15 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 .first { it.first == ThemePickerHomeCustomizationOption.COLORS }
                 .second
         val optionColorsIcon: ColorOptionIconView2 =
-            optionColors.requireViewById(R.id.option_entry_colors_icon)
+            optionColors.requireViewById(R.id.option_entry_icon)
 
         val optionShapeGrid: View =
             homeScreenCustomizationOptionEntries
                 .first { it.first == ThemePickerHomeCustomizationOption.APP_SHAPE_GRID }
                 .second
         val optionShapeGridDescription: TextView =
-            optionShapeGrid.requireViewById(R.id.option_entry_app_shape_grid_description)
-        val optionShapeGridIcon: ImageView =
-            optionShapeGrid.requireViewById(R.id.option_entry_app_shape_grid_icon)
+            optionShapeGrid.requireViewById(R.id.option_entry_description)
+        val optionShapeGridIcon: ImageView = optionShapeGrid.requireViewById(R.id.option_entry_icon)
 
         val optionColorContrast: View =
             homeScreenCustomizationOptionEntries
@@ -148,19 +196,17 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 .second
         optionColorContrast.setOnClickListener { navigateToColorContrastSettingsActivity.invoke() }
         val optionColorContrastDescription: TextView =
-            optionColorContrast.requireViewById(R.id.option_entry_color_contrast_description)
+            optionColorContrast.requireViewById(R.id.option_entry_description)
         val optionColorContrastIcon: ImageView =
-            optionColorContrast.requireViewById(R.id.option_entry_color_contrast_icon)
+            optionColorContrast.requireViewById(R.id.option_entry_icon)
 
         val optionThemedIcons =
             homeScreenCustomizationOptionEntries
                 .find { it.first == ThemePickerHomeCustomizationOption.THEMED_ICONS }
                 ?.second
         val optionThemedIconsSwitch =
-            optionThemedIcons?.findViewById<Switch>(R.id.option_entry_themed_icons_switch)
+            optionThemedIcons?.findViewById<Switch>(R.id.option_entry_switch)
 
-        val optionsViewModel =
-            viewModel.customizationOptionsViewModel as ThemePickerCustomizationOptionsViewModel
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -250,14 +296,21 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
 
                 launch {
+                    var binding: ColorOptionIconBinder2.Binding? = null
                     optionsViewModel.colorPickerViewModel2.selectedColorOption.collect { colorOption
                         ->
                         (colorOption as? ColorOptionImpl)?.let {
-                            ColorOptionIconBinder2.bind(
-                                view = optionColorsIcon,
-                                viewModel = ColorOptionIconViewModel.fromColorOption(colorOption),
-                                darkTheme = view.resources.configuration.isNightModeActive,
-                            )
+                            binding?.destroy()
+                            binding =
+                                ColorOptionIconBinder2.bind(
+                                    view = optionColorsIcon,
+                                    viewModel =
+                                        ColorOptionIconViewModel.fromColorOption(colorOption),
+                                    darkTheme = view.resources.configuration.isNightModeActive,
+                                    colorUpdateViewModel = colorUpdateViewModel,
+                                    shouldAnimateColor = isOnMainScreen,
+                                    lifecycleOwner = lifecycleOwner,
+                                )
                         }
                     }
                 }
@@ -415,6 +468,18 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
             }
         }
+    }
+
+    override fun bindDiscardChangesDialog(
+        customizationOptionsViewModel: CustomizationOptionsViewModel,
+        lifecycleOwner: LifecycleOwner,
+        activity: Activity,
+    ) {
+        defaultCustomizationOptionsBinder.bindDiscardChangesDialog(
+            customizationOptionsViewModel,
+            lifecycleOwner,
+            activity,
+        )
     }
 
     data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)

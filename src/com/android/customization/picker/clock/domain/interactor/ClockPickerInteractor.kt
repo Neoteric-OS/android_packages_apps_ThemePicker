@@ -63,6 +63,8 @@ constructor(
 
     val selectedClockSize: Flow<ClockSize> = repository.selectedClockSize
 
+    fun isReactiveToTone(clockId: String) = repository.isReactiveToTone(clockId)
+
     suspend fun setSelectedClock(clockId: String) {
         // Use the [clockId] to override saved clock id, since it might not be updated in time
         setClockOption(ClockSnapshotModel(clockId = clockId))

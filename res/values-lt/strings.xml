@@ -75,6 +75,8 @@
     <string name="font_card_body" msgid="6790525594503904468">"Pridėkite mėgstamiausių šriftų prie kiekvieno ekrano"</string>
     <string name="grid_options_title" msgid="7071930966989877023">"Pasirinkti tinklelio dydį"</string>
     <string name="grid_title_pattern" msgid="9188866567612607806">"<xliff:g id="ID_1">%1$d</xliff:g> x <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <!-- no translation found for grid_content_description (5312080295600578441) -->
+    <skip />
     <string name="apply_grid_btn_note" msgid="2966021967355139181">"Keičiant tinklelio dydį iš naujo įkeliama darbo sritis ir tai gali užtrukti kelias sekundes."</string>
     <string name="toast_of_changing_grid" msgid="3515633981312731121">"Iš naujo įkeliama darbo sritis su %1$s tinkleliu"</string>
     <string name="toast_of_failure_to_change_grid" msgid="1349622908271736044">"Nepavyko iš naujo įkelti darbo srities su %1$s tinkleliu"</string>

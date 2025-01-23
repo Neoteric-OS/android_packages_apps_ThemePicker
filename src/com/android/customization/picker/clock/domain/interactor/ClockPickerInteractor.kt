@@ -24,6 +24,7 @@ import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.customization.picker.clock.shared.model.ClockSnapshotModel
 import com.android.systemui.plugins.clocks.ClockFontAxisSetting
+import com.android.wallpaper.picker.customization.data.repository.CustomizationRuntimeValuesRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
@@ -41,6 +42,7 @@ class ClockPickerInteractor
 constructor(
     private val repository: ClockPickerRepository,
     private val snapshotRestorer: ClockPickerSnapshotRestorer,
+    private val customizationRuntimeValuesRepository: CustomizationRuntimeValuesRepository,
 ) {
 
     val allClocks: Flow<List<ClockMetadataModel>> = repository.allClocks
@@ -113,6 +115,10 @@ constructor(
             )
         )
     }
+
+    suspend fun getIsShadeLayoutWide() = customizationRuntimeValuesRepository.getIsShadeLayoutWide()
+
+    suspend fun getUdfpsLocation() = customizationRuntimeValuesRepository.getUdfpsLocation()
 
     private suspend fun setClockOption(clockSnapshotModel: ClockSnapshotModel) {
         // [ClockCarouselViewModel] is monitoring the [ClockPickerInteractor.setSelectedClock] job,

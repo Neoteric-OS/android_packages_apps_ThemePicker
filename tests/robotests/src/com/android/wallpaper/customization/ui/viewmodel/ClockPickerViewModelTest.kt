@@ -28,10 +28,12 @@ import com.android.customization.picker.clock.ui.viewmodel.ClockColorViewModel
 import com.android.customization.picker.clock.ui.viewmodel.ClockSettingsViewModel
 import com.android.customization.picker.color.data.repository.FakeColorPickerRepository2
 import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor2
+import com.android.systemui.shared.customization.data.content.FakeCustomizationProviderClient
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.Tab
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
+import com.android.wallpaper.picker.customization.data.repository.CustomizationRuntimeValuesRepository
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.testing.FakeSnapshotStore
 import com.android.wallpaper.testing.collectLastValue
@@ -78,6 +80,7 @@ class ClockPickerViewModelTest {
         hiltRule.inject()
         Dispatchers.setMain(testDispatcher)
         val repository = FakeClockPickerRepository()
+        val customizationProviderClient = FakeCustomizationProviderClient()
         val clockPickerInteractor =
             ClockPickerInteractor(
                 repository = repository,
@@ -85,6 +88,7 @@ class ClockPickerViewModelTest {
                     ClockPickerSnapshotRestorer(repository = repository).apply {
                         runBlocking { setUpSnapshotRestorer(store = FakeSnapshotStore()) }
                     },
+                CustomizationRuntimeValuesRepository(customizationProviderClient),
             )
         val colorPickerRepository = FakeColorPickerRepository2()
         val colorPickerInteractor = ColorPickerInteractor2(repository = colorPickerRepository)

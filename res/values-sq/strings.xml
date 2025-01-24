@@ -75,8 +75,7 @@
     <string name="font_card_body" msgid="6790525594503904468">"Shto fontet e tua të preferuara në çdo ekran"</string>
     <string name="grid_options_title" msgid="7071930966989877023">"Zgjidh një madhësi rrjete"</string>
     <string name="grid_title_pattern" msgid="9188866567612607806">"<xliff:g id="ID_1">%1$d</xliff:g>x<xliff:g id="ID_2">%2$d</xliff:g>"</string>
-    <!-- no translation found for grid_content_description (5312080295600578441) -->
-    <skip />
+    <string name="grid_content_description" msgid="5312080295600578441">"<xliff:g id="ID_1">%1$d</xliff:g> nga <xliff:g id="ID_2">%2$d</xliff:g>"</string>
     <string name="apply_grid_btn_note" msgid="2966021967355139181">"Ndryshimi i rrjetës ringarkon vendin e punës dhe zgjat disa sekonda."</string>
     <string name="toast_of_changing_grid" msgid="3515633981312731121">"Vendi i punës po ringarkohet me rrjetën %1$s"</string>
     <string name="toast_of_failure_to_change_grid" msgid="1349622908271736044">"Vendi i punës nuk mund të ringarkohej me rrjetën %1$s"</string>

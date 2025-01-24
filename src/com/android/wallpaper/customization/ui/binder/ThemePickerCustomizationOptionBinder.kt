@@ -416,23 +416,26 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                             if (Flags.newCustomizationPickerUi()) {
                                 clockViewFactory.getController(clock.clockId).let { clockController
                                     ->
-                                    addClockViews(clockController, clockHostView, size)
-                                    val cs = ConstraintSet()
-                                    // TODO(b/379348167): get correct isShadeLayoutWide from picker
-                                    clockController.largeClock.layout.applyPreviewConstraints(
+                                    val udfpsTop =
+                                        clockPickerViewModel.getUdfpsLocation()?.let {
+                                            it.centerY - it.radius
+                                        }
+                                    val previewConfig =
                                         ClockPreviewConfig(
                                             context = context,
-                                            isShadeLayoutWide = false,
+                                            isShadeLayoutWide =
+                                                clockPickerViewModel.getIsShadeLayoutWide(),
                                             isSceneContainerFlagEnabled = false,
-                                        ),
+                                            udfpsTop = udfpsTop,
+                                        )
+                                    addClockViews(clockController, clockHostView, size)
+                                    val cs = ConstraintSet()
+                                    clockController.largeClock.layout.applyPreviewConstraints(
+                                        previewConfig,
                                         cs,
                                     )
                                     clockController.smallClock.layout.applyPreviewConstraints(
-                                        ClockPreviewConfig(
-                                            context = context,
-                                            isShadeLayoutWide = false,
-                                            isSceneContainerFlagEnabled = false,
-                                        ),
+                                        previewConfig,
                                         cs,
                                     )
                                     cs.applyTo(clockHostView)

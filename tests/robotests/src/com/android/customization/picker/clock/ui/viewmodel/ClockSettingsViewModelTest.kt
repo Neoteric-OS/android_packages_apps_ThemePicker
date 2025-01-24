@@ -13,6 +13,8 @@ import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.customization.picker.color.data.repository.FakeColorPickerRepository
 import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor
 import com.android.customization.picker.color.domain.interactor.ColorPickerSnapshotRestorer
+import com.android.systemui.shared.customization.data.content.FakeCustomizationProviderClient
+import com.android.wallpaper.picker.customization.data.repository.CustomizationRuntimeValuesRepository
 import com.android.wallpaper.testing.FakeSnapshotStore
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
@@ -62,6 +64,7 @@ class ClockSettingsViewModelTest {
         context = InstrumentationRegistry.getInstrumentation().targetContext
         testScope = TestScope(testDispatcher)
         val repository = FakeClockPickerRepository()
+        val customizationProviderClient = FakeCustomizationProviderClient()
         clockPickerInteractor =
             ClockPickerInteractor(
                 repository = repository,
@@ -69,6 +72,7 @@ class ClockSettingsViewModelTest {
                     ClockPickerSnapshotRestorer(repository = repository).apply {
                         runBlocking { setUpSnapshotRestorer(store = FakeSnapshotStore()) }
                     },
+                CustomizationRuntimeValuesRepository(customizationProviderClient),
             )
         val colorPickerRepository = FakeColorPickerRepository(context = context)
         colorPickerInteractor =

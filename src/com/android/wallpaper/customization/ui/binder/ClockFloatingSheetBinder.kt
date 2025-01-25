@@ -325,11 +325,25 @@ object ClockFloatingSheetBinder {
                 }
 
                 launch {
+                    var binding: SwitchColorBinder.Binding? = null
                     viewModel.previewingClockSize.collect { size ->
                         when (size) {
                             ClockSize.DYNAMIC -> clockSizeSwitch.isChecked = true
                             ClockSize.SMALL -> clockSizeSwitch.isChecked = false
                         }
+                        binding?.destroy()
+                        binding =
+                            SwitchColorBinder.bind(
+                                switch = clockSizeSwitch,
+                                isChecked =
+                                    when (size) {
+                                        ClockSize.DYNAMIC -> true
+                                        ClockSize.SMALL -> false
+                                    },
+                                colorUpdateViewModel = colorUpdateViewModel,
+                                shouldAnimateColor = isFloatingSheetActive,
+                                lifecycleOwner = lifecycleOwner,
+                            )
                     }
                 }
 
@@ -346,6 +360,8 @@ object ClockFloatingSheetBinder {
         bindClockFontContent(
             clockFontContent = clockFontContent,
             viewModel = viewModel,
+            colorUpdateViewModel = colorUpdateViewModel,
+            shouldAnimateColor = isFloatingSheetActive,
             lifecycleOwner = lifecycleOwner,
         )
     }
@@ -353,6 +369,8 @@ object ClockFloatingSheetBinder {
     private fun bindClockFontContent(
         clockFontContent: View,
         viewModel: ClockPickerViewModel,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
     ) {
         val sliderViewList =
@@ -409,9 +427,15 @@ object ClockFloatingSheetBinder {
                             viewHolder.setIsVisible(booleanAxis != null)
                             booleanAxis?.let {
                                 switchViewMap[it.key] = viewHolder
-                                viewHolder.initView(booleanAxis) { value ->
-                                    viewModel.updatePreviewFontAxis(booleanAxis.key, value)
-                                }
+                                viewHolder.initView(
+                                    clockFontAxis = booleanAxis,
+                                    onFontAxisValueUpdated = { value ->
+                                        viewModel.updatePreviewFontAxis(booleanAxis.key, value)
+                                    },
+                                    colorUpdateViewModel = colorUpdateViewModel,
+                                    shouldAnimateColor = shouldAnimateColor,
+                                    lifecycleOwner = lifecycleOwner,
+                                )
                             }
                         }
                     }

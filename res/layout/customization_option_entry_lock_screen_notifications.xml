@@ -17,7 +17,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="@dimen/customization_option_entry_horizontal_padding"
@@ -25,26 +24,25 @@
     android:clickable="true">
 
     <TextView
+        android:id="@+id/option_entry_lock_screen_notification_title"
         style="@style/CustomizationOptionEntryTitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/show_notifications_on_lock_screen"
-        android:layout_marginEnd="@dimen/customization_option_entry_text_margin_end"
+        android:text="@string/lock_screen_notifications_section_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/option_entry_show_notifications_switch"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/option_entry_lock_screen_notification_description"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <Switch
-        android:id="@+id/option_entry_show_notifications_switch"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/option_entry_lock_screen_notification_description"
+        style="@style/CustomizationOptionEntrySubtitleTextStyle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:focusable="false"
-        android:clickable="false"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/lock_screen_notifications_section_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        style="@style/Switch.SettingsLib"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/option_entry_lock_screen_notification_title" />
 </androidx.constraintlayout.widget.ConstraintLayout>

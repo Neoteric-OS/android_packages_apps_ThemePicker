@@ -20,6 +20,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -76,6 +77,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         navigateToWallpaperCategoriesScreen: (screen: Screen) -> Unit,
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,
+        navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
     ) {
         defaultCustomizationOptionsBinder.bind(
             view,
@@ -88,6 +90,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToWallpaperCategoriesScreen,
             navigateToMoreLockScreenSettingsActivity,
             navigateToColorContrastSettingsActivity,
+            navigateToLockScreenNotificationsSettingsActivity,
         )
 
         val optionClock: View =
@@ -106,6 +109,14 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             optionShortcut.requireViewById(R.id.option_entry_keyguard_quick_affordance_icon_1)
         val optionShortcutIcon2: ImageView =
             optionShortcut.requireViewById(R.id.option_entry_keyguard_quick_affordance_icon_2)
+
+        val optionLockScreenNotificationsSettings: View =
+            lockScreenCustomizationOptionEntries
+                .first { it.first == ThemePickerLockCustomizationOption.LOCK_SCREEN_NOTIFICATIONS }
+                .second
+        optionLockScreenNotificationsSettings.setOnClickListener {
+            navigateToLockScreenNotificationsSettingsActivity.invoke()
+        }
 
         val optionMoreLockScreenSettings: View =
             lockScreenCustomizationOptionEntries
@@ -140,6 +151,13 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             optionColorContrast.requireViewById(R.id.option_entry_color_contrast_description)
         val optionColorContrastIcon: ImageView =
             optionColorContrast.requireViewById(R.id.option_entry_color_contrast_icon)
+
+        val optionThemedIcons =
+            homeScreenCustomizationOptionEntries
+                .find { it.first == ThemePickerHomeCustomizationOption.THEMED_ICONS }
+                ?.second
+        val optionThemedIconsSwitch =
+            optionThemedIcons?.findViewById<Switch>(R.id.option_entry_themed_icons_switch)
 
         val optionsViewModel =
             viewModel.customizationOptionsViewModel as ThemePickerCustomizationOptionsViewModel
@@ -243,6 +261,28 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                         }
                     }
                 }
+
+                if (optionThemedIconsSwitch != null) {
+                    launch {
+                        optionsViewModel.themedIconViewModel.isAvailable.collect { isAvailable ->
+                            optionThemedIconsSwitch.isEnabled = isAvailable
+                        }
+                    }
+
+                    launch {
+                        optionsViewModel.themedIconViewModel.isActivated.collect {
+                            optionThemedIconsSwitch.isChecked = it
+                        }
+                    }
+
+                    launch {
+                        optionsViewModel.themedIconViewModel.toggleThemedIcon.collect {
+                            optionThemedIconsSwitch.setOnCheckedChangeListener { _, _ ->
+                                launch { it.invoke() }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -325,7 +365,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     // TODO(b/379348167): get correct isShadeLayoutWide from picker
                                     clockController.largeClock.layout.applyPreviewConstraints(
                                         ClockPreviewConfig(
-                                            previewContext = context,
+                                            context = context,
                                             isShadeLayoutWide = false,
                                             isSceneContainerFlagEnabled = false,
                                         ),
@@ -333,7 +373,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     )
                                     clockController.smallClock.layout.applyPreviewConstraints(
                                         ClockPreviewConfig(
-                                            previewContext = context,
+                                            context = context,
                                             isShadeLayoutWide = false,
                                             isSceneContainerFlagEnabled = false,
                                         ),

@@ -48,6 +48,7 @@ constructor(
     shapeGridPickerViewModelFactory: ShapeGridPickerViewModel.Factory,
     val colorContrastSectionViewModel: ColorContrastSectionViewModel2,
     val darkModeViewModel: DarkModeViewModel,
+    val themedIconViewModel: ThemedIconViewModel,
     @Assisted private val viewModelScope: CoroutineScope,
 ) : CustomizationOptionsViewModel {
 
@@ -158,9 +159,13 @@ constructor(
                         combine(colorPickerViewModel2.onApply, darkModeViewModel.onApply) {
                             colorOnApply,
                             darkModeOnApply ->
-                            {
-                                colorOnApply?.invoke()
-                                darkModeOnApply?.invoke()
+                            if (colorOnApply == null && darkModeOnApply == null) {
+                                null
+                            } else {
+                                {
+                                    colorOnApply?.invoke()
+                                    darkModeOnApply?.invoke()
+                                }
                             }
                         }
                     else -> flow { emit(null) }

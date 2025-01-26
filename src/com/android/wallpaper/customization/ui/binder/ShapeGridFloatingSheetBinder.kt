@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -39,6 +40,7 @@ import com.android.wallpaper.customization.ui.viewmodel.ShapeGridFloatingSheetHe
 import com.android.wallpaper.customization.ui.viewmodel.ShapeGridPickerViewModel.Tab.GRID
 import com.android.wallpaper.customization.ui.viewmodel.ShapeGridPickerViewModel.Tab.SHAPE
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
@@ -74,17 +76,39 @@ object ShapeGridFloatingSheetBinder {
         val floatingSheetContentVerticalPadding =
             view.resources.getDimensionPixelSize(R.dimen.floating_sheet_content_vertical_padding)
         val viewModel = optionsViewModel.shapeGridPickerViewModel
+        val isFloatingSheetActive = { optionsViewModel.selectedOption.value == APP_SHAPE_GRID }
 
         val tabs = view.requireViewById<FloatingToolbar>(R.id.floating_toolbar)
+        val tabContainer =
+            tabs.findViewById<ViewGroup>(com.android.wallpaper.R.id.floating_toolbar_tab_container)
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                DrawableCompat.setTint(DrawableCompat.wrap(tabContainer.background), color)
+            },
+            color = colorUpdateViewModel.floatingToolbarBackground,
+            shouldAnimate = isFloatingSheetActive,
+            lifecycleOwner = lifecycleOwner,
+        )
         val tabAdapter =
             FloatingToolbarTabAdapter(
                     colorUpdateViewModel = WeakReference(colorUpdateViewModel),
-                    shouldAnimateColor = { optionsViewModel.selectedOption.value == APP_SHAPE_GRID },
+                    shouldAnimateColor = isFloatingSheetActive,
                 )
                 .also { tabs.setAdapter(it) }
 
         val floatingSheetContainer =
-            view.requireViewById<ViewGroup>(R.id.shape_grid_floating_sheet_content_container)
+            view.requireViewById<ViewGroup>(R.id.floating_sheet_content_container)
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                DrawableCompat.setTint(
+                    DrawableCompat.wrap(floatingSheetContainer.background),
+                    color,
+                )
+            },
+            color = colorUpdateViewModel.colorSurfaceBright,
+            shouldAnimate = isFloatingSheetActive,
+            lifecycleOwner = lifecycleOwner,
+        )
 
         val shapeContent = view.requireViewById<View>(R.id.app_shape_container)
         val shapeOptionListAdapter =

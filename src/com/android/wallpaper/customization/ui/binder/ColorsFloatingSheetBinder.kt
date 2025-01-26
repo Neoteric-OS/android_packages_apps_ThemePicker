@@ -20,7 +20,9 @@ import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -35,6 +37,7 @@ import com.android.customization.picker.mode.ui.binder.DarkModeBinder
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
@@ -51,6 +54,39 @@ object ColorsFloatingSheetBinder {
         lifecycleOwner: LifecycleOwner,
     ) {
         val viewModel = optionsViewModel.colorPickerViewModel2
+        val isFloatingSheetActive = { optionsViewModel.selectedOption.value == COLORS }
+
+        val tabs = view.requireViewById<FloatingToolbar>(R.id.floating_toolbar)
+        val tabContainer =
+            tabs.findViewById<ViewGroup>(com.android.wallpaper.R.id.floating_toolbar_tab_container)
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                DrawableCompat.setTint(DrawableCompat.wrap(tabContainer.background), color)
+            },
+            color = colorUpdateViewModel.floatingToolbarBackground,
+            shouldAnimate = isFloatingSheetActive,
+            lifecycleOwner = lifecycleOwner,
+        )
+        val tabAdapter =
+            FloatingToolbarTabAdapter(
+                    colorUpdateViewModel = WeakReference(colorUpdateViewModel),
+                    shouldAnimateColor = isFloatingSheetActive,
+                )
+                .also { tabs.setAdapter(it) }
+
+        val floatingSheetContainer =
+            view.requireViewById<ViewGroup>(R.id.floating_sheet_content_container)
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                DrawableCompat.setTint(
+                    DrawableCompat.wrap(floatingSheetContainer.background),
+                    color,
+                )
+            },
+            color = colorUpdateViewModel.colorSurfaceBright,
+            shouldAnimate = isFloatingSheetActive,
+            lifecycleOwner = lifecycleOwner,
+        )
 
         val subhead = view.requireViewById<TextView>(R.id.color_type_tab_subhead)
 
@@ -60,14 +96,6 @@ object ColorsFloatingSheetBinder {
             view.requireViewById<RecyclerView>(R.id.colors_horizontal_list).also {
                 it.initColorsList(view.context.applicationContext, colorsAdapter)
             }
-
-        val tabs = view.requireViewById<FloatingToolbar>(R.id.floating_toolbar)
-        val tabAdapter =
-            FloatingToolbarTabAdapter(
-                    colorUpdateViewModel = WeakReference(colorUpdateViewModel),
-                    shouldAnimateColor = { optionsViewModel.selectedOption.value == COLORS },
-                )
-                .also { tabs.setAdapter(it) }
 
         DarkModeBinder.bind(
             darkModeToggle = view.findViewById(R.id.dark_mode_toggle),

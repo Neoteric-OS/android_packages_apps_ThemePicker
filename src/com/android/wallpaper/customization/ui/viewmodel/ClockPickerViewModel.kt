@@ -131,6 +131,10 @@ constructor(
             }
             .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
+    suspend fun getIsShadeLayoutWide() = clockPickerInteractor.getIsShadeLayoutWide()
+
+    suspend fun getUdfpsLocation() = clockPickerInteractor.getUdfpsLocation()
+
     data class ClockStyleModel(val thumbnail: Drawable, val showEditButton: StateFlow<Boolean>)
 
     @OptIn(ExperimentalCoroutinesApi::class)

@@ -161,10 +161,11 @@ private constructor(
                                 ),
                             text =
                                 Text.Loaded(
-                                    context.getString(
-                                        R.string.content_description_color_option,
-                                        index,
-                                    )
+                                    colorModel.colorName
+                                        ?: context.getString(
+                                            R.string.content_description_color_option,
+                                            index,
+                                        )
                                 ),
                             isTextUserVisible = false,
                             isSelected = isSelectedFlow,
@@ -180,7 +181,7 @@ private constructor(
                                                         color = colorModel.color,
                                                         colorTone =
                                                             colorModel.getColorTone(
-                                                                colorToneProgress,
+                                                                colorToneProgress
                                                             ),
                                                     )
                                                 clockPickerInteractor.setClockColor(
@@ -282,7 +283,7 @@ private constructor(
                             null
                         } else {
                             { _selectedTabPosition.tryEmit(Tab.COLOR) }
-                        }
+                        },
                 ),
                 ClockSettingsTabViewModel(
                     name = context.resources.getString(R.string.clock_size),
@@ -292,7 +293,7 @@ private constructor(
                             null
                         } else {
                             { _selectedTabPosition.tryEmit(Tab.SIZE) }
-                        }
+                        },
                 ),
             )
         }
@@ -302,11 +303,7 @@ private constructor(
 
         fun blendColorWithTone(color: Int, colorTone: Double): Int {
             ColorUtils.colorToLAB(color, helperColorLab)
-            return ColorUtils.LABToColor(
-                colorTone,
-                helperColorLab[1],
-                helperColorLab[2],
-            )
+            return ColorUtils.LABToColor(colorTone, helperColorLab[1], helperColorLab[2])
         }
 
         const val COLOR_OPTIONS_EVENT_UPDATE_DELAY_MILLIS: Long = 100

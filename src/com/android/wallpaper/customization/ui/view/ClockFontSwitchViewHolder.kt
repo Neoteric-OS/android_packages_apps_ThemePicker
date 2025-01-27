@@ -16,13 +16,13 @@
 
 package com.android.wallpaper.customization.ui.view
 
-import android.widget.Switch
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.android.systemui.plugins.clocks.ClockFontAxis
+import com.google.android.material.materialswitch.MaterialSwitch
 import kotlin.math.abs
 
-class ClockFontSwitchViewHolder(val name: TextView, val switch: Switch) {
+class ClockFontSwitchViewHolder(val name: TextView, val switch: MaterialSwitch) {
 
     private var switchMaxValue: Float? = null
 

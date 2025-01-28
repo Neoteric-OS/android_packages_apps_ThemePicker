@@ -55,12 +55,21 @@
         android:background="@drawable/customization_option_entry_icon_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:importantForAccessibility="noHideDescendants" >
 
         <ImageView
-            android:id="@+id/option_entry_icon"
+            android:id="@+id/option_entry_icon_inner_part"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/grid_preview_card_content_description" />
+            android:src="@drawable/ic_contrast_inner_part"
+            android:importantForAccessibility="no" />
+
+        <ImageView
+            android:id="@+id/option_entry_icon_outer_part"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_contrast_outer_part"
+            android:importantForAccessibility="no" />
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

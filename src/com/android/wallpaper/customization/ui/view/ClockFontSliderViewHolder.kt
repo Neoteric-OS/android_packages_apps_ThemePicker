@@ -16,12 +16,13 @@
 
 package com.android.wallpaper.customization.ui.view
 
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.view.isInvisible
 import com.android.systemui.plugins.clocks.ClockFontAxis
+import com.google.android.material.slider.LabelFormatter
+import com.google.android.material.slider.Slider
 
-class ClockFontSliderViewHolder(val name: TextView, val slider: SeekBar) {
+class ClockFontSliderViewHolder(val name: TextView, val slider: Slider) {
 
     fun setIsVisible(isVisible: Boolean) {
         name.isInvisible = !isVisible
@@ -31,30 +32,19 @@ class ClockFontSliderViewHolder(val name: TextView, val slider: SeekBar) {
     fun initView(clockFontAxis: ClockFontAxis, onFontAxisValueUpdated: (value: Float) -> Unit) {
         name.text = clockFontAxis.name
         slider.apply {
-            max = clockFontAxis.maxValue.toInt()
-            min = clockFontAxis.minValue.toInt()
-            progress = clockFontAxis.currentValue.toInt()
-            setOnSeekBarChangeListener(
-                object : SeekBar.OnSeekBarChangeListener {
-                    override fun onProgressChanged(
-                        seekBar: SeekBar?,
-                        progress: Int,
-                        fromUser: Boolean,
-                    ) {
-                        if (fromUser) {
-                            onFontAxisValueUpdated.invoke(progress.toFloat())
-                        }
-                    }
-
-                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            valueFrom = clockFontAxis.minValue
+            valueTo = clockFontAxis.maxValue
+            value = clockFontAxis.currentValue
+            labelBehavior = LabelFormatter.LABEL_GONE
+            addOnChangeListener { _, value, fromUser ->
+                if (fromUser) {
+                    onFontAxisValueUpdated.invoke(value)
                 }
-            )
+            }
         }
     }
 
     fun setValue(value: Float) {
-        slider.progress = value.toInt()
+        slider.value = value
     }
 }

@@ -35,6 +35,8 @@ data class ClockMetadataModel(
     @ColorInt val seedColor: Int?,
 ) {
     companion object {
+        const val MIN_COLOR_TONE_PROGRESS = 0
+        const val MAX_COLOR_TONE_PROGRESS = 100
         const val DEFAULT_COLOR_TONE_PROGRESS = 75
     }
 }

@@ -110,6 +110,8 @@ object ColorsFloatingSheetBinder {
         DarkModeBinder.bind(
             darkModeToggle = view.findViewById(R.id.dark_mode_toggle),
             viewModel = optionsViewModel.darkModeViewModel,
+            colorUpdateViewModel = colorUpdateViewModel,
+            shouldAnimateColor = isFloatingSheetActive,
             lifecycleOwner = lifecycleOwner,
         )
 

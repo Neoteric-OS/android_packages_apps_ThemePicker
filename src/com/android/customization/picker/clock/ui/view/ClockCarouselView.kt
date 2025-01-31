@@ -30,6 +30,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.get
 import androidx.core.view.isNotEmpty
+import androidx.core.view.isVisible
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.ui.viewmodel.ClockCarouselItemViewModel
 import com.android.systemui.plugins.clocks.ClockController
@@ -57,6 +58,7 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
         val clockCarousel = LayoutInflater.from(context).inflate(R.layout.clock_carousel, this)
         carousel = clockCarousel.requireViewById(R.id.carousel)
         motionLayout = clockCarousel.requireViewById(R.id.motion_container)
+        motionLayout.isVisible = false
         motionLayout.contentDescription = context.getString(R.string.custom_clocks_label)
         clockViewScale =
             TypedValue().let {
@@ -133,6 +135,11 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
         onClockSelected: (clock: ClockCarouselItemViewModel) -> Unit,
         isTwoPaneAndSmallWidth: Boolean,
     ) {
+        if (clocks.isEmpty()) {
+            // Hide the carousel if clock list is empty
+            motionLayout.isVisible = false
+            return
+        }
         if (isTwoPaneAndSmallWidth) {
             overrideScreenPreviewWidth()
         }
@@ -311,6 +318,7 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
                 ) {}
             }
         )
+        motionLayout.isVisible = true
     }
 
     fun setSelectedClockIndex(index: Int) {

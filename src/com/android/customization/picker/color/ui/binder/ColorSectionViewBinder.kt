@@ -129,15 +129,14 @@ object ColorSectionViewBinder {
                 )
             }
             val optionSelectedView = itemView.requireViewById<ImageView>(R.id.option_selected)
-            val colorView: View = itemView.requireViewById(R.id.option_tile)
-            colorView.isClickable = true
-            colorView.isFocusable = true
+            itemView.isClickable = true
+            itemView.isFocusable = true
 
             lifecycleOwner.lifecycleScope.launch {
                 launch {
                     item.isSelected.collect { isSelected ->
                         optionSelectedView.isVisible = isSelected
-                        colorView.isSelected = isSelected
+                        itemView.isSelected = isSelected
                     }
                 }
                 launch {

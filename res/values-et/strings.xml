@@ -48,7 +48,7 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Ekraaninurgas kuvatakse väike kell"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Kella fondi muudatuste rakendamine"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Kella fondi muudatuste tagasivõtmine"</string>
-    <string name="grid_title" msgid="1688173478777254123">"Rak. ruudustik"</string>
+    <string name="grid_title" msgid="1688173478777254123">"Äpiruudustik"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Rakenduse kuju ja paigutus"</string>
     <string name="grid_layout" msgid="370175667652663686">"Paigutus"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Rakenda"</string>

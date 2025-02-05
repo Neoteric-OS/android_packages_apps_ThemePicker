@@ -27,7 +27,6 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.SeekBar
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -37,6 +36,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.clock.shared.ClockSize
+import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder2
 import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
@@ -57,7 +57,10 @@ import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolba
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.slider.LabelFormatter
+import com.google.android.material.slider.Slider
 import java.lang.ref.WeakReference
+import kotlin.math.roundToInt
 import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -157,20 +160,17 @@ object ClockFloatingSheetBinder {
                 layoutManager =
                     LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
             }
-        val clockColorSlider: SeekBar = view.requireViewById(R.id.clock_color_slider)
-        clockColorSlider.setOnSeekBarChangeListener(
-            object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
-                    if (fromUser) {
-                        viewModel.onSliderProgressChanged(progress)
-                    }
+        val clockColorSlider: Slider = view.requireViewById(R.id.clock_color_slider)
+        clockColorSlider.apply {
+            valueFrom = ClockMetadataModel.MIN_COLOR_TONE_PROGRESS.toFloat()
+            valueTo = ClockMetadataModel.MAX_COLOR_TONE_PROGRESS.toFloat()
+            labelBehavior = LabelFormatter.LABEL_GONE
+            addOnChangeListener { _, value, fromUser ->
+                if (fromUser) {
+                    viewModel.onSliderProgressChanged(value.roundToInt())
                 }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
             }
-        )
+        }
 
         // Clock size switch
         val clockSizeSwitch =
@@ -312,7 +312,7 @@ object ClockFloatingSheetBinder {
 
                 launch {
                     viewModel.previewingSliderProgress.collect { progress ->
-                        clockColorSlider.setProgress(progress, true)
+                        clockColorSlider.value = progress.toFloat()
                     }
                 }
 
@@ -325,11 +325,25 @@ object ClockFloatingSheetBinder {
                 }
 
                 launch {
+                    var binding: SwitchColorBinder.Binding? = null
                     viewModel.previewingClockSize.collect { size ->
                         when (size) {
                             ClockSize.DYNAMIC -> clockSizeSwitch.isChecked = true
                             ClockSize.SMALL -> clockSizeSwitch.isChecked = false
                         }
+                        binding?.destroy()
+                        binding =
+                            SwitchColorBinder.bind(
+                                switch = clockSizeSwitch,
+                                isChecked =
+                                    when (size) {
+                                        ClockSize.DYNAMIC -> true
+                                        ClockSize.SMALL -> false
+                                    },
+                                colorUpdateViewModel = colorUpdateViewModel,
+                                shouldAnimateColor = isFloatingSheetActive,
+                                lifecycleOwner = lifecycleOwner,
+                            )
                     }
                 }
 
@@ -346,6 +360,8 @@ object ClockFloatingSheetBinder {
         bindClockFontContent(
             clockFontContent = clockFontContent,
             viewModel = viewModel,
+            colorUpdateViewModel = colorUpdateViewModel,
+            shouldAnimateColor = isFloatingSheetActive,
             lifecycleOwner = lifecycleOwner,
         )
     }
@@ -353,6 +369,8 @@ object ClockFloatingSheetBinder {
     private fun bindClockFontContent(
         clockFontContent: View,
         viewModel: ClockPickerViewModel,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
     ) {
         val sliderViewList =
@@ -409,9 +427,15 @@ object ClockFloatingSheetBinder {
                             viewHolder.setIsVisible(booleanAxis != null)
                             booleanAxis?.let {
                                 switchViewMap[it.key] = viewHolder
-                                viewHolder.initView(booleanAxis) { value ->
-                                    viewModel.updatePreviewFontAxis(booleanAxis.key, value)
-                                }
+                                viewHolder.initView(
+                                    clockFontAxis = booleanAxis,
+                                    onFontAxisValueUpdated = { value ->
+                                        viewModel.updatePreviewFontAxis(booleanAxis.key, value)
+                                    },
+                                    colorUpdateViewModel = colorUpdateViewModel,
+                                    shouldAnimateColor = shouldAnimateColor,
+                                    lifecycleOwner = lifecycleOwner,
+                                )
                             }
                         }
                     }

@@ -212,4 +212,8 @@
     <dimen name="clock_axis_control_slider_row_margin_vertical">10dp</dimen>
     <dimen name="clock_axis_control_switch_row_margin_vertical">8dp</dimen>
     <dimen name="clock_font_apply_padding_start">8dp</dimen>
+
+    <!-- Shared dimensions for Material 3 sliders -->
+    <dimen name="slider_track_height">24dp</dimen>
+    <dimen name="slider_thumb_height">36dp</dimen>
 </resources>

@@ -18,7 +18,10 @@ package com.android.wallpaper.customization.ui.view
 
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
 import com.android.systemui.plugins.clocks.ClockFontAxis
+import com.android.wallpaper.customization.ui.binder.SwitchColorBinder
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.google.android.material.materialswitch.MaterialSwitch
 import kotlin.math.abs
 
@@ -31,12 +34,35 @@ class ClockFontSwitchViewHolder(val name: TextView, val switch: MaterialSwitch) 
         switch.isVisible = isVisible
     }
 
-    fun initView(clockFontAxis: ClockFontAxis, onFontAxisValueUpdated: (value: Float) -> Unit) {
+    fun initView(
+        clockFontAxis: ClockFontAxis,
+        onFontAxisValueUpdated: (value: Float) -> Unit,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
+        lifecycleOwner: LifecycleOwner,
+    ) {
         switchMaxValue = clockFontAxis.maxValue
         name.text = clockFontAxis.name
         switch.apply {
             isChecked = abs(clockFontAxis.currentValue - clockFontAxis.maxValue) < 0.01f
+            var binding: SwitchColorBinder.Binding =
+                SwitchColorBinder.bind(
+                    switch = switch,
+                    isChecked = isChecked,
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    shouldAnimateColor = shouldAnimateColor,
+                    lifecycleOwner = lifecycleOwner,
+                )
             setOnCheckedChangeListener { v, _ ->
+                binding.destroy()
+                binding =
+                    SwitchColorBinder.bind(
+                        switch = switch,
+                        isChecked = v.isChecked,
+                        colorUpdateViewModel = colorUpdateViewModel,
+                        shouldAnimateColor = shouldAnimateColor,
+                        lifecycleOwner = lifecycleOwner,
+                    )
                 val value = if (v.isChecked) clockFontAxis.maxValue else clockFontAxis.minValue
                 onFontAxisValueUpdated.invoke(value)
             }

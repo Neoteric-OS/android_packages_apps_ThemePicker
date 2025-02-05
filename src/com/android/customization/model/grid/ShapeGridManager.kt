@@ -16,6 +16,8 @@
 
 package com.android.customization.model.grid
 
+import android.graphics.drawable.Drawable
+
 interface ShapeGridManager {
 
     suspend fun getGridOptions(): List<GridOptionModel>?
@@ -23,4 +25,6 @@ interface ShapeGridManager {
     suspend fun getShapeOptions(): List<ShapeOptionModel>?
 
     fun applyShapeGridOption(shapeKey: String, gridKey: String): Int
+
+    fun getGridOptionDrawble(iconId: Int): Drawable?
 }

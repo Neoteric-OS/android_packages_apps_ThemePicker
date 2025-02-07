@@ -112,7 +112,12 @@ object ShapeGridFloatingSheetBinder {
 
         val shapeContent = view.requireViewById<View>(R.id.app_shape_container)
         val shapeOptionListAdapter =
-            createShapeOptionItemAdapter(lifecycleOwner, backgroundDispatcher)
+            createShapeOptionItemAdapter(
+                colorUpdateViewModel = colorUpdateViewModel,
+                shouldAnimateColor = isFloatingSheetActive,
+                lifecycleOwner = lifecycleOwner,
+                backgroundDispatcher = backgroundDispatcher,
+            )
         val shapeOptionList =
             view.requireViewById<RecyclerView>(R.id.shape_options).also {
                 it.initShapeOptionList(view.context, shapeOptionListAdapter)
@@ -120,7 +125,12 @@ object ShapeGridFloatingSheetBinder {
 
         val gridContent = view.requireViewById<View>(R.id.app_grid_container)
         val gridOptionListAdapter =
-            createGridOptionItemAdapter(lifecycleOwner, backgroundDispatcher)
+            createGridOptionItemAdapter(
+                colorUpdateViewModel = colorUpdateViewModel,
+                shouldAnimateColor = isFloatingSheetActive,
+                lifecycleOwner = lifecycleOwner,
+                backgroundDispatcher = backgroundDispatcher,
+            )
         val gridOptionList =
             view.requireViewById<RecyclerView>(R.id.grid_options).also {
                 it.initGridOptionList(view.context, gridOptionListAdapter)
@@ -231,6 +241,8 @@ object ShapeGridFloatingSheetBinder {
     }
 
     private fun createShapeOptionItemAdapter(
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
     ): OptionItemAdapter2<ShapeIconViewModel> =
@@ -243,6 +255,8 @@ object ShapeGridFloatingSheetBinder {
                 imageView?.let { ShapeIconViewBinder.bind(imageView, shapeIcon) }
                 return@OptionItemAdapter2 null
             },
+            colorUpdateViewModel = WeakReference(colorUpdateViewModel),
+            shouldAnimateColor = shouldAnimateColor,
         )
 
     private fun RecyclerView.initShapeOptionList(
@@ -268,6 +282,8 @@ object ShapeGridFloatingSheetBinder {
     }
 
     private fun createGridOptionItemAdapter(
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
     ): OptionItemAdapter2<GridIconViewModel> =
@@ -280,6 +296,8 @@ object ShapeGridFloatingSheetBinder {
                 imageView?.let { GridIconViewBinder.bind(imageView, gridIcon) }
                 return@OptionItemAdapter2 null
             },
+            colorUpdateViewModel = WeakReference(colorUpdateViewModel),
+            shouldAnimateColor = shouldAnimateColor,
         )
 
     private fun RecyclerView.initGridOptionList(

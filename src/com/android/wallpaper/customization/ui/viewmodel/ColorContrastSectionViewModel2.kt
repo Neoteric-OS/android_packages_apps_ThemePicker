@@ -16,57 +16,13 @@
 
 package com.android.wallpaper.customization.ui.viewmodel
 
-import android.app.UiModeManager.ContrastUtils.CONTRAST_LEVEL_HIGH
-import android.app.UiModeManager.ContrastUtils.CONTRAST_LEVEL_MEDIUM
-import android.app.UiModeManager.ContrastUtils.CONTRAST_LEVEL_STANDARD
-import android.util.Log
 import com.android.customization.picker.settings.domain.interactor.ColorContrastSectionInteractor
-import com.android.customization.picker.settings.ui.viewmodel.ColorContrastSectionDataViewModel
-import com.android.themepicker.R
-import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
-import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 @ViewModelScoped
 class ColorContrastSectionViewModel2
 @Inject
 constructor(colorContrastSectionInteractor: ColorContrastSectionInteractor) {
-
-    val summary: Flow<ColorContrastSectionDataViewModel> =
-        colorContrastSectionInteractor.contrast.map { contrastValue ->
-            when (contrastValue) {
-                CONTRAST_LEVEL_STANDARD ->
-                    ColorContrastSectionDataViewModel(
-                        Text.Resource(R.string.color_contrast_default_title),
-                        Icon.Resource(
-                            res = R.drawable.ic_contrast_standard,
-                            contentDescription = null,
-                        ),
-                    )
-                CONTRAST_LEVEL_MEDIUM ->
-                    ColorContrastSectionDataViewModel(
-                        Text.Resource(R.string.color_contrast_medium_title),
-                        Icon.Resource(
-                            res = R.drawable.ic_contrast_medium,
-                            contentDescription = null,
-                        ),
-                    )
-                CONTRAST_LEVEL_HIGH ->
-                    ColorContrastSectionDataViewModel(
-                        Text.Resource(R.string.color_contrast_high_title),
-                        Icon.Resource(res = R.drawable.ic_contrast_high, contentDescription = null),
-                    )
-                else -> {
-                    Log.e(TAG, "Invalid contrast value: $contrastValue")
-                    throw IllegalArgumentException("Invalid contrast value: $contrastValue")
-                }
-            }
-        }
-
-    companion object {
-        private const val TAG = "ColorContrastSectionViewModel2"
-    }
+    val contrast = colorContrastSectionInteractor.contrast
 }

@@ -3,6 +3,8 @@ package com.android.customization.picker.clock.domain.interactor
 import androidx.test.filters.SmallTest
 import com.android.customization.picker.clock.data.repository.FakeClockPickerRepository
 import com.android.customization.picker.clock.shared.ClockSize
+import com.android.systemui.shared.customization.data.content.FakeCustomizationProviderClient
+import com.android.wallpaper.picker.customization.data.repository.CustomizationRuntimeValuesRepository
 import com.android.wallpaper.testing.FakeSnapshotStore
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth
@@ -31,6 +33,7 @@ class ClockPickerInteractorTest {
         val testDispatcher = StandardTestDispatcher()
         Dispatchers.setMain(testDispatcher)
         val repository = FakeClockPickerRepository()
+        val customizationProviderClient = FakeCustomizationProviderClient()
         underTest =
             ClockPickerInteractor(
                 repository = repository,
@@ -38,6 +41,7 @@ class ClockPickerInteractorTest {
                     ClockPickerSnapshotRestorer(repository = repository).apply {
                         runBlocking { setUpSnapshotRestorer(store = FakeSnapshotStore()) }
                     },
+                CustomizationRuntimeValuesRepository(customizationProviderClient),
             )
     }
 

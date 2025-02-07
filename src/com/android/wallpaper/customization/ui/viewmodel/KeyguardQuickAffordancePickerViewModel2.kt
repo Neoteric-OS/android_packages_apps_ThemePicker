@@ -49,6 +49,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
@@ -80,12 +81,37 @@ constructor(
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = "",
             )
-    private val _previewingQuickAffordances = MutableStateFlow<Map<String, String>>(emptyMap())
-    val previewingQuickAffordances: Flow<Map<String, String>> =
-        _previewingQuickAffordances.asStateFlow()
+    private val overridingQuickAffordances = MutableStateFlow<Map<String, String>>(emptyMap())
+    private val selectedQuickAffordancesGroupBySlotId =
+        quickAffordanceInteractor.selections
+            .map { it.groupBy { selectionModel -> selectionModel.slotId } }
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+    // optimisticUpdateQuickAffordances updates right after applying button is clicked, while the
+    // actual update of selectedQuickAffordancesGroupBySlotId later updates until the system
+    // completes the update task. This can make sure the apply button state updates before we return
+    // to the previous screen.
+    private val optimisticUpdateQuickAffordances: MutableStateFlow<Map<String, String>?> =
+        MutableStateFlow(null)
+
+    val previewingQuickAffordances =
+        combine(
+            quickAffordanceInteractor.slots,
+            overridingQuickAffordances,
+            selectedQuickAffordancesGroupBySlotId,
+        ) { slots, overridingQuickAffordances, selectedQuickAffordancesGroupBySlotId ->
+            slots.associate { slot ->
+                val selectedAffordanceId =
+                    overridingQuickAffordances[slot.id]
+                        ?: selectedQuickAffordancesGroupBySlotId[slot.id]
+                            ?.firstOrNull()
+                            ?.affordanceId
+                        ?: KEYGUARD_QUICK_AFFORDANCE_ID_NONE
+                slot.id to selectedAffordanceId
+            }
+        }
 
     fun resetPreview() {
-        _previewingQuickAffordances.tryEmit(emptyMap())
+        overridingQuickAffordances.tryEmit(emptyMap())
         _selectedSlotId.tryEmit(SLOT_ID_BOTTOM_START)
     }
 
@@ -94,21 +120,13 @@ constructor(
         combine(
                 quickAffordanceInteractor.slots,
                 quickAffordanceInteractor.affordances,
-                quickAffordanceInteractor.selections,
                 previewingQuickAffordances,
                 selectedSlotId,
-            ) { slots, affordances, selections, selectedQuickAffordances, selectedSlotId ->
+            ) { slots, affordances, previewingQuickAffordances, selectedSlotId ->
                 slots.associate { slot ->
-                    val selectedAffordanceIds =
-                        selectedQuickAffordances[slot.id]?.let { setOf(it) }
-                            ?: selections
-                                .filter { selection -> selection.slotId == slot.id }
-                                .map { selection -> selection.affordanceId }
-                                .toSet()
+                    val selectedAffordanceId = previewingQuickAffordances[slot.id]
                     val selectedAffordances =
-                        affordances.filter { affordance ->
-                            selectedAffordanceIds.contains(affordance.id)
-                        }
+                        affordances.filter { affordance -> selectedAffordanceId == affordance.id }
 
                     val isSelected = selectedSlotId == slot.id
                     slot.id to
@@ -160,31 +178,15 @@ constructor(
             }
         }
 
-    /**
-     * The set of IDs of the currently-selected affordances. These change with user selection of new
-     * or different affordances in the currently-selected slot or when slot selection changes.
-     */
-    private val selectedAffordanceIds: Flow<Set<String>> =
-        combine(quickAffordanceInteractor.selections, selectedSlotId) { selections, selectedSlotId
-                ->
-                selections
-                    .filter { selection -> selection.slotId == selectedSlotId }
-                    .map { selection -> selection.affordanceId }
-                    .toSet()
-            }
-            .shareIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(), replay = 1)
-
     /** The list of all available quick affordances for the selected slot. */
     val quickAffordances: Flow<List<OptionItemViewModel2<Icon>>> =
         quickAffordanceInteractor.affordances.map { affordances ->
             val isNoneSelected =
-                combine(selectedSlotId, previewingQuickAffordances, selectedAffordanceIds) {
+                combine(selectedSlotId, previewingQuickAffordances) {
                         selectedSlotId,
-                        selectedQuickAffordances,
-                        selectedAffordanceIds ->
-                        selectedQuickAffordances[selectedSlotId]?.let {
-                            it == KEYGUARD_QUICK_AFFORDANCE_ID_NONE
-                        } ?: selectedAffordanceIds.isEmpty()
+                        previewingQuickAffordances ->
+                        previewingQuickAffordances[selectedSlotId] ==
+                            KEYGUARD_QUICK_AFFORDANCE_ID_NONE
                     }
                     .stateIn(viewModelScope)
             listOf(
@@ -196,10 +198,10 @@ constructor(
                             if (!isSelected) {
                                 {
                                     val newMap =
-                                        _previewingQuickAffordances.value.toMutableMap().apply {
+                                        overridingQuickAffordances.value.toMutableMap().apply {
                                             put(selectedSlotId, KEYGUARD_QUICK_AFFORDANCE_ID_NONE)
                                         }
-                                    _previewingQuickAffordances.tryEmit(newMap)
+                                    overridingQuickAffordances.tryEmit(newMap)
                                 }
                             } else {
                                 null
@@ -210,14 +212,10 @@ constructor(
                 affordances.map { affordance ->
                     val affordanceIcon = getAffordanceIcon(affordance.iconResourceId)
                     val isSelectedFlow: StateFlow<Boolean> =
-                        combine(
+                        combine(selectedSlotId, previewingQuickAffordances) {
                                 selectedSlotId,
-                                previewingQuickAffordances,
-                                selectedAffordanceIds,
-                            ) { selectedSlotId, selectedQuickAffordances, selectedAffordanceIds ->
-                                selectedQuickAffordances[selectedSlotId]?.let {
-                                    it == affordance.id
-                                } ?: selectedAffordanceIds.contains(affordance.id)
+                                previewingQuickAffordances ->
+                                previewingQuickAffordances[selectedSlotId] == affordance.id
                             }
                             .stateIn(viewModelScope)
                     OptionItemViewModel2<Icon>(
@@ -235,10 +233,10 @@ constructor(
                                     if (!isSelected) {
                                         {
                                             val newMap =
-                                                _previewingQuickAffordances.value
+                                                overridingQuickAffordances.value
                                                     .toMutableMap()
                                                     .apply { put(selectedSlotId, affordance.id) }
-                                            _previewingQuickAffordances.tryEmit(newMap)
+                                            overridingQuickAffordances.tryEmit(newMap)
                                         }
                                     } else {
                                         null
@@ -267,12 +265,19 @@ constructor(
         }
 
     val onApply: Flow<(suspend () -> Unit)?> =
-        previewingQuickAffordances.map {
-            if (it.isEmpty()) {
-                null
-            } else {
+        combine(overridingQuickAffordances, optimisticUpdateQuickAffordances) {
+            overridingQuickAffordances,
+            optimisticUpdateQuickAffordances ->
+            // If all overridingQuickAffordances is empty or are same as the
+            // optimisticUpdateQuickAffordances, it is not yet edited
+            val isQuickAffordancesEdited =
+                (!overridingQuickAffordances.all { (slotId, overridingQuickAffordanceId) ->
+                    optimisticUpdateQuickAffordances?.get(slotId) == overridingQuickAffordanceId
+                })
+            if (isQuickAffordancesEdited) {
                 {
-                    it.forEach { entry ->
+                    this.optimisticUpdateQuickAffordances.value = overridingQuickAffordances
+                    overridingQuickAffordances.forEach { entry ->
                         val slotId = entry.key
                         val affordanceId = entry.value
                         if (slotId == KEYGUARD_QUICK_AFFORDANCE_ID_NONE) {
@@ -286,6 +291,8 @@ constructor(
                         logger.logShortcutApplied(shortcut = affordanceId, shortcutSlotId = slotId)
                     }
                 }
+            } else {
+                null
             }
         }
 

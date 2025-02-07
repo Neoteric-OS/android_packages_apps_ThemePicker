@@ -120,7 +120,7 @@
         <item name="android:textColor">@color/system_on_surface</item>
         <item name="android:textDirection">locale</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:lineHeight">24dp</item>
+        <item name="android:lineHeight">24sp</item>
     </style>
 
     <style name="SectionSubtitleTextStyle" parent="SectionTitleTextStyle">

@@ -24,6 +24,7 @@ import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.systemui.plugins.clocks.ClockFontAxis
 import com.android.systemui.plugins.clocks.ClockFontAxisSetting
+import com.android.systemui.plugins.clocks.ClockId
 import com.android.systemui.plugins.clocks.ClockMetadata
 import com.android.systemui.shared.clocks.ClockRegistry
 import com.android.systemui.shared.settings.data.repository.SecureSettingsRepository
@@ -193,6 +194,10 @@ constructor(
             newSettings.metadata = oldSettings.metadata
             newSettings
         }
+    }
+
+    override fun isReactiveToTone(clockId: ClockId): Boolean? {
+        return registry.getClockPickerConfig(clockId)?.isReactiveToTone
     }
 
     private fun JSONObject.getSelectedColorId(): String? {

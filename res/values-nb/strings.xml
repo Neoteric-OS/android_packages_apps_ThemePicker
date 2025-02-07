@@ -28,6 +28,8 @@
     <string name="clock_color_and_size_description" msgid="6578061553012886817">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="clock_style" msgid="6847711178193804308">"Stil"</string>
     <string name="clock_color" msgid="8081608867289156163">"Farge"</string>
+    <string name="clock_color_title" msgid="4484141281632973058">"Klokkefarge"</string>
+    <string name="clock_color_description" msgid="1493964392794026841">"Match bakgrunnstemaet, eller velg din egen farge"</string>
     <string name="clock_color_red" msgid="3843504214807597810">"Rød"</string>
     <string name="clock_color_orange" msgid="4175805201144275804">"Oransje"</string>
     <string name="clock_color_yellow" msgid="7391699163247349977">"Gul"</string>
@@ -41,8 +43,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Dynamisk"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"Klokkens størrelse endres basert på innholdet på låseskjermen"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"Stor"</string>
-    <!-- no translation found for clock_size_large_description (1171001745473029918) -->
-    <skip />
+    <string name="clock_size_large_description" msgid="1171001745473029918">"Vises når varsler ikke er synlige"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Liten"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"En liten klokke vises i hjørnet av skjermen"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Bruk endringene i klokkeskrifttypen"</string>
@@ -74,6 +75,7 @@
     <string name="font_card_body" msgid="6790525594503904468">"Legg til favorittskrifttypen din på alle skjermer"</string>
     <string name="grid_options_title" msgid="7071930966989877023">"Velg rutenettstørrelse"</string>
     <string name="grid_title_pattern" msgid="9188866567612607806">"<xliff:g id="ID_1">%1$d</xliff:g>x<xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="grid_content_description" msgid="5312080295600578441">"<xliff:g id="ID_1">%1$d</xliff:g> ganger <xliff:g id="ID_2">%2$d</xliff:g>"</string>
     <string name="apply_grid_btn_note" msgid="2966021967355139181">"Endring av rutenettstørrelse laster inn arbeidsområdet på nytt, noe som kan ta noen sekunder."</string>
     <string name="toast_of_changing_grid" msgid="3515633981312731121">"Laster inn arbeidsområdet med rutenett på %1$s"</string>
     <string name="toast_of_failure_to_change_grid" msgid="1349622908271736044">"Kunne ikke laste inn arbeidsområdet med rutenett på %1$s"</string>
@@ -126,8 +128,7 @@
     <string name="color_changed" msgid="7029571720331641235">"Fargen er endret"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dynamisk"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Systemfarger"</string>
-    <!-- no translation found for system_colors_title (8011422955674152731) -->
-    <skip />
+    <string name="system_colors_title" msgid="8011422955674152731">"Farger"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Venstre snarvei"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Høyre snarvei"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Ingen"</string>
@@ -144,8 +145,9 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Ingen"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Vis varsler på låseskjermen"</string>
-    <!-- no translation found for more_settings_section_title (6854797937797818510) -->
-    <skip />
+    <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Varsler på låseskjermen"</string>
+    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Administrer hvordan varsler vises, og hva som skal vises"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"Flere låseskjerminnstillinger"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Personvern, Spilles nå med mer"</string>
     <string name="more_colors" msgid="3191071655353004591">"Flere farger"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Dynamisk primærtema"</string>

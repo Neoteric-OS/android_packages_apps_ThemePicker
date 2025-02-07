@@ -17,14 +17,36 @@
 
 package com.android.customization.picker.color.ui.binder
 
+import androidx.lifecycle.LifecycleOwner
 import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 
 object ColorOptionIconBinder2 {
-    fun bind(view: ColorOptionIconView2, viewModel: ColorOptionIconViewModel, darkTheme: Boolean) {
+
+    interface Binding {
+        /** Destroys the color update binding, in spite of lifecycle state. */
+        fun destroy()
+    }
+
+    fun bind(
+        view: ColorOptionIconView2,
+        viewModel: ColorOptionIconViewModel,
+        darkTheme: Boolean,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
+        lifecycleOwner: LifecycleOwner,
+    ): Binding {
+        val binding =
+            ColorUpdateBinder.bind(
+                setColor = { color -> view.bindStrokeColor(color) },
+                color = colorUpdateViewModel.colorPrimary,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
         if (darkTheme) {
             view.bindColor(
-                view.resources.getColor(android.R.color.system_primary_dark, view.context.theme),
                 viewModel.darkThemeColor0,
                 viewModel.darkThemeColor1,
                 viewModel.darkThemeColor2,
@@ -32,12 +54,16 @@ object ColorOptionIconBinder2 {
             )
         } else {
             view.bindColor(
-                view.resources.getColor(android.R.color.system_primary_light, view.context.theme),
                 viewModel.lightThemeColor0,
                 viewModel.lightThemeColor1,
                 viewModel.lightThemeColor2,
                 viewModel.lightThemeColor3,
             )
+        }
+        return object : Binding {
+            override fun destroy() {
+                binding.destroy()
+            }
         }
     }
 }

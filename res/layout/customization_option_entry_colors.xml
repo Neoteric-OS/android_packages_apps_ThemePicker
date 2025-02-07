@@ -24,19 +24,20 @@
     android:clickable="true">
 
     <TextView
+        android:id="@+id/option_entry_title"
         style="@style/CustomizationOptionEntryTitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/system_colors_title"
         android:layout_marginEnd="@dimen/customization_option_entry_text_margin_end"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/option_entry_colors_icon_container"
+        app:layout_constraintEnd_toStartOf="@+id/option_entry_icon_container"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <FrameLayout
-        android:id="@+id/option_entry_colors_icon_container"
+        android:id="@+id/option_entry_icon_container"
         android:layout_width="@dimen/customization_option_entry_icon_size"
         android:layout_height="@dimen/customization_option_entry_icon_size"
         android:orientation="horizontal"
@@ -46,7 +47,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.android.customization.picker.color.ui.view.ColorOptionIconView2
-            android:id="@+id/option_entry_colors_icon"
+            android:id="@+id/option_entry_icon"
             android:layout_width="@dimen/customization_option_entry_color_icon_size"
             android:layout_height="@dimen/customization_option_entry_color_icon_size"
             android:layout_gravity="center"/>

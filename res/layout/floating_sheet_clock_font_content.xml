@@ -112,7 +112,7 @@
         style="@style/CustomizationOptionEntryTitleTextStyle"
         android:text="@string/tab_placeholder_text" />
 
-    <Switch
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/clock_axis_switch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
         app:layout_constraintStart_toEndOf="@+id/clock_axis_switch_name1"
         android:layout_marginVertical="@dimen/clock_axis_control_switch_row_margin_vertical"
         android:layout_marginStart="@dimen/clock_axis_control_text_margin_end"
-        style="@style/Switch.SettingsLib" />
+        android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
 
     <ImageView
         android:id="@+id/divider"
@@ -149,7 +149,7 @@
         style="@style/CustomizationOptionEntryTitleTextStyle"
         android:text="@string/tab_placeholder_text" />
 
-    <Switch
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/clock_axis_switch2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -157,5 +157,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginVertical="@dimen/clock_axis_control_switch_row_margin_vertical"
-        style="@style/Switch.SettingsLib" />
+        android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
 </androidx.constraintlayout.widget.ConstraintLayout>

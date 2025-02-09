@@ -44,18 +44,13 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOpti
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 @Singleton
 class ThemePickerToolbarBinder
 @Inject
 constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBinder {
-
-    private val _toolbarHeights: MutableStateFlow<ToolbarHeightsViewModel?> = MutableStateFlow(null)
-    private val toolbarHeights = _toolbarHeights.asStateFlow().filterNotNull()
 
     override fun bind(
         navButton: FrameLayout,
@@ -66,6 +61,8 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
         lifecycleOwner: LifecycleOwner,
         onNavBack: () -> Unit,
     ) {
+        val toolbarHeights: MutableStateFlow<ToolbarHeightsViewModel?> = MutableStateFlow(null)
+
         defaultToolbarBinder.bind(
             navButton,
             toolbar,
@@ -86,8 +83,8 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     if (navButton.height != 0) {
-                        _toolbarHeights.value =
-                            _toolbarHeights.value?.copy(navButtonHeight = navButton.height)
+                        toolbarHeights.value =
+                            toolbarHeights.value?.copy(navButtonHeight = navButton.height)
                                 ?: ToolbarHeightsViewModel(navButtonHeight = navButton.height)
                     }
                     navButton.viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -99,8 +96,8 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     if (toolbar.height != 0) {
-                        _toolbarHeights.value =
-                            _toolbarHeights.value?.copy(toolbarHeight = toolbar.height)
+                        toolbarHeights.value =
+                            toolbarHeights.value?.copy(toolbarHeight = toolbar.height)
                                 ?: ToolbarHeightsViewModel(toolbarHeight = toolbar.height)
                     }
                     navButton.viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -112,8 +109,8 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     if (applyButton.height != 0) {
-                        _toolbarHeights.value =
-                            _toolbarHeights.value?.copy(applyButtonHeight = applyButton.height)
+                        toolbarHeights.value =
+                            toolbarHeights.value?.copy(applyButtonHeight = applyButton.height)
                                 ?: ToolbarHeightsViewModel(applyButtonHeight = applyButton.height)
                     }
                     applyButton.viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -184,7 +181,8 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
                 launch {
                     combine(toolbarHeights, viewModel.isToolbarCollapsed, ::Pair).collect {
                         (toolbarHeights, isToolbarCollapsed) ->
-                        val (navButtonHeight, toolbarHeight, applyButtonHeight) = toolbarHeights
+                        val (navButtonHeight, toolbarHeight, applyButtonHeight) =
+                            toolbarHeights ?: return@collect
                         navButtonHeight ?: return@collect
                         toolbarHeight ?: return@collect
                         applyButtonHeight ?: return@collect

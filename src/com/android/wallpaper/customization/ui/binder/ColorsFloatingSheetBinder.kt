@@ -55,6 +55,16 @@ object ColorsFloatingSheetBinder {
         val viewModel = optionsViewModel.colorPickerViewModel2
         val isFloatingSheetActive = { optionsViewModel.selectedOption.value == COLORS }
 
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                view.requireViewById<TextView>(R.id.color_type_tab_subhead).setTextColor(color)
+                view.requireViewById<TextView>(R.id.dark_mode_toggle_title).setTextColor(color)
+            },
+            color = colorUpdateViewModel.colorOnSurface,
+            shouldAnimate = isFloatingSheetActive,
+            lifecycleOwner = lifecycleOwner,
+        )
+
         val tabs = view.requireViewById<FloatingToolbar>(R.id.floating_toolbar)
         val tabContainer =
             tabs.findViewById<ViewGroup>(com.android.wallpaper.R.id.floating_toolbar_tab_container)

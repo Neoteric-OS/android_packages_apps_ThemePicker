@@ -146,7 +146,7 @@
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Hiện thông báo trên màn hình khoá"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Thông báo trên màn hình khoá"</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Quản lý cách thông báo xuất hiện và nội dung hiển thị"</string>
-    <string name="more_settings_section_title" msgid="6854797937797818510">"Cài đặt khác trên màn hình khoá"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"Chế độ cài đặt khác về màn hình khoá"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Quyền riêng tư, Phát hiện nhạc, v.v."</string>
     <string name="more_colors" msgid="3191071655353004591">"Màu khác"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Giao diện động chính"</string>

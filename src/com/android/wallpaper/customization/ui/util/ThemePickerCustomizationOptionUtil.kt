@@ -16,26 +16,33 @@
 
 package com.android.wallpaper.customization.ui.util
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.compose.ui.platform.ComposeView
 import com.android.customization.picker.mode.shared.util.DarkModeLifecycleUtil
 import com.android.themepicker.R
+import com.android.wallpaper.config.BaseFlags
+import com.android.wallpaper.customization.ui.compose.ColorFloatingSheet
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.util.DefaultCustomizationOptionUtil
+import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
 @ActivityScoped
 class ThemePickerCustomizationOptionUtil
 @Inject
-constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOptionUtil) :
-    CustomizationOptionUtil {
+constructor(
+    private val defaultCustomizationOptionUtil: DefaultCustomizationOptionUtil,
+    @ActivityContext private val context: Context,
+) : CustomizationOptionUtil {
 
     // Instantiate DarkModeLifecycleUtil for it to observe lifecycle and update DarkModeRepository
     @Inject lateinit var darkModeLifecycleUtil: DarkModeLifecycleUtil
@@ -143,6 +150,7 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
     ): Map<CustomizationOptionUtil.CustomizationOption, View> {
         val map =
             defaultCustomizationOptionUtil.initFloatingSheet(bottomSheetContainer, layoutInflater)
+        val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
         return buildMap {
             putAll(map)
             put(
@@ -165,11 +173,15 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
             )
             put(
                 ThemePickerHomeCustomizationOption.COLORS,
-                inflateFloatingSheet(
-                        ThemePickerHomeCustomizationOption.COLORS,
-                        bottomSheetContainer,
-                        layoutInflater,
-                    )
+                if (isComposeRefactorEnabled) {
+                        ComposeView(context).apply { setContent { ColorFloatingSheet() } }
+                    } else {
+                        inflateFloatingSheet(
+                            ThemePickerHomeCustomizationOption.COLORS,
+                            bottomSheetContainer,
+                            layoutInflater,
+                        )
+                    }
                     .also { bottomSheetContainer.addView(it) },
             )
             put(

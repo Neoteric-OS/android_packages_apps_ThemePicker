@@ -48,6 +48,7 @@ public class GridOption implements CustomizationOption<GridOption>, Parcelable {
     private final GridTileDrawable mTileDrawable;
     public final String title;
     public final String name;
+    public final int gridIconId;
     public final int rows;
     public final int cols;
     public final Uri previewImageUri;
@@ -55,12 +56,13 @@ public class GridOption implements CustomizationOption<GridOption>, Parcelable {
     private boolean mIsCurrent;
 
     public GridOption(String title, String name, boolean isCurrent, int rows, int cols,
-            Uri previewImageUri, int previewPagesCount, String iconShapePath) {
+            Uri previewImageUri, int previewPagesCount, String iconShapePath, int gridIconId) {
         this.title = title;
         mIsCurrent = isCurrent;
         mIconShapePath = iconShapePath;
         mTileDrawable = new GridTileDrawable(rows, cols, mIconShapePath);
         this.name = name;
+        this.gridIconId = gridIconId;
         this.rows = rows;
         this.cols = cols;
         this.previewImageUri = previewImageUri;
@@ -76,6 +78,7 @@ public class GridOption implements CustomizationOption<GridOption>, Parcelable {
         mIsCurrent = in.readByte() != 0;
         mIconShapePath = in.readString();
         name = in.readString();
+        gridIconId = in.readInt();
         rows = in.readInt();
         cols = in.readInt();
         previewImageUri = in.readParcelable(Uri.class.getClassLoader());

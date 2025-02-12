@@ -43,6 +43,7 @@ import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.systemui.plugins.clocks.ClockPreviewConfig
 import com.android.systemui.shared.Flags
 import com.android.themepicker.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
@@ -99,6 +100,8 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToLockScreenNotificationsSettingsActivity,
             navigateToPreviewScreen,
         )
+
+        val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
 
         val optionsViewModel =
             viewModel.customizationOptionsViewModel as ThemePickerCustomizationOptionsViewModel
@@ -375,16 +378,18 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 )
             }
 
-        customizationOptionFloatingSheetViewMap
-            ?.get(ThemePickerHomeCustomizationOption.COLORS)
-            ?.let {
-                ColorsFloatingSheetBinder.bind(
-                    it,
-                    optionsViewModel,
-                    colorUpdateViewModel,
-                    lifecycleOwner,
-                )
-            }
+        if (!isComposeRefactorEnabled) {
+            customizationOptionFloatingSheetViewMap
+                ?.get(ThemePickerHomeCustomizationOption.COLORS)
+                ?.let {
+                    ColorsFloatingSheetBinder.bind(
+                        it,
+                        optionsViewModel,
+                        colorUpdateViewModel,
+                        lifecycleOwner,
+                    )
+                }
+        }
 
         customizationOptionFloatingSheetViewMap
             ?.get(ThemePickerHomeCustomizationOption.APP_SHAPE_GRID)

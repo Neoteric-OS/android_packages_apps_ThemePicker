@@ -16,14 +16,18 @@
  */
 package com.android.customization.picker.color.data.repository
 
+import android.app.WallpaperColors
+import android.app.WallpaperManager
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.android.customization.model.CustomizationManager
 import com.android.customization.model.color.ColorCustomizationManager
 import com.android.customization.model.color.ColorOption
 import com.android.customization.model.color.ColorOptionImpl
 import com.android.customization.picker.color.shared.model.ColorType
-import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository
-import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
+import com.android.wallpaper.model.Screen
+import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,11 +35,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 @Singleton
@@ -43,41 +47,41 @@ class ColorPickerRepositoryImpl2
 @Inject
 constructor(
     @BackgroundDispatcher private val scope: CoroutineScope,
-    wallpaperColorsRepository: WallpaperColorsRepository,
     private val colorManager: ColorCustomizationManager,
+    client: WallpaperClient,
 ) : ColorPickerRepository2 {
 
-    private val homeWallpaperColors: StateFlow<WallpaperColorsModel?> =
-        wallpaperColorsRepository.homeWallpaperColors
-    private val lockWallpaperColors: StateFlow<WallpaperColorsModel?> =
-        wallpaperColorsRepository.lockWallpaperColors
+    private val wallpaperColorsCallback: Flow<Pair<Screen, WallpaperColors?>> =
+        callbackFlow {
+                trySend(Pair(Screen.HOME_SCREEN, client.getWallpaperColors(Screen.HOME_SCREEN)))
+                trySend(Pair(Screen.LOCK_SCREEN, client.getWallpaperColors(Screen.LOCK_SCREEN)))
+                val listener = { colors: WallpaperColors?, which: Int ->
+                    if (which and WallpaperManager.FLAG_SYSTEM != 0) {
+                        trySend(Pair(Screen.HOME_SCREEN, colors))
+                    }
+                    if (which and WallpaperManager.FLAG_LOCK != 0) {
+                        trySend(Pair(Screen.LOCK_SCREEN, colors))
+                    }
+                }
+                client.addOnColorsChangedListener(listener, Handler(Looper.getMainLooper()))
+                awaitClose { client.removeOnColorsChangedListener(listener) }
+            }
+            // Make this a shared flow to make sure only one listener is added.
+            .shareIn(scope = scope, started = SharingStarted.WhileSubscribed(), replay = 1)
+    private val homeWallpaperColors: Flow<WallpaperColors?> =
+        wallpaperColorsCallback
+            .filter { (screen, _) -> screen == Screen.HOME_SCREEN }
+            .map { (_, colors) -> colors }
+    private val lockWallpaperColors: Flow<WallpaperColors?> =
+        wallpaperColorsCallback
+            .filter { (screen, _) -> screen == Screen.LOCK_SCREEN }
+            .map { (_, colors) -> colors }
 
     override val colorOptions: Flow<Map<ColorType, List<ColorOption>>> =
-        combine(homeWallpaperColors, lockWallpaperColors) { homeColors, lockColors ->
-                homeColors to lockColors
-            }
+        combine(homeWallpaperColors, lockWallpaperColors, ::Pair)
             .map { (homeColors, lockColors) ->
                 suspendCancellableCoroutine { continuation ->
-                    if (
-                        homeColors is WallpaperColorsModel.Loading ||
-                            lockColors is WallpaperColorsModel.Loading
-                    ) {
-                        continuation.resumeWith(
-                            Result.success(
-                                mapOf(
-                                    ColorType.WALLPAPER_COLOR to listOf(),
-                                    ColorType.PRESET_COLOR to listOf(),
-                                )
-                            )
-                        )
-                        return@suspendCancellableCoroutine
-                    }
-                    val homeColorsLoaded = homeColors as WallpaperColorsModel.Loaded
-                    val lockColorsLoaded = lockColors as WallpaperColorsModel.Loaded
-                    colorManager.setWallpaperColors(
-                        homeColorsLoaded.colors,
-                        lockColorsLoaded.colors,
-                    )
+                    colorManager.setWallpaperColors(homeColors, lockColors)
                     colorManager.fetchOptions(
                         object : CustomizationManager.OptionsFetchedListener<ColorOption> {
                             override fun onOptionsLoaded(options: MutableList<ColorOption>?) {
@@ -114,12 +118,17 @@ constructor(
                     )
                 }
             }
+            .shareIn(scope = scope, started = SharingStarted.WhileSubscribed(), replay = 1)
 
-    private val settingsChanged = callbackFlow {
-        trySend(Unit)
-        colorManager.setListener { trySend(Unit) }
-        awaitClose { colorManager.setListener(null) }
-    }
+    private val settingsChanged =
+        callbackFlow {
+                trySend(Unit)
+                colorManager.setListener { trySend(Unit) }
+                awaitClose { colorManager.setListener(null) }
+            }
+            // Make this a shared flow to prevent colorManager.setListener from being called
+            // every time this flow is collected, since colorManager is a singleton.
+            .shareIn(scope = scope, started = SharingStarted.WhileSubscribed(), replay = 1)
 
     override val selectedColorOption =
         combine(colorOptions, settingsChanged) { options, _ ->
@@ -132,7 +141,7 @@ constructor(
                 }
                 return@combine null
             }
-            .stateIn(scope = scope, started = SharingStarted.WhileSubscribed(), initialValue = null)
+            .shareIn(scope = scope, started = SharingStarted.WhileSubscribed(), replay = 1)
 
     override suspend fun select(colorOption: ColorOption) {
         suspendCancellableCoroutine { continuation ->
@@ -155,6 +164,6 @@ constructor(
     }
 
     companion object {
-        private const val TAG = "ColorPickerRepositoryImpl"
+        private const val TAG = "ColorPickerRepositoryImpl2"
     }
 }

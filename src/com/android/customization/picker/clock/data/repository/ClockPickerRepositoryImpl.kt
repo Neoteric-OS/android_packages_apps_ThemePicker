@@ -104,7 +104,7 @@ constructor(
 
     /** The currently-selected clock. This also emits the clock color information. */
     override val selectedClock: Flow<ClockMetadataModel> =
-        callbackFlow {
+        callbackFlow<ClockMetadataModel?> {
                 fun send() {
                     val activeClockId = registry.activeClockId
                     val metadata = registry.settings?.metadata
@@ -146,6 +146,9 @@ constructor(
             }
             .flowOn(mainDispatcher)
             .mapNotNull { it }
+            // Make this a shared flow to prevent ClockRegistry.registerClockChangeListener from
+            // being called every time this flow is collected, since ClockRegistry is a singleton.
+            .shareIn(mainScope, SharingStarted.WhileSubscribed(), 1)
 
     override suspend fun setSelectedClock(clockId: String) {
         registry.mutateSetting { oldSettings ->

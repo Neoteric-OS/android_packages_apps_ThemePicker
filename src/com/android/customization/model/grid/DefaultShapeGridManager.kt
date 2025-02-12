@@ -46,30 +46,45 @@ constructor(
                     .query(previewUtils.getUri(GRID_OPTIONS), null, null, null, null)
                     ?.use { cursor ->
                         buildList {
-                            while (cursor.moveToNext()) {
-                                val rows = cursor.getInt(cursor.getColumnIndex(COL_ROWS))
-                                val cols = cursor.getInt(cursor.getColumnIndex(COL_COLS))
-                                val title =
-                                    cursor.getString(cursor.getColumnIndex(COL_GRID_TITLE))
-                                        ?: context.getString(
-                                            com.android.themepicker.R.string.grid_title_pattern,
-                                            cols,
-                                            rows,
+                                while (cursor.moveToNext()) {
+                                    val rows = cursor.getInt(cursor.getColumnIndex(COL_ROWS))
+                                    val cols = cursor.getInt(cursor.getColumnIndex(COL_COLS))
+                                    val title =
+                                        cursor.getString(cursor.getColumnIndex(COL_GRID_TITLE))
+                                            ?: context.getString(
+                                                com.android.themepicker.R.string.grid_title_pattern,
+                                                cols,
+                                                rows,
+                                            )
+                                    add(
+                                        GridOptionModel(
+                                            key =
+                                                cursor.getString(
+                                                    cursor.getColumnIndex(COL_GRID_KEY)
+                                                ),
+                                            title = title,
+                                            isCurrent =
+                                                cursor
+                                                    .getString(
+                                                        cursor.getColumnIndex(COL_IS_DEFAULT)
+                                                    )
+                                                    .toBoolean(),
+                                            rows = rows,
+                                            cols = cols,
                                         )
-                                add(
-                                    GridOptionModel(
-                                        key = cursor.getString(cursor.getColumnIndex(COL_GRID_KEY)),
-                                        title = title,
-                                        isCurrent =
-                                            cursor
-                                                .getString(cursor.getColumnIndex(COL_IS_DEFAULT))
-                                                .toBoolean(),
-                                        rows = rows,
-                                        cols = cols,
                                     )
-                                )
+                                }
                             }
-                        }
+                            .let { list ->
+                                // In this list, exactly one item should have isCurrent true.
+                                val isCurrentCount = list.count { it.isCurrent }
+                                if (isCurrentCount != 1) {
+                                    throw IllegalStateException(
+                                        "Exactly one grid option should have isCurrent = true. Found $isCurrentCount."
+                                    )
+                                }
+                                list
+                            }
                     }
             } else {
                 null
@@ -83,24 +98,39 @@ constructor(
                     .query(previewUtils.getUri(SHAPE_OPTIONS), null, null, null, null)
                     ?.use { cursor ->
                         buildList {
-                            while (cursor.moveToNext()) {
-                                add(
-                                    ShapeOptionModel(
-                                        key =
-                                            cursor.getString(cursor.getColumnIndex(COL_SHAPE_KEY)),
-                                        title =
-                                            cursor.getString(
-                                                cursor.getColumnIndex(COL_SHAPE_TITLE)
-                                            ),
-                                        path = cursor.getString(cursor.getColumnIndex(COL_PATH)),
-                                        isCurrent =
-                                            cursor
-                                                .getString(cursor.getColumnIndex(COL_IS_DEFAULT))
-                                                .toBoolean(),
+                                while (cursor.moveToNext()) {
+                                    add(
+                                        ShapeOptionModel(
+                                            key =
+                                                cursor.getString(
+                                                    cursor.getColumnIndex(COL_SHAPE_KEY)
+                                                ),
+                                            title =
+                                                cursor.getString(
+                                                    cursor.getColumnIndex(COL_SHAPE_TITLE)
+                                                ),
+                                            path =
+                                                cursor.getString(cursor.getColumnIndex(COL_PATH)),
+                                            isCurrent =
+                                                cursor
+                                                    .getString(
+                                                        cursor.getColumnIndex(COL_IS_DEFAULT)
+                                                    )
+                                                    .toBoolean(),
+                                        )
                                     )
-                                )
+                                }
                             }
-                        }
+                            .let { list ->
+                                // In this list, exactly one item should have isCurrent true.
+                                val isCurrentCount = list.count { it.isCurrent }
+                                if (isCurrentCount != 1) {
+                                    throw IllegalStateException(
+                                        "Exactly one shape option should have isCurrent = true. Found $isCurrentCount."
+                                    )
+                                }
+                                list
+                            }
                     }
             } else {
                 null

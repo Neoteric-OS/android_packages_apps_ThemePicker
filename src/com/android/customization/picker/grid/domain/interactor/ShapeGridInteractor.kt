@@ -17,6 +17,7 @@
 
 package com.android.customization.picker.grid.domain.interactor
 
+import android.graphics.drawable.Drawable
 import com.android.customization.picker.grid.data.repository.ShapeGridRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,4 +35,6 @@ class ShapeGridInteractor @Inject constructor(private val repository: ShapeGridR
 
     suspend fun applySelectedOption(shapeKey: String, gridKey: String) =
         repository.applySelectedOption(shapeKey, gridKey)
+
+    fun getGridOptionDrawable(iconId: Int): Drawable? = repository.getGridOptionDrawable(iconId)
 }

@@ -16,11 +16,17 @@
 
 package com.android.customization.model.grid
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
+
+    val gridOptionDrawable0: Drawable = ColorDrawable(Color.BLUE)
+    val gridOptionDrawable1: Drawable = ColorDrawable(Color.GREEN)
 
     private var gridOptions: List<GridOptionModel>? = DEFAULT_GRID_OPTION_LIST
 
@@ -36,6 +42,14 @@ class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
         return 0
     }
 
+    override fun getGridOptionDrawble(iconId: Int): Drawable? {
+        return when (iconId) {
+            0 -> gridOptionDrawable0
+            1 -> gridOptionDrawable1
+            else -> null
+        }
+    }
+
     companion object {
         val DEFAULT_GRID_OPTION_LIST =
             listOf(
@@ -45,6 +59,7 @@ class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
                     isCurrent = true,
                     rows = 5,
                     cols = 5,
+                    iconId = 0,
                 ),
                 GridOptionModel(
                     key = "practical",
@@ -52,6 +67,7 @@ class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
                     isCurrent = false,
                     rows = 5,
                     cols = 4,
+                    iconId = 1,
                 ),
             )
 

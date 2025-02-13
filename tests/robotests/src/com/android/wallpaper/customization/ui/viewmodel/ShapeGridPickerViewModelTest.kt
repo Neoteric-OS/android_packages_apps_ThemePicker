@@ -17,13 +17,10 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
-import android.content.res.Resources
-import androidx.test.core.app.ApplicationProvider
+import android.graphics.drawable.Drawable
 import androidx.test.filters.SmallTest
-import com.android.customization.model.ResourceConstants
 import com.android.customization.model.grid.FakeShapeGridManager
 import com.android.customization.picker.grid.domain.interactor.ShapeGridInteractor
-import com.android.customization.picker.grid.ui.viewmodel.GridIconViewModel
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
@@ -56,18 +53,6 @@ class ShapeGridPickerViewModelTest {
     @Inject lateinit var gridOptionsManager: FakeShapeGridManager
     @Inject lateinit var interactor: ShapeGridInteractor
     @Inject @ApplicationContext lateinit var appContext: Context
-
-    private val iconShapePath =
-        ApplicationProvider.getApplicationContext<Context>()
-            .resources
-            .getString(
-                Resources.getSystem()
-                    .getIdentifier(
-                        ResourceConstants.CONFIG_ICON_MASK,
-                        "string",
-                        ResourceConstants.ANDROID_PACKAGE,
-                    )
-            )
 
     private lateinit var underTest: ShapeGridPickerViewModel
 
@@ -162,7 +147,7 @@ class ShapeGridPickerViewModelTest {
             assertGridItem(
                 optionItem = selectedGridOption(),
                 key = "normal",
-                payload = GridIconViewModel(5, 5, iconShapePath),
+                payload = gridOptionsManager.gridOptionDrawable0,
                 text = Text.Loaded("5x5"),
                 isTextUserVisible = true,
                 isSelected = true,
@@ -186,7 +171,7 @@ class ShapeGridPickerViewModelTest {
             assertGridItem(
                 optionItem = selectedGridOption(),
                 key = "practical",
-                payload = GridIconViewModel(4, 5, iconShapePath),
+                payload = gridOptionsManager.gridOptionDrawable1,
                 text = Text.Loaded("4x5"),
                 isTextUserVisible = true,
                 isSelected = true,
@@ -202,7 +187,7 @@ class ShapeGridPickerViewModelTest {
             assertGridItem(
                 optionItem = optionItems()?.get(0),
                 key = "normal",
-                payload = GridIconViewModel(5, 5, iconShapePath),
+                payload = gridOptionsManager.gridOptionDrawable0,
                 text = Text.Loaded("5x5"),
                 isTextUserVisible = true,
                 isSelected = true,
@@ -211,7 +196,7 @@ class ShapeGridPickerViewModelTest {
             assertGridItem(
                 optionItem = optionItems()?.get(1),
                 key = "practical",
-                payload = GridIconViewModel(4, 5, iconShapePath),
+                payload = gridOptionsManager.gridOptionDrawable1,
                 text = Text.Loaded("4x5"),
                 isTextUserVisible = true,
                 isSelected = false,
@@ -232,7 +217,7 @@ class ShapeGridPickerViewModelTest {
             assertGridItem(
                 optionItem = optionItems()?.get(0),
                 key = "normal",
-                payload = GridIconViewModel(5, 5, iconShapePath),
+                payload = gridOptionsManager.gridOptionDrawable0,
                 text = Text.Loaded("5x5"),
                 isTextUserVisible = true,
                 isSelected = false,
@@ -241,7 +226,7 @@ class ShapeGridPickerViewModelTest {
             assertGridItem(
                 optionItem = optionItems()?.get(1),
                 key = "practical",
-                payload = GridIconViewModel(4, 5, iconShapePath),
+                payload = gridOptionsManager.gridOptionDrawable1,
                 text = Text.Loaded("4x5"),
                 isTextUserVisible = true,
                 isSelected = true,
@@ -268,9 +253,9 @@ class ShapeGridPickerViewModelTest {
     }
 
     private fun TestScope.assertGridItem(
-        optionItem: OptionItemViewModel2<GridIconViewModel>?,
+        optionItem: OptionItemViewModel2<Drawable>?,
         key: String,
-        payload: GridIconViewModel?,
+        payload: Drawable?,
         text: Text,
         isTextUserVisible: Boolean,
         isSelected: Boolean,

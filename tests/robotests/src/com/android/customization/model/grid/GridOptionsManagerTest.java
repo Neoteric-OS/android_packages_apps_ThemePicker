@@ -50,7 +50,7 @@ public class GridOptionsManagerTest {
     @Test
     public void testApply() {
         String gridName = "testName";
-        GridOption grid = new GridOption("testTitle", gridName, false, 2, 2, null, 1, "");
+        GridOption grid = new GridOption("testTitle", gridName, false, 2, 2, null, 1, "", 0);
         when(mProvider.applyGrid(gridName)).thenReturn(1);
 
         mManager.apply(grid, new Callback() {

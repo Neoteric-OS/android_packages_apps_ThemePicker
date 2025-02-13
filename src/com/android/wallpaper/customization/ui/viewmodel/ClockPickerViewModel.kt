@@ -187,14 +187,13 @@ constructor(
 
     // Clock font axis
     private val overrideClockFontAxisMap = MutableStateFlow<Map<String, Float>>(emptyMap())
-    val selectedClockFontAxes =
+    val previewingClockFontAxes =
         previewingClock
             .map { clock -> clock.fontAxes }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
     private val selectedClockFontAxisMap =
-        selectedClockFontAxes
-            .filterNotNull()
-            .map { fontAxes -> fontAxes.associate { it.key to it.currentValue } }
+        selectedClock
+            .map { clock -> clock.fontAxes.associate { it.key to it.currentValue } }
             .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
     private val isFontAxisMapEdited =
         combine(overrideClockFontAxisMap, selectedClockFontAxisMap) {
@@ -432,9 +431,10 @@ constructor(
                 isClockColorEdited ||
                 isSliderProgressEdited
         }
-
+    private val onApplyClicked: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val onApply: Flow<(suspend () -> Unit)?> =
         combine(
+            onApplyClicked,
             isEdited,
             previewingClock,
             previewingClockSize,
@@ -442,14 +442,16 @@ constructor(
             previewingSliderProgress,
             previewingClockFontAxisMap,
         ) { array ->
-            val isEdited: Boolean = array[0] as Boolean
-            val clock: ClockMetadataModel = array[1] as ClockMetadataModel
-            val size: ClockSize = array[2] as ClockSize
-            val previewingColorId: String = array[3] as String
-            val previewProgress: Int = array[4] as Int
-            val axisMap: Map<String, Float> = array[5] as Map<String, Float>
-            if (isEdited) {
+            val onApplyClicked: Boolean = array[0] as Boolean
+            val isEdited: Boolean = array[1] as Boolean
+            val clock: ClockMetadataModel = array[2] as ClockMetadataModel
+            val size: ClockSize = array[3] as ClockSize
+            val previewingColorId: String = array[4] as String
+            val previewProgress: Int = array[5] as Int
+            val axisMap: Map<String, Float> = array[6] as Map<String, Float>
+            if (isEdited && !onApplyClicked) {
                 {
+                    this.onApplyClicked.value = true
                     clockPickerInteractor.applyClock(
                         clockId = clock.clockId,
                         size = size,
@@ -477,6 +479,7 @@ constructor(
         overridingSliderProgress.value = null
         overrideClockFontAxisMap.value = emptyMap()
         _selectedTab.value = Tab.STYLE
+        onApplyClicked.value = false
     }
 
     companion object {

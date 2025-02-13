@@ -48,6 +48,7 @@ public class LauncherGridOptionsProvider {
 
     private static final String COL_NAME = "name";
     private static final String COL_GRID_TITLE = "grid_title";
+    private static final String COL_GRID_ICON_ID = "grid_icon_id";
     private static final String COL_ROWS = "rows";
     private static final String COL_COLS = "cols";
     private static final String COL_PREVIEW_COUNT = "preview_count";
@@ -93,7 +94,7 @@ public class LauncherGridOptionsProvider {
             while(c.moveToNext()) {
                 String name = c.getString(c.getColumnIndex(COL_NAME));
                 String title = c.getString(c.getColumnIndex(COL_GRID_TITLE));
-
+                int gridIconId = c.getInt(c.getColumnIndex(COL_GRID_ICON_ID));
                 int rows = c.getInt(c.getColumnIndex(COL_ROWS));
                 int cols = c.getInt(c.getColumnIndex(COL_COLS));
                 int previewCount = c.getInt(c.getColumnIndex(COL_PREVIEW_COUNT));
@@ -102,7 +103,7 @@ public class LauncherGridOptionsProvider {
                     title = mContext.getString(R.string.grid_title_pattern, cols, rows);
                 }
                 mOptions.add(new GridOption(title, name, isSet, rows, cols,
-                        mPreviewUtils.getUri(PREVIEW), previewCount, iconPath));
+                        mPreviewUtils.getUri(PREVIEW), previewCount, iconPath, gridIconId));
             }
         } catch (Exception e) {
             mOptions = null;

@@ -160,7 +160,15 @@ object ClockFloatingSheetBinder {
                 layoutManager =
                     LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
             }
-        val clockColorSlider: Slider = view.requireViewById(R.id.clock_color_slider)
+        val clockColorSlider: Slider =
+            view.requireViewById<Slider>(R.id.clock_color_slider).also {
+                SliderColorBinder.bind(
+                    slider = it,
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    shouldAnimateColor = isFloatingSheetActive,
+                    lifecycleOwner = lifecycleOwner,
+                )
+            }
         clockColorSlider.apply {
             valueFrom = ClockMetadataModel.MIN_COLOR_TONE_PROGRESS.toFloat()
             valueTo = ClockMetadataModel.MAX_COLOR_TONE_PROGRESS.toFloat()
@@ -373,15 +381,33 @@ object ClockFloatingSheetBinder {
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
     ) {
+        val slider1 =
+            clockFontContent.requireViewById<Slider>(R.id.clock_axis_slider1).also {
+                SliderColorBinder.bind(
+                    slider = it,
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    shouldAnimateColor = shouldAnimateColor,
+                    lifecycleOwner = lifecycleOwner,
+                )
+            }
+        val slider2 =
+            clockFontContent.requireViewById<Slider>(R.id.clock_axis_slider2).also {
+                SliderColorBinder.bind(
+                    slider = it,
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    shouldAnimateColor = shouldAnimateColor,
+                    lifecycleOwner = lifecycleOwner,
+                )
+            }
         val sliderViewList =
             listOf(
                 ClockFontSliderViewHolder(
                     name = clockFontContent.requireViewById(R.id.clock_axis_slider_name1),
-                    slider = clockFontContent.requireViewById(R.id.clock_axis_slider1),
+                    slider = slider1,
                 ),
                 ClockFontSliderViewHolder(
                     name = clockFontContent.requireViewById(R.id.clock_axis_slider_name2),
-                    slider = clockFontContent.requireViewById(R.id.clock_axis_slider2),
+                    slider = slider2,
                 ),
             )
         val switchViewList =

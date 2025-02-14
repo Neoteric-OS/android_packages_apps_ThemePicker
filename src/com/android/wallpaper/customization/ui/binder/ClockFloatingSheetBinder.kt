@@ -401,7 +401,7 @@ object ClockFloatingSheetBinder {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.selectedClockFontAxes.filterNotNull().collect { fontAxes ->
+                    viewModel.previewingClockFontAxes.filterNotNull().collect { fontAxes ->
                         // This data flow updates only when a new clock style is selected. We
                         // initiate the clock font content with regard to that clock style.
                         sliderViewMap.clear()

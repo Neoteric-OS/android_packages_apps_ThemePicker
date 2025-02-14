@@ -19,7 +19,6 @@ import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.view.LayoutInflater
-import com.android.systemui.Flags
 import com.android.systemui.plugins.Plugin
 import com.android.systemui.plugins.PluginManager
 import com.android.systemui.shared.clocks.ClockRegistry
@@ -30,6 +29,7 @@ import com.android.systemui.shared.plugins.PluginInstance
 import com.android.systemui.shared.plugins.PluginManagerImpl
 import com.android.systemui.shared.plugins.PluginPrefs
 import com.android.systemui.shared.system.UncaughtExceptionPreHandlerManager_Factory
+import com.android.wallpaper.config.BaseFlags
 import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -45,19 +45,20 @@ class ClockRegistryProvider(
     private val backgroundDispatcher: CoroutineDispatcher,
 ) {
     private val clockRegistry: ClockRegistry by lazy {
+        val flags = BaseFlags.get()
         ClockRegistry(
             context,
             createPluginManager(context),
             coroutineScope,
             mainDispatcher,
             backgroundDispatcher,
-            isEnabled = true,
+            isEnabled = flags.isCustomClocksEnabled(context),
             handleAllUsers = false,
             DefaultClockProvider(
                 ctx = context,
                 layoutInflater = LayoutInflater.from(context),
                 resources = context.resources,
-                isClockReactiveVariantsEnabled = Flags.clockReactiveVariants(),
+                isClockReactiveVariantsEnabled = flags.isClockReactiveVariantsEnabled(),
             ),
             keepAllLoaded = true,
             subTag = "Picker",
@@ -93,7 +94,7 @@ class ClockRegistryProvider(
 
                 override fun setDisabled(
                     component: ComponentName,
-                    @PluginEnabler.DisableReason reason: Int
+                    @PluginEnabler.DisableReason reason: Int,
                 ) = Unit
 
                 override fun isEnabled(component: ComponentName): Boolean {

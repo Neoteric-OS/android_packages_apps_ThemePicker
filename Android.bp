@@ -74,6 +74,17 @@ android_library {
         "androidx.recyclerview_recyclerview",
         "SystemUICustomizationLib",
         "hilt_android",
+        // Compose
+        "PlatformComposeCore",
+        "androidx.activity_activity-compose",
+        "androidx.compose.foundation_foundation",
+        "androidx.compose.foundation_foundation-layout",
+        "androidx.compose.material3_material3",
+        "androidx.compose.runtime_runtime",
+        "androidx.compose.ui_ui",
+        "androidx.compose.ui_ui-tooling",
+        "androidx.lifecycle_lifecycle-runtime-compose",
+        "androidx.lifecycle_lifecycle-viewmodel-compose",
     ],
 
     srcs: [

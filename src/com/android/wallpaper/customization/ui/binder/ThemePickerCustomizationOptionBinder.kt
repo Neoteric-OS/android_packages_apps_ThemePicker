@@ -47,7 +47,6 @@ import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
-import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.common.icon.ui.viewbinder.IconViewBinder
 import com.android.wallpaper.picker.common.text.ui.viewbinder.TextViewBinder
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
@@ -57,7 +56,6 @@ import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUti
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
-import com.android.wallpaper.picker.data.WallpaperModel
 import com.google.android.material.materialswitch.MaterialSwitch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -80,11 +78,9 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         viewModel: CustomizationPickerViewModel2,
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
-        navigateToWallpaperCategoriesScreen: (screen: Screen) -> Unit,
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
-        navigateToPreviewScreen: ((wallpaperModel: WallpaperModel) -> Unit)?,
     ) {
         defaultCustomizationOptionsBinder.bind(
             view,
@@ -94,11 +90,9 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             viewModel,
             colorUpdateViewModel,
             lifecycleOwner,
-            navigateToWallpaperCategoriesScreen,
             navigateToMoreLockScreenSettingsActivity,
             navigateToColorContrastSettingsActivity,
             navigateToLockScreenNotificationsSettingsActivity,
-            navigateToPreviewScreen,
         )
 
         val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()

@@ -115,7 +115,6 @@
     <string name="accessibility_clock_slider_description" msgid="8374135133110681332">"Intensity ng kulay"</string>
     <string name="mode_title" msgid="2394873501427436055">"Madilim na tema"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Pansamantalang na-disable dahil sa Pantipid ng Baterya"</string>
-    <string name="mode_changed" msgid="2243581369395418584">"Pinalitan ang tema"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Mga may temang icon"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Baguhin ang grid ng app"</string>

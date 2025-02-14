@@ -115,7 +115,6 @@
     <string name="accessibility_clock_slider_description" msgid="8374135133110681332">"Intensità cromatica"</string>
     <string name="mode_title" msgid="2394873501427436055">"Tema scuro"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Opzione disattivata temporaneamente per risparmio energetico"</string>
-    <string name="mode_changed" msgid="2243581369395418584">"Tema modificato"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Icone a tema"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Cambia griglia di app"</string>
@@ -145,7 +144,7 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Nessuna"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Mostra le notifiche sulla schermata di blocco"</string>
-    <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Notifiche schermata di blocco"</string>
+    <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Notifiche su schermata di blocco"</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Scegli come visualizzare le notifiche e ciò che devono mostrare"</string>
     <string name="more_settings_section_title" msgid="6854797937797818510">"Altre impostazioni della schermata di blocco"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Privacy, Now Playing e altro"</string>

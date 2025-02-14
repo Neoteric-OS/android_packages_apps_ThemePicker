@@ -115,7 +115,6 @@
     <string name="accessibility_clock_slider_description" msgid="8374135133110681332">"Intensidad de color"</string>
     <string name="mode_title" msgid="2394873501427436055">"Tema oscuro"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Se inhabilitó temporalmente debido al Ahorro de batería"</string>
-    <string name="mode_changed" msgid="2243581369395418584">"Se cambió el tema"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Íconos temáticos"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Cambiar cuadrícula de apps"</string>
@@ -138,7 +137,7 @@
     <string name="keyguard_affordance_enablement_dialog_dismiss_button" msgid="629754625264422508">"Listo"</string>
     <string name="keyguard_quick_affordance_title" msgid="4242813186995735584">"Accesos directos"</string>
     <string name="keyguard_quick_affordance_section_title" msgid="2806304242671717309">"Accesos directos"</string>
-    <string name="color_contrast_section_title" msgid="7194809124718896091">"Contr. de color"</string>
+    <string name="color_contrast_section_title" msgid="7194809124718896091">"Contraste de color"</string>
     <string name="color_contrast_default_title" msgid="7954235103549276978">"Predeterminado"</string>
     <string name="color_contrast_medium_title" msgid="8071574793250090215">"Medio"</string>
     <string name="color_contrast_high_title" msgid="5554685752479470200">"Alto"</string>

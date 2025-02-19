@@ -42,7 +42,7 @@ class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
         return 0
     }
 
-    override fun getGridOptionDrawble(iconId: Int): Drawable? {
+    override fun getGridOptionDrawable(iconId: Int): Drawable? {
         return when (iconId) {
             0 -> gridOptionDrawable0
             1 -> gridOptionDrawable1

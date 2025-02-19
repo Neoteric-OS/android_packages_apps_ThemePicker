@@ -113,9 +113,8 @@
     <string name="accessibility_custom_shape_title" msgid="7708408259374643129">"કસ્ટમ આકાર"</string>
     <string name="accessibility_custom_name_title" msgid="5494460518085463262">"કસ્ટમ શૈલી નામ"</string>
     <string name="accessibility_clock_slider_description" msgid="8374135133110681332">"રંગની તીવ્રતા"</string>
-    <string name="mode_title" msgid="2394873501427436055">"ઘેરી થીમ"</string>
+    <string name="mode_title" msgid="2394873501427436055">"ડાર્ક થીમ"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"બૅટરી સેવરના લીધે હંગામીરૂપે બંધ કર્યું"</string>
-    <string name="mode_changed" msgid="2243581369395418584">"થીમ બદલી છે"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"થીમવાળા આઇકન"</string>
     <string name="beta_title" msgid="8703819523760746458">"બીટા"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"ઍપ ગ્રિડ બદલો"</string>
@@ -127,7 +126,7 @@
     <string name="preset_color_subheader" msgid="8230588536141279371">"તમારા આઇકન, ઘડિયાળ, વગેરે માટે કોઈપણ રંગ પસંદ કરો"</string>
     <string name="color_changed" msgid="7029571720331641235">"રંગ બદલ્યો છે"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"ડાઇનૅમિક"</string>
-    <string name="color_picker_title" msgid="6666830057938082864">"સિસ્ટમના રંગ"</string>
+    <string name="color_picker_title" msgid="6666830057938082864">"સિસ્ટમના રંગો"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"રંગો"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"ડાબો શૉર્ટકટ"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"જમણો શૉર્ટકટ"</string>

@@ -48,7 +48,7 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"ਤੁਹਾਡੀ ਸਕ੍ਰੀਨ ਦੇ ਕੋਨੇ \'ਤੇ ਇੱਕ ਛੋਟੀ ਘੜੀ ਦਿਖਾਈ ਦਿੰਦੀ ਹੈ"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"ਘੜੀ ਦੇ ਫ਼ੌਟਾਂ ਵਿੱਚ ਕੀਤੀਆਂ ਤਬਦੀਲੀਆਂ ਲਾਗੂ ਕਰੋ"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"ਘੜੀ ਦੇ ਫ਼ੌਟਾਂ ਵਿੱਚ ਕੀਤੀਆਂ ਤਬਦੀਲੀਆਂ ਨੂੰ ਅਣਕੀਤਾ ਕਰੋ"</string>
-    <string name="grid_title" msgid="1688173478777254123">"ਐਪ ਗ੍ਰਿਡ"</string>
+    <string name="grid_title" msgid="1688173478777254123">"ਐਪ ਗਰਿੱਡ"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"ਐਪ ਦੀ ਆਕ੍ਰਿਤੀ ਅਤੇ ਖਾਕਾ"</string>
     <string name="grid_layout" msgid="370175667652663686">"ਖਾਕਾ"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"ਲਾਗੂ ਕਰੋ"</string>
@@ -115,7 +115,6 @@
     <string name="accessibility_clock_slider_description" msgid="8374135133110681332">"ਰੰਗ ਦੀ ਤੀਬਰਤਾ"</string>
     <string name="mode_title" msgid="2394873501427436055">"ਗੂੜ੍ਹਾ ਥੀਮ"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ਬੈਟਰੀ ਸੇਵਰ ਕਰਕੇ ਕੁਝ ਸਮੇਂ ਲਈ ਬੰਦ ਕੀਤਾ ਗਿਆ"</string>
-    <string name="mode_changed" msgid="2243581369395418584">"ਥੀਮ ਬਦਲਿਆ ਗਿਆ"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"ਥੀਮ ਵਾਲੇ ਪ੍ਰਤੀਕ"</string>
     <string name="beta_title" msgid="8703819523760746458">"ਬੀਟਾ"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"ਐਪ ਗ੍ਰਿਡ ਬਦਲੋ"</string>

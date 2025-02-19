@@ -26,7 +26,7 @@ import com.android.themepicker.R
 class CarouselAccessibilityDelegate(
     private val context: Context,
     private val scrollForwardCallback: () -> Unit,
-    private val scrollBackwardCallback: () -> Unit
+    private val scrollBackwardCallback: () -> Unit,
 ) : View.AccessibilityDelegate() {
 
     var contentDescriptionOfSelectedClock = ""
@@ -45,13 +45,13 @@ class CarouselAccessibilityDelegate(
         info.addAction(
             AccessibilityNodeInfo.AccessibilityAction(
                 ACTION_SCROLL_FORWARD,
-                context.getString(R.string.scroll_forward_and_select)
+                context.getString(R.string.scroll_forward_and_select),
             )
         )
         info.addAction(
             AccessibilityNodeInfo.AccessibilityAction(
                 ACTION_SCROLL_BACKWARD,
-                context.getString(R.string.scroll_backward_and_select)
+                context.getString(R.string.scroll_backward_and_select),
             )
         )
         info.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_ACCESSIBILITY_FOCUS)
@@ -62,6 +62,10 @@ class CarouselAccessibilityDelegate(
 
     override fun performAccessibilityAction(host: View, action: Int, args: Bundle?): Boolean {
         when (action) {
+            AccessibilityNodeInfo.ACTION_CLICK -> {
+                scrollForwardCallback.invoke()
+                return true
+            }
             ACTION_SCROLL_BACKWARD -> {
                 scrollBackwardCallback.invoke()
                 return true

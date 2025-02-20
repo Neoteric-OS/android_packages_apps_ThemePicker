@@ -115,7 +115,6 @@
     <string name="accessibility_clock_slider_description" msgid="8374135133110681332">"色の輝度"</string>
     <string name="mode_title" msgid="2394873501427436055">"ダークモード"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"バッテリー セーバーにより一時的に無効になりました"</string>
-    <string name="mode_changed" msgid="2243581369395418584">"テーマを変更しました"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"テーマアイコン"</string>
     <string name="beta_title" msgid="8703819523760746458">"ベータ版"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"アプリグリッドを変更します"</string>

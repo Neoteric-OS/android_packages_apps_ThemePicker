@@ -24,6 +24,7 @@ import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.systemui.plugins.clocks.AxisType
 import com.android.systemui.plugins.clocks.ClockFontAxis
+import com.android.systemui.plugins.clocks.ClockFontAxis.Companion.merge
 import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.systemui.plugins.clocks.ClockId
 import kotlinx.coroutines.flow.Flow
@@ -88,7 +89,7 @@ open class FakeClockPickerRepository(clocks: List<ClockMetadataModel> = fakeCloc
     }
 
     override suspend fun setClockFontAxes(axisSettings: List<ClockFontAxisSetting>) {
-        fontAxes.update { fontAxes -> ClockFontAxis.merge(fontAxes, axisSettings) }
+        fontAxes.update { fontAxes -> fontAxes.merge(axisSettings) }
     }
 
     override fun isReactiveToTone(clockId: ClockId): Boolean? = true

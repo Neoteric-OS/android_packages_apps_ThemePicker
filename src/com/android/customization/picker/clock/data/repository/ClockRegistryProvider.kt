@@ -59,6 +59,7 @@ class ClockRegistryProvider(
                 layoutInflater = LayoutInflater.from(context),
                 resources = context.resources,
                 isClockReactiveVariantsEnabled = flags.isClockReactiveVariantsEnabled(),
+                vibrator = null,
             ),
             keepAllLoaded = true,
             subTag = "Picker",

@@ -26,5 +26,5 @@ interface ShapeGridManager {
 
     fun applyShapeGridOption(shapeKey: String, gridKey: String): Int
 
-    fun getGridOptionDrawble(iconId: Int): Drawable?
+    fun getGridOptionDrawable(iconId: Int): Drawable?
 }

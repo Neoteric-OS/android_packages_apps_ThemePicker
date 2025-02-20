@@ -17,11 +17,14 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import com.android.customization.model.ResourceConstants
 import com.android.customization.model.grid.GridOptionModel
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.picker.grid.domain.interactor.ShapeGridInteractor
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
+import com.android.customization.widget.GridTileDrawable
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
@@ -186,6 +189,21 @@ constructor(
     }
 
     private fun toGridOptionItemViewModel(option: GridOptionModel): OptionItemViewModel2<Drawable> {
+        // Fallback to use GridTileDrawable when no resource found for the icon ID
+        val drawable =
+            interactor.getGridOptionDrawable(option.iconId)
+                ?: GridTileDrawable(
+                    option.cols,
+                    option.rows,
+                    context.resources.getString(
+                        Resources.getSystem()
+                            .getIdentifier(
+                                ResourceConstants.CONFIG_ICON_MASK,
+                                "string",
+                                ResourceConstants.ANDROID_PACKAGE,
+                            )
+                    ),
+                )
         val isSelected =
             previewingGridKey
                 .map { it == option.key }
@@ -194,10 +212,9 @@ constructor(
                     started = SharingStarted.Lazily,
                     initialValue = false,
                 )
-
         return OptionItemViewModel2(
             key = MutableStateFlow(option.key),
-            payload = interactor.getGridOptionDrawable(option.iconId),
+            payload = drawable,
             text = Text.Loaded(option.title),
             isSelected = isSelected,
             onClicked =

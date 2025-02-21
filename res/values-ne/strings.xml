@@ -115,7 +115,7 @@
     <string name="accessibility_clock_slider_description" msgid="8374135133110681332">"कलर इन्टेन्सिटी"</string>
     <string name="mode_title" msgid="2394873501427436055">"अँध्यारो थिम"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ब्याट्री सेभर अन भएकाले केही समयका लागि अफ गरिएको छ"</string>
-    <string name="themed_icon_title" msgid="7312460430471956558">"थिम भएका आइकन"</string>
+    <string name="themed_icon_title" msgid="7312460430471956558">"थिमयुक्त आइकन"</string>
     <string name="beta_title" msgid="8703819523760746458">"बिटा"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"एप ग्रिड बदल्नुहोस्"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"वालपेपरका रङहरू"</string>

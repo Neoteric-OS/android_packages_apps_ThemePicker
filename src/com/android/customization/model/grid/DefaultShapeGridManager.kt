@@ -18,7 +18,9 @@ package com.android.customization.model.grid
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
@@ -156,15 +158,26 @@ constructor(
         )
     }
 
-    override fun getGridOptionDrawble(iconId: Int): Drawable? {
-        return ResourcesCompat.getDrawable(
-            context.packageManager.getResourcesForApplication(APP_RESOURCES_PACKAGE_NAME),
-            iconId,
-            /* theme = */ null,
-        )
+    override fun getGridOptionDrawable(iconId: Int): Drawable? {
+        try {
+            val drawable =
+                ResourcesCompat.getDrawable(
+                    context.packageManager.getResourcesForApplication(APP_RESOURCES_PACKAGE_NAME),
+                    iconId,
+                    /* theme = */ null,
+                )
+            return drawable
+        } catch (exception: Resources.NotFoundException) {
+            Log.w(
+                TAG,
+                "Unable to find drawable resource from package $APP_RESOURCES_PACKAGE_NAME with resource ID $iconId",
+            )
+            return null
+        }
     }
 
     companion object {
+        const val TAG = "DefaultShapeGridManager"
         const val SHAPE_OPTIONS: String = "shape_options"
         const val GRID_OPTIONS: String = "list_options"
         const val SHAPE_GRID: String = "default_grid"

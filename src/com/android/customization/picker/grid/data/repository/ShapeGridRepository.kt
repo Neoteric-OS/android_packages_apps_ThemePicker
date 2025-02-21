@@ -72,6 +72,6 @@ constructor(
         }
 
     fun getGridOptionDrawable(iconId: Int): Drawable? {
-        return manager.getGridOptionDrawble(iconId)
+        return manager.getGridOptionDrawable(iconId)
     }
 }

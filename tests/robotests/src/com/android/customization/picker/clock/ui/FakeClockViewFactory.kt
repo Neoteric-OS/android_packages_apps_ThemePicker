@@ -35,7 +35,7 @@ class FakeClockViewFactory @Inject constructor() : ClockViewFactory {
         override fun dump(pw: PrintWriter) = TODO("Not yet implemented")
     }
 
-    override fun getController(clockId: String): ClockController = clockControllers[clockId]!!
+    override fun getController(clockId: String): ClockController? = clockControllers[clockId]
 
     override fun getLargeView(clockId: String): View {
         TODO("Not yet implemented")

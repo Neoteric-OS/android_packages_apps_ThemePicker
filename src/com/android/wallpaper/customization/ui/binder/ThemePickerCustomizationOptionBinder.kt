@@ -418,7 +418,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                             clockHostView.removeAllViews()
                             // For new customization picker, we should get views from clocklayout
                             if (Flags.newCustomizationPickerUi()) {
-                                clockViewFactory.getController(clock.clockId).let { clockController
+                                clockViewFactory.getController(clock.clockId)?.let { clockController
                                     ->
                                     val udfpsTop =
                                         clockPickerViewModel.getUdfpsLocation()?.let {

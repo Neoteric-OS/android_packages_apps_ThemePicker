@@ -18,6 +18,8 @@ package com.android.customization.model.grid
 
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.drawable.Drawable
+import androidx.core.content.res.ResourcesCompat
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.util.PreviewUtils
@@ -71,6 +73,10 @@ constructor(
                                                     .toBoolean(),
                                             rows = rows,
                                             cols = cols,
+                                            iconId =
+                                                cursor.getInt(
+                                                    cursor.getColumnIndex(KEY_GRID_ICON_ID)
+                                                ),
                                         )
                                     )
                                 }
@@ -85,6 +91,7 @@ constructor(
                                 }
                                 list
                             }
+                            .sortedByDescending { it.rows * it.cols }
                     }
             } else {
                 null
@@ -149,6 +156,14 @@ constructor(
         )
     }
 
+    override fun getGridOptionDrawble(iconId: Int): Drawable? {
+        return ResourcesCompat.getDrawable(
+            context.packageManager.getResourcesForApplication(APP_RESOURCES_PACKAGE_NAME),
+            iconId,
+            /* theme = */ null,
+        )
+    }
+
     companion object {
         const val SHAPE_OPTIONS: String = "shape_options"
         const val GRID_OPTIONS: String = "list_options"
@@ -162,5 +177,8 @@ constructor(
         const val COL_COLS: String = "cols"
         const val COL_IS_DEFAULT: String = "is_default"
         const val COL_PATH: String = "path"
+        const val KEY_GRID_ICON_ID: String = "grid_icon_id"
+        private const val APP_RESOURCES_PACKAGE_NAME: String =
+            "com.google.android.apps.nexuslauncher"
     }
 }

@@ -18,6 +18,7 @@ package com.android.wallpaper.customization.ui.binder
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -31,8 +32,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
-import com.android.customization.picker.grid.ui.binder.GridIconViewBinder
-import com.android.customization.picker.grid.ui.viewmodel.GridIconViewModel
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_SHAPE_GRID
@@ -286,14 +285,14 @@ object ShapeGridFloatingSheetBinder {
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
-    ): OptionItemAdapter2<GridIconViewModel> =
+    ): OptionItemAdapter2<Drawable> =
         OptionItemAdapter2(
             layoutResourceId = R.layout.grid_option2,
             lifecycleOwner = lifecycleOwner,
             backgroundDispatcher = backgroundDispatcher,
-            bindPayload = { view: View, gridIcon: GridIconViewModel ->
+            bindPayload = { view: View, gridIcon: Drawable ->
                 val imageView = view.findViewById(R.id.foreground) as? ImageView
-                imageView?.let { GridIconViewBinder.bind(imageView, gridIcon) }
+                imageView?.setImageDrawable(gridIcon)
                 return@OptionItemAdapter2 null
             },
             colorUpdateViewModel = WeakReference(colorUpdateViewModel),
@@ -302,7 +301,7 @@ object ShapeGridFloatingSheetBinder {
 
     private fun RecyclerView.initGridOptionList(
         context: Context,
-        adapter: OptionItemAdapter2<GridIconViewModel>,
+        adapter: OptionItemAdapter2<Drawable>,
     ) {
         apply {
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)

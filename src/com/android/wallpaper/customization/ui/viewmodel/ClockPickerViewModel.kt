@@ -51,7 +51,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
@@ -74,7 +73,7 @@ constructor(
     enum class Tab {
         STYLE,
         COLOR,
-        FONT,
+        SIZE,
     }
 
     private val colorMap = ClockColorViewModel.getPresetColorMap(context.resources)
@@ -92,9 +91,9 @@ constructor(
                             contentDescription = Text.Resource(R.string.clock_style),
                         ),
                     text = context.getString(R.string.clock_style),
-                    isSelected = it == Tab.STYLE || it == Tab.FONT,
+                    isSelected = it == Tab.STYLE,
                     onClick =
-                        if (it == Tab.STYLE || it == Tab.FONT) null
+                        if (it == Tab.STYLE) null
                         else {
                             { _selectedTab.value = Tab.STYLE }
                         },
@@ -111,6 +110,20 @@ constructor(
                         if (it == Tab.COLOR) null
                         else {
                             { _selectedTab.value = Tab.COLOR }
+                        },
+                ),
+                FloatingToolbarTabViewModel(
+                    icon =
+                        Icon.Resource(
+                            res = R.drawable.ic_font_size_filled_24px,
+                            contentDescription = Text.Resource(R.string.clock_size),
+                        ),
+                    text = context.getString(R.string.clock_size),
+                    isSelected = it == Tab.SIZE,
+                    onClick =
+                        if (it == Tab.SIZE) null
+                        else {
+                            { _selectedTab.value = Tab.SIZE }
                         },
                 ),
             )
@@ -135,7 +148,7 @@ constructor(
 
     suspend fun getUdfpsLocation() = clockPickerInteractor.getUdfpsLocation()
 
-    data class ClockStyleModel(val thumbnail: Drawable, val showEditButton: StateFlow<Boolean>)
+    data class ClockStyleModel(val thumbnail: Drawable)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val clockStyleOptions: StateFlow<List<OptionItemViewModel2<ClockStyleModel>>> =
@@ -159,26 +172,21 @@ constructor(
         resources: Resources
     ): OptionItemViewModel2<ClockStyleModel> {
         val isSelectedFlow = previewingClock.map { it.clockId == clockId }.stateIn(viewModelScope)
-        val isEditable = fontAxes.isNotEmpty()
-        val showEditButton = isSelectedFlow.map { it && isEditable }.stateIn(viewModelScope)
         val contentDescription =
             resources.getString(R.string.select_clock_action_description, description)
         return OptionItemViewModel2<ClockStyleModel>(
             key = MutableStateFlow(clockId) as StateFlow<String>,
-            payload = ClockStyleModel(thumbnail = thumbnail, showEditButton = showEditButton),
+            payload = ClockStyleModel(thumbnail = thumbnail),
             text = Text.Loaded(contentDescription),
             isTextUserVisible = false,
             isSelected = isSelectedFlow,
             onClicked =
                 isSelectedFlow.map { isSelected ->
-                    if (isSelected && isEditable) {
-                        fun() {
-                            _selectedTab.value = Tab.FONT
-                        }
+                    if (isSelected) {
+                        null
                     } else {
                         fun() {
                             overridingClock.value = this
-                            overrideClockFontAxisMap.value = emptyMap()
                         }
                     }
                 },
@@ -202,7 +210,7 @@ constructor(
             !overrideClockFontAxisMap.all { (key, value) -> selectedClockFontAxisMap[key] == value }
         }
     val previewingClockFontAxisMap =
-        combine(overrideClockFontAxisMap, selectedClockFontAxisMap.filterNotNull()) {
+        combine(overrideClockFontAxisMap, selectedClockFontAxisMap) {
                 overrideAxisMap,
                 selectedAxisMap ->
                 if (overrideAxisMap.isEmpty()) {
@@ -221,15 +229,6 @@ constructor(
         val axisMap = overrideClockFontAxisMap.value.toMutableMap()
         axisMap[key] = value
         overrideClockFontAxisMap.value = axisMap.toMap()
-    }
-
-    fun confirmFontAxes() {
-        _selectedTab.value = Tab.STYLE
-    }
-
-    fun cancelFontAxes() {
-        overrideClockFontAxisMap.value = emptyMap()
-        _selectedTab.value = Tab.STYLE
     }
 
     // Clock size

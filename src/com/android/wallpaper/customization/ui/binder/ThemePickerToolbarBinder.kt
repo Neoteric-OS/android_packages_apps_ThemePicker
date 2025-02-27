@@ -16,8 +16,6 @@
 
 package com.android.wallpaper.customization.ui.binder
 
-import android.animation.ValueAnimator
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toolbar
@@ -35,7 +33,6 @@ import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptio
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.SHORTCUTS
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
-import com.android.wallpaper.customization.ui.viewmodel.ToolbarHeightsViewModel
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultToolbarBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
@@ -43,7 +40,6 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewMo
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
@@ -61,8 +57,6 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
         lifecycleOwner: LifecycleOwner,
         onNavBack: () -> Unit,
     ) {
-        val toolbarHeights: MutableStateFlow<ToolbarHeightsViewModel?> = MutableStateFlow(null)
-
         defaultToolbarBinder.bind(
             navButton,
             toolbar,
@@ -78,45 +72,6 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
                 "viewModel $viewModel is not a ThemePickerCustomizationOptionsViewModel."
             )
         }
-
-        navButton.viewTreeObserver.addOnGlobalLayoutListener(
-            object : OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    if (navButton.height != 0) {
-                        toolbarHeights.value =
-                            toolbarHeights.value?.copy(navButtonHeight = navButton.height)
-                                ?: ToolbarHeightsViewModel(navButtonHeight = navButton.height)
-                    }
-                    navButton.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            }
-        )
-
-        toolbar.viewTreeObserver.addOnGlobalLayoutListener(
-            object : OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    if (toolbar.height != 0) {
-                        toolbarHeights.value =
-                            toolbarHeights.value?.copy(toolbarHeight = toolbar.height)
-                                ?: ToolbarHeightsViewModel(toolbarHeight = toolbar.height)
-                    }
-                    navButton.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            }
-        )
-
-        applyButton.viewTreeObserver.addOnGlobalLayoutListener(
-            object : OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    if (applyButton.height != 0) {
-                        toolbarHeights.value =
-                            toolbarHeights.value?.copy(applyButtonHeight = applyButton.height)
-                                ?: ToolbarHeightsViewModel(applyButtonHeight = applyButton.height)
-                    }
-                    applyButton.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            }
-        )
 
         ColorUpdateBinder.bind(
             setColor = { color ->
@@ -175,53 +130,6 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
                                 else -> R.string.app_name
                             }
                         toolbar.title = toolbar.resources.getString(stringResId)
-                    }
-                }
-
-                launch {
-                    combine(toolbarHeights, viewModel.isToolbarCollapsed, ::Pair).collect {
-                        (toolbarHeights, isToolbarCollapsed) ->
-                        val (navButtonHeight, toolbarHeight, applyButtonHeight) =
-                            toolbarHeights ?: return@collect
-                        navButtonHeight ?: return@collect
-                        toolbarHeight ?: return@collect
-                        applyButtonHeight ?: return@collect
-
-                        val navButtonToHeight = if (isToolbarCollapsed) 0 else navButtonHeight
-                        val toolbarToHeight = if (isToolbarCollapsed) 0 else toolbarHeight
-                        val applyButtonToHeight = if (isToolbarCollapsed) 0 else applyButtonHeight
-                        ValueAnimator.ofInt(navButton.height, navButtonToHeight)
-                            .apply {
-                                addUpdateListener { valueAnimator ->
-                                    val value = valueAnimator.animatedValue as Int
-                                    navButton.layoutParams =
-                                        navButton.layoutParams.apply { height = value }
-                                }
-                                duration = ANIMATION_DURATION
-                            }
-                            .start()
-
-                        ValueAnimator.ofInt(toolbar.height, toolbarToHeight)
-                            .apply {
-                                addUpdateListener { valueAnimator ->
-                                    val value = valueAnimator.animatedValue as Int
-                                    toolbar.layoutParams =
-                                        toolbar.layoutParams.apply { height = value }
-                                }
-                                duration = ANIMATION_DURATION
-                            }
-                            .start()
-
-                        ValueAnimator.ofInt(applyButton.height, applyButtonToHeight)
-                            .apply {
-                                addUpdateListener { valueAnimator ->
-                                    val value = valueAnimator.animatedValue as Int
-                                    applyButton.layoutParams =
-                                        applyButton.layoutParams.apply { height = value }
-                                }
-                                duration = ANIMATION_DURATION
-                            }
-                            .start()
                     }
                 }
             }

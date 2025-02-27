@@ -182,8 +182,6 @@
     <!-- Floating sheet dimensions -->
     <dimen name="floating_sheet_content_vertical_padding">20dp</dimen>
     <dimen name="floating_sheet_content_horizontal_padding">20dp</dimen>
-    <dimen name="floating_sheet_clock_style_content_top_padding">2dp</dimen>
-    <dimen name="floating_sheet_clock_style_content_bottom_padding">20dp</dimen>
     <dimen name="floating_sheet_horizontal_padding">16dp</dimen>
     <dimen name="floating_sheet_tab_toolbar_vertical_margin">8dp</dimen>
     <dimen name="floating_sheet_tab_clock_font_toolbar_top_margin">16dp</dimen>
@@ -191,14 +189,10 @@
     <dimen name="floating_sheet_list_item_horizontal_space">4dp</dimen>
     <dimen name="floating_sheet_grid_list_item_horizontal_space">10dp</dimen>
     <dimen name="floating_sheet_list_item_vertical_space">4dp</dimen>
-    <dimen name="floating_sheet_clock_style_option_list_margin_bottom">8dp</dimen>
-    <dimen name="floating_sheet_clock_style_option_width">80dp</dimen>
-    <dimen name="floating_sheet_clock_style_option_height">98dp</dimen>
-    <dimen name="floating_sheet_clock_style_option_background_size">80dp</dimen>
+    <dimen name="floating_sheet_clock_style_option_size">80dp</dimen>
     <dimen name="floating_sheet_clock_style_option_thumbnail_size">56dp</dimen>
     <dimen name="floating_sheet_clock_edit_icon_size">48dp</dimen>
     <dimen name="floating_sheet_clock_edit_icon_margin">-18dp</dimen>
-    <dimen name="floating_sheet_clock_style_thumbnail_margin_bottom">12dp</dimen>
     <dimen name="floating_sheet_clock_style_clock_size_text_margin_end">16dp</dimen>
     <dimen name="floating_sheet_color_option_size">54dp</dimen>
     <dimen name="floating_sheet_color_option_stroke_width">3dp</dimen>

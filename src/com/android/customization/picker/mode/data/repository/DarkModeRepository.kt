@@ -18,11 +18,9 @@ package com.android.customization.picker.mode.data.repository
 
 import com.android.customization.picker.mode.shared.util.DarkModeUtil
 import com.android.wallpaper.system.PowerManagerWrapper
-import com.android.wallpaper.system.UiModeManagerWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
@@ -31,7 +29,7 @@ class DarkModeRepository
 @Inject
 constructor(
     darkModeUtil: DarkModeUtil,
-    private val uiModeManager: UiModeManagerWrapper,
+    private val darkModeStateRepository: DarkModeStateRepository,
     private val powerManager: PowerManagerWrapper,
 ) {
     private val isPowerSaveMode = MutableStateFlow(powerManager.getIsPowerSaveMode() ?: false)
@@ -43,17 +41,11 @@ constructor(
             isPowerSaveMode.map { !it }
         } else flowOf(false)
 
-    private val _isDarkMode = MutableStateFlow(uiModeManager.getIsNightModeActivated())
-    val isDarkMode = _isDarkMode.asStateFlow()
+    val isDarkMode = darkModeStateRepository.isDarkMode
 
-    fun setDarkModeActivated(isActive: Boolean) {
-        uiModeManager.setNightModeActivated(isActive)
-        refreshIsDarkModeActivated()
-    }
+    fun setIsDarkMode(isActive: Boolean) = darkModeStateRepository.setIsDarkMode(isActive)
 
-    fun refreshIsDarkModeActivated() {
-        _isDarkMode.value = uiModeManager.getIsNightModeActivated()
-    }
+    fun refreshIsDarkMode() = darkModeStateRepository.refreshIsDarkMode()
 
     fun refreshIsPowerSaveModeActivated() {
         powerManager.getIsPowerSaveMode()?.let { isPowerSaveMode.value = it }

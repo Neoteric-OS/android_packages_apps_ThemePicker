@@ -21,6 +21,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.customization.picker.mode.ui.viewmodel.DarkModeViewModel
+import com.android.wallpaper.customization.ui.binder.SwitchColorBinder
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.google.android.material.materialswitch.MaterialSwitch
 import kotlinx.coroutines.launch
 
@@ -28,12 +30,28 @@ object DarkModeBinder {
     fun bind(
         darkModeToggle: MaterialSwitch,
         viewModel: DarkModeViewModel,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
     ) {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isEnabled.collect { darkModeToggle.isEnabled = it } }
-                launch { viewModel.previewingIsDarkMode.collect { darkModeToggle.isChecked = it } }
+                launch {
+                    var binding: SwitchColorBinder.Binding? = null
+                    viewModel.previewingIsDarkMode.collect {
+                        darkModeToggle.isChecked = it
+                        binding?.destroy()
+                        binding =
+                            SwitchColorBinder.bind(
+                                switch = darkModeToggle,
+                                isChecked = it,
+                                colorUpdateViewModel = colorUpdateViewModel,
+                                shouldAnimateColor = shouldAnimateColor,
+                                lifecycleOwner = lifecycleOwner,
+                            )
+                    }
+                }
                 launch {
                     viewModel.toggleDarkMode.collect {
                         darkModeToggle.setOnCheckedChangeListener { _, _ -> it.invoke() }

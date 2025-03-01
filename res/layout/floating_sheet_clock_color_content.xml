@@ -16,6 +16,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingVertical="@dimen/floating_sheet_content_vertical_padding"
@@ -69,16 +70,15 @@
             android:clipToPadding="false" />
     </FrameLayout>
 
-    <SeekBar
+    <com.google.android.material.slider.Slider
         android:id="@+id/clock_color_slider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingHorizontal="@dimen/floating_sheet_content_horizontal_padding"
         android:minHeight="@dimen/touch_target_min_height"
-        android:thumb="@null"
         android:contentDescription="@string/accessibility_clock_slider_description"
-        android:background="@null"
-        android:progressDrawable="@drawable/saturation_progress_drawable"
-        android:splitTrack="false" />
+        app:trackHeight="@dimen/slider_track_height"
+        app:thumbHeight="@dimen/slider_thumb_height"
+        android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
 </LinearLayout>

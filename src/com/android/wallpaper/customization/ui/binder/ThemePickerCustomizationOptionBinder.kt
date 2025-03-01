@@ -43,6 +43,7 @@ import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.systemui.plugins.clocks.ClockPreviewConfig
 import com.android.systemui.shared.Flags
 import com.android.themepicker.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
@@ -56,6 +57,7 @@ import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUti
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
+import com.android.wallpaper.picker.data.WallpaperModel
 import com.google.android.material.materialswitch.MaterialSwitch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -82,6 +84,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
+        navigateToPreviewScreen: ((wallpaperModel: WallpaperModel) -> Unit)?,
     ) {
         defaultCustomizationOptionsBinder.bind(
             view,
@@ -95,7 +98,10 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToMoreLockScreenSettingsActivity,
             navigateToColorContrastSettingsActivity,
             navigateToLockScreenNotificationsSettingsActivity,
+            navigateToPreviewScreen,
         )
+
+        val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
 
         val optionsViewModel =
             viewModel.customizationOptionsViewModel as ThemePickerCustomizationOptionsViewModel
@@ -198,10 +204,10 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
         val optionThemedIcons =
             homeScreenCustomizationOptionEntries
-                .find { it.first == ThemePickerHomeCustomizationOption.THEMED_ICONS }
-                ?.second
+                .first { it.first == ThemePickerHomeCustomizationOption.THEMED_ICONS }
+                .second
         val optionThemedIconsSwitch =
-            optionThemedIcons?.findViewById<MaterialSwitch>(R.id.option_entry_switch)
+            optionThemedIcons.requireViewById<MaterialSwitch>(R.id.option_entry_switch)
 
         ColorUpdateBinder.bind(
             setColor = { color ->
@@ -318,24 +324,32 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     }
                 }
 
-                if (optionThemedIconsSwitch != null) {
-                    launch {
-                        optionsViewModel.themedIconViewModel.isAvailable.collect { isAvailable ->
-                            optionThemedIconsSwitch.isEnabled = isAvailable
-                        }
+                launch {
+                    optionsViewModel.themedIconViewModel.isAvailable.collect { isAvailable ->
+                        optionThemedIconsSwitch.isEnabled = isAvailable
                     }
+                }
 
-                    launch {
-                        optionsViewModel.themedIconViewModel.isActivated.collect {
-                            optionThemedIconsSwitch.isChecked = it
-                        }
+                launch {
+                    var binding: SwitchColorBinder.Binding? = null
+                    optionsViewModel.themedIconViewModel.isActivated.collect {
+                        optionThemedIconsSwitch.isChecked = it
+                        binding?.destroy()
+                        binding =
+                            SwitchColorBinder.bind(
+                                switch = optionThemedIconsSwitch,
+                                isChecked = it,
+                                colorUpdateViewModel = colorUpdateViewModel,
+                                shouldAnimateColor = isOnMainScreen,
+                                lifecycleOwner = lifecycleOwner,
+                            )
                     }
+                }
 
-                    launch {
-                        optionsViewModel.themedIconViewModel.toggleThemedIcon.collect {
-                            optionThemedIconsSwitch.setOnCheckedChangeListener { _, _ ->
-                                launch { it.invoke() }
-                            }
+                launch {
+                    optionsViewModel.themedIconViewModel.toggleThemedIcon.collect {
+                        optionThemedIconsSwitch.setOnCheckedChangeListener { _, _ ->
+                            launch { it.invoke() }
                         }
                     }
                 }
@@ -364,16 +378,18 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 )
             }
 
-        customizationOptionFloatingSheetViewMap
-            ?.get(ThemePickerHomeCustomizationOption.COLORS)
-            ?.let {
-                ColorsFloatingSheetBinder.bind(
-                    it,
-                    optionsViewModel,
-                    colorUpdateViewModel,
-                    lifecycleOwner,
-                )
-            }
+        if (!isComposeRefactorEnabled) {
+            customizationOptionFloatingSheetViewMap
+                ?.get(ThemePickerHomeCustomizationOption.COLORS)
+                ?.let {
+                    ColorsFloatingSheetBinder.bind(
+                        it,
+                        optionsViewModel,
+                        colorUpdateViewModel,
+                        lifecycleOwner,
+                    )
+                }
+        }
 
         customizationOptionFloatingSheetViewMap
             ?.get(ThemePickerHomeCustomizationOption.APP_SHAPE_GRID)

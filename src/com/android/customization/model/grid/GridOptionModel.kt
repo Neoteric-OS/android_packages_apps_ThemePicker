@@ -22,4 +22,5 @@ data class GridOptionModel(
     val isCurrent: Boolean,
     val rows: Int,
     val cols: Int,
+    val iconId: Int,
 )

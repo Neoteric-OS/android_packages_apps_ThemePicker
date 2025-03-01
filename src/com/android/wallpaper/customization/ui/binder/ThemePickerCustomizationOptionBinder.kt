@@ -37,7 +37,6 @@ import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder2
 import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
-import com.android.customization.picker.grid.ui.binder.GridIconViewBinder
 import com.android.customization.picker.settings.ui.binder.ColorContrastSectionViewBinder2
 import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.systemui.plugins.clocks.ClockPreviewConfig
@@ -273,12 +272,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     optionsViewModel.shapeGridPickerViewModel.selectedGridOption.collect {
                         gridOption ->
                         TextViewBinder.bind(optionShapeGridDescription, gridOption.text)
-                        gridOption.payload?.let { gridIconViewModel ->
-                            GridIconViewBinder.bind(
-                                view = optionShapeGridIcon,
-                                viewModel = gridIconViewModel,
-                            )
-                        }
+                        gridOption.payload?.let { optionShapeGridIcon.setImageDrawable(it) }
                     }
                 }
 

@@ -17,12 +17,10 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
-import android.content.res.Resources
-import com.android.customization.model.ResourceConstants
+import android.graphics.drawable.Drawable
 import com.android.customization.model.grid.GridOptionModel
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.picker.grid.domain.interactor.ShapeGridInteractor
-import com.android.customization.picker.grid.ui.viewmodel.GridIconViewModel
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
@@ -50,7 +48,7 @@ class ShapeGridPickerViewModel
 @AssistedInject
 constructor(
     @ApplicationContext private val context: Context,
-    interactor: ShapeGridInteractor,
+    private val interactor: ShapeGridInteractor,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
 
@@ -126,7 +124,7 @@ constructor(
             overridingGridOptionKey ?: selectedGridOption.key.value
         }
 
-    val gridOptions: Flow<List<OptionItemViewModel2<GridIconViewModel>>> =
+    val gridOptions: Flow<List<OptionItemViewModel2<Drawable>>> =
         interactor.gridOptions
             .filterNotNull()
             .map { gridOptions -> gridOptions.map { toGridOptionItemViewModel(it) } }
@@ -187,18 +185,7 @@ constructor(
         )
     }
 
-    private fun toGridOptionItemViewModel(
-        option: GridOptionModel
-    ): OptionItemViewModel2<GridIconViewModel> {
-        val iconShapePath =
-            context.resources.getString(
-                Resources.getSystem()
-                    .getIdentifier(
-                        ResourceConstants.CONFIG_ICON_MASK,
-                        "string",
-                        ResourceConstants.ANDROID_PACKAGE,
-                    )
-            )
+    private fun toGridOptionItemViewModel(option: GridOptionModel): OptionItemViewModel2<Drawable> {
         val isSelected =
             previewingGridKey
                 .map { it == option.key }
@@ -210,8 +197,7 @@ constructor(
 
         return OptionItemViewModel2(
             key = MutableStateFlow(option.key),
-            payload =
-                GridIconViewModel(columns = option.cols, rows = option.rows, path = iconShapePath),
+            payload = interactor.getGridOptionDrawable(option.iconId),
             text = Text.Loaded(option.title),
             isSelected = isSelected,
             onClicked =

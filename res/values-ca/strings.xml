@@ -38,7 +38,7 @@
     <string name="clock_color_indigo" msgid="8910855386698452917">"Anyil"</string>
     <string name="clock_color_violet" msgid="3454503847169375826">"Violeta"</string>
     <string name="clock_color_gray" msgid="9221530636948859231">"Gris"</string>
-    <string name="clock_color_teal" msgid="7499223425741344251">"Verd blavós"</string>
+    <string name="clock_color_teal" msgid="7499223425741344251">"Xarxet"</string>
     <string name="clock_size" msgid="5028923902364418263">"Mida"</string>
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Dinàmic"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"La mida del rellotge canvia d\'acord amb el contingut de la pantalla de bloqueig"</string>

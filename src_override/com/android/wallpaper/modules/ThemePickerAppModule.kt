@@ -51,11 +51,13 @@ import com.android.wallpaper.picker.category.domain.interactor.CategoriesLoading
 import com.android.wallpaper.picker.category.domain.interactor.CategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CuratedPhotosInteractor
+import com.android.wallpaper.picker.category.domain.interactor.OnDeviceWallpapersInteractor
 import com.android.wallpaper.picker.category.domain.interactor.ThirdPartyCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.implementations.CategoryInteractorImpl
 import com.android.wallpaper.picker.category.domain.interactor.implementations.CreativeCategoryInteractorImpl
 import com.android.wallpaper.picker.category.domain.interactor.implementations.DefaultCategoriesLoadingStatusInteractor
 import com.android.wallpaper.picker.category.domain.interactor.implementations.DefaultCuratedPhotosInteractorImpl
+import com.android.wallpaper.picker.category.domain.interactor.implementations.DefaultOnDeviceWallpapersInteractor
 import com.android.wallpaper.picker.category.domain.interactor.implementations.ThirdPartyCategoryInteractorImpl
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.category.ui.view.providers.implementation.DefaultIndividualPickerFactory
@@ -138,6 +140,12 @@ abstract class ThemePickerAppModule {
     @Binds
     @Singleton
     abstract fun bindGoogleCategoryInteractor(impl: CategoryInteractorImpl): CategoryInteractor
+
+    @Binds
+    @Singleton
+    abstract fun bindOnDeviceWallpapersInteractor(
+        impl: DefaultOnDeviceWallpapersInteractor
+    ): OnDeviceWallpapersInteractor
 
     @Binds
     @Singleton

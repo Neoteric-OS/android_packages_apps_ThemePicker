@@ -96,11 +96,14 @@ class ShapeGridInteractorTest {
     fun selectedShapeOption_shouldUpdateAfterApplyGridOption() =
         testScope.runTest {
             val selectedShapeOption = collectLastValue(underTest.selectedShapeOption)
+            val expectedShapeKey = "circle"
+            val expectedShapeOption =
+                FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST.first { it.key == expectedShapeKey }
+                    .copy(isCurrent = true)
 
-            underTest.applySelectedOption("circle", "practical")
+            underTest.applySelectedOption(expectedShapeKey, "practical")
 
-            assertThat(selectedShapeOption())
-                .isEqualTo(FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST[4].copy(isCurrent = true))
+            assertThat(selectedShapeOption()).isEqualTo(expectedShapeOption)
         }
 
     @Test

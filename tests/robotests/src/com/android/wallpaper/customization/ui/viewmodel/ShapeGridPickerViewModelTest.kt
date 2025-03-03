@@ -116,8 +116,8 @@ class ShapeGridPickerViewModelTest {
         testScope.runTest {
             val shapeOptions = collectLastValue(underTest.shapeOptions)
             val previewingShapeKey = collectLastValue(underTest.previewingShapeKey)
-            val onCircleOptionClicked =
-                shapeOptions()?.get(4)?.onClicked?.let { collectLastValue(it) }
+            val circleOption = shapeOptions()?.firstOrNull { it.key.value == "circle" }
+            val onCircleOptionClicked = circleOption?.onClicked?.let { collectLastValue(it) }
             checkNotNull(onCircleOptionClicked)
 
             onCircleOptionClicked()?.invoke()

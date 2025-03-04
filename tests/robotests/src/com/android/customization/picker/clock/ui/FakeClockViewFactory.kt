@@ -1,12 +1,12 @@
 package com.android.customization.picker.clock.ui
 
-import android.graphics.RectF
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.android.customization.picker.clock.data.repository.FakeClockPickerRepository
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.systemui.plugins.clocks.ClockConfig
 import com.android.systemui.plugins.clocks.ClockController
+import com.android.systemui.plugins.clocks.ClockEventListener
 import com.android.systemui.plugins.clocks.ClockEvents
 import com.android.systemui.plugins.clocks.ClockFaceController
 import com.android.systemui.plugins.clocks.ClockFontAxisSetting
@@ -34,7 +34,7 @@ class FakeClockViewFactory @Inject constructor() : ClockViewFactory {
             isDarkTheme: Boolean,
             dozeFraction: Float,
             foldFraction: Float,
-            onBoundsChanged: (RectF) -> Unit,
+            clockListener: ClockEventListener?,
         ) = TODO("Not yet implemented")
 
         override fun dump(pw: PrintWriter) = TODO("Not yet implemented")

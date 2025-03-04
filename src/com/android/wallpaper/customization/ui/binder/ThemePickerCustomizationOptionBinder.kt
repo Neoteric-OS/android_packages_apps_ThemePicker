@@ -38,7 +38,7 @@ import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder2
 import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.settings.ui.binder.ColorContrastSectionViewBinder2
-import com.android.systemui.plugins.clocks.ClockFontAxisSetting
+import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.systemui.plugins.clocks.ClockPreviewConfig
 import com.android.systemui.shared.Flags
 import com.android.themepicker.R
@@ -473,8 +473,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                         .collect { quadruple ->
                             val (color, clock, axisMap, _) = quadruple
                             clockViewFactory.updateColor(clock.clockId, color)
-                            val axisList = axisMap.map { ClockFontAxisSetting(it.key, it.value) }
-                            clockViewFactory.updateFontAxes(clock.clockId, axisList)
+                            clockViewFactory.updateFontAxes(clock.clockId, ClockAxisStyle(axisMap))
                         }
                 }
 

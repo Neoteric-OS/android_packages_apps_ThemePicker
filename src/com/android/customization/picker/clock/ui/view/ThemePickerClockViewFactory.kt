@@ -25,8 +25,8 @@ import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.lifecycle.LifecycleOwner
 import com.android.internal.policy.SystemBarUtils
+import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.systemui.plugins.clocks.ClockController
-import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.systemui.plugins.clocks.WeatherData
 import com.android.systemui.shared.Flags
 import com.android.systemui.shared.clocks.ClockRegistry
@@ -136,7 +136,7 @@ constructor(
         }
     }
 
-    override fun updateFontAxes(clockId: String, settings: List<ClockFontAxisSetting>) {
+    override fun updateFontAxes(clockId: String, settings: ClockAxisStyle) {
         getController(clockId)?.let { it.events.onFontAxesChanged(settings) }
     }
 

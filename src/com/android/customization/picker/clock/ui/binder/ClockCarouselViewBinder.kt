@@ -56,7 +56,7 @@ object ClockCarouselViewBinder {
                 scrollBackwardCallback = {
                     // Callback code for scrolling backward
                     carouselView.transitionToPrevious()
-                }
+                },
             )
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -71,7 +71,13 @@ object ClockCarouselViewBinder {
                             },
                             isTwoPaneAndSmallWidth = isTwoPaneAndSmallWidth,
                         )
-                        carouselView.accessibilityDelegate = carouselAccessibilityDelegate
+                        // Only show accessibility action when there is >1 clock to choose from
+                        carouselView.accessibilityDelegate =
+                            if (allClocks.size > 1) {
+                                carouselAccessibilityDelegate
+                            } else {
+                                null
+                            }
                         screenPreviewClickView.setOnSideClickedListener { isStart ->
                             if (isStart) carouselView.scrollToPrevious()
                             else carouselView.scrollToNext()

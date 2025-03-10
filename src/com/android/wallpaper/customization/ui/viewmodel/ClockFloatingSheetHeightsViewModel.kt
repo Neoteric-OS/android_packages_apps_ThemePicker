@@ -20,4 +20,5 @@ data class ClockFloatingSheetHeightsViewModel(
     val clockStyleContentHeight: Int? = null,
     val clockColorContentHeight: Int? = null,
     val clockSizeContentHeight: Int? = null,
+    val axisPresetSliderHeight: Int? = null,
 )

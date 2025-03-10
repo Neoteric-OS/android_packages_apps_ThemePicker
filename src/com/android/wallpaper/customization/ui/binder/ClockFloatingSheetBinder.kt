@@ -85,7 +85,7 @@ object ClockFloatingSheetBinder {
         val appContext = view.context.applicationContext
         val isFloatingSheetActive = { optionsViewModel.selectedOption.value == CLOCK }
 
-        val tabs = view.requireViewById<FloatingToolbar>(R.id.floating_toolbar)
+        val tabs: FloatingToolbar = view.requireViewById(R.id.floating_toolbar)
         val tabContainer =
             tabs.findViewById<ViewGroup>(com.android.wallpaper.R.id.floating_toolbar_tab_container)
         ColorUpdateBinder.bind(
@@ -103,8 +103,8 @@ object ClockFloatingSheetBinder {
                 )
                 .also { tabs.setAdapter(it) }
 
-        val floatingSheetContainer =
-            view.requireViewById<ViewGroup>(R.id.floating_sheet_content_container)
+        val floatingSheetContainer: ViewGroup =
+            view.requireViewById(R.id.floating_sheet_content_container)
         ColorUpdateBinder.bind(
             setColor = { color ->
                 DrawableCompat.setTint(
@@ -118,7 +118,7 @@ object ClockFloatingSheetBinder {
         )
 
         // Clock style
-        val clockStyleContent = view.requireViewById<View>(R.id.clock_floating_sheet_style_content)
+        val clockStyleContent: View = view.requireViewById(R.id.clock_floating_sheet_style_content)
         val isClockStyleActive = {
             isFloatingSheetActive() && viewModel.selectedTab.value == Tab.STYLE
         }
@@ -128,13 +128,14 @@ object ClockFloatingSheetBinder {
                 shouldAnimateColor = isClockStyleActive,
                 lifecycleOwner = lifecycleOwner,
             )
-        val clockStyleList =
-            view.requireViewById<RecyclerView>(R.id.clock_style_list).apply {
-                initStyleList(appContext, clockStyleAdapter)
-            }
+        val clockStyleList: RecyclerView = view.requireViewById(R.id.clock_style_list)
+        clockStyleList.initStyleList(appContext, clockStyleAdapter)
+        val axisPresetSlider: Slider =
+            clockStyleContent.requireViewById(R.id.clock_axis_preset_slider)
 
         // Clock color
-        val clockColorContent = view.requireViewById<View>(R.id.clock_floating_sheet_color_content)
+        val clockColorContent: View = view.requireViewById(R.id.clock_floating_sheet_color_content)
+
         val clockColorAdapter =
             createClockColorOptionItemAdapter(
                 uiMode = view.resources.configuration.uiMode,
@@ -142,21 +143,19 @@ object ClockFloatingSheetBinder {
                 shouldAnimateColor = isFloatingSheetActive,
                 lifecycleOwner = lifecycleOwner,
             )
-        val clockColorList =
-            view.requireViewById<RecyclerView>(R.id.clock_color_list).apply {
-                adapter = clockColorAdapter
-                layoutManager =
-                    LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
-            }
-        val clockColorSlider: Slider =
-            view.requireViewById<Slider>(R.id.clock_color_slider).also {
-                SliderColorBinder.bind(
-                    slider = it,
-                    colorUpdateViewModel = colorUpdateViewModel,
-                    shouldAnimateColor = isFloatingSheetActive,
-                    lifecycleOwner = lifecycleOwner,
-                )
-            }
+        val clockColorList: RecyclerView = view.requireViewById(R.id.clock_color_list)
+        clockColorList.adapter = clockColorAdapter
+        clockColorList.layoutManager =
+            LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
+
+        val clockColorSlider: Slider = view.requireViewById(R.id.clock_color_slider)
+        SliderColorBinder.bind(
+            slider = clockColorSlider,
+            colorUpdateViewModel = colorUpdateViewModel,
+            shouldAnimateColor = isFloatingSheetActive,
+            lifecycleOwner = lifecycleOwner,
+        )
+
         clockColorSlider.apply {
             valueFrom = ClockMetadataModel.MIN_COLOR_TONE_PROGRESS.toFloat()
             valueTo = ClockMetadataModel.MAX_COLOR_TONE_PROGRESS.toFloat()
@@ -192,9 +191,9 @@ object ClockFloatingSheetBinder {
         )
 
         // Clock size
-        val clockSizeContent = view.requireViewById<View>(R.id.clock_floating_sheet_size_content)
-        val clockSizeSwitch =
-            clockSizeContent.requireViewById<MaterialSwitch>(R.id.clock_style_clock_size_switch)
+        val clockSizeContent: View = view.requireViewById(R.id.clock_floating_sheet_size_content)
+        val clockSizeSwitch: MaterialSwitch =
+            clockSizeContent.requireViewById(R.id.clock_style_clock_size_switch)
         ColorUpdateBinder.bind(
             setColor = { color ->
                 clockSizeContent
@@ -221,11 +220,14 @@ object ClockFloatingSheetBinder {
                 override fun onGlobalLayout() {
                     if (
                         clockStyleContent.height != 0 &&
+                            axisPresetSlider.height != 0 &&
+                            _clockFloatingSheetHeights.value.axisPresetSliderHeight == null &&
                             _clockFloatingSheetHeights.value.clockStyleContentHeight == null
                     ) {
                         _clockFloatingSheetHeights.value =
                             _clockFloatingSheetHeights.value.copy(
-                                clockStyleContentHeight = clockStyleContent.height
+                                clockStyleContentHeight = clockStyleContent.height,
+                                axisPresetSliderHeight = axisPresetSlider.height,
                             )
                         clockStyleContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
@@ -268,60 +270,82 @@ object ClockFloatingSheetBinder {
         )
 
         lifecycleOwner.lifecycleScope.launch {
-            var currentContent: View = clockStyleContent
+            var currentTab: Tab = Tab.STYLE
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.tabs.collect { tabAdapter.submitList(it) } }
 
                 launch {
-                    combine(clockFloatingSheetHeights, viewModel.selectedTab, ::Pair).collect {
-                        (heights, selectedTab) ->
-                        val (
-                            clockStyleContentHeight,
-                            clockColorContentHeight,
-                            clockSizeContentHeight) =
-                            heights
-                        clockStyleContentHeight ?: return@collect
-                        clockColorContentHeight ?: return@collect
-                        clockSizeContentHeight ?: return@collect
+                    combine(
+                            clockFloatingSheetHeights,
+                            viewModel.selectedTab,
+                            viewModel.shouldShowPresetSlider,
+                            ::Triple,
+                        )
+                        .collect { (heights, selectedTab, shouldShowPresetSlider) ->
+                            val (
+                                clockStyleContentHeight,
+                                clockColorContentHeight,
+                                clockSizeContentHeight,
+                                axisPresetSliderHeight) =
+                                heights
+                            clockStyleContentHeight ?: return@collect
+                            clockColorContentHeight ?: return@collect
+                            clockSizeContentHeight ?: return@collect
+                            axisPresetSliderHeight ?: return@collect
 
-                        val fromHeight = floatingSheetContainer.height
-                        val toHeight =
-                            when (selectedTab) {
-                                Tab.STYLE -> clockStyleContentHeight
-                                Tab.COLOR -> clockColorContentHeight
-                                Tab.SIZE -> clockSizeContentHeight
-                            }
-                        // Start to animate the content height
-                        ValueAnimator.ofInt(fromHeight, toHeight)
-                            .apply {
-                                addUpdateListener { valueAnimator ->
-                                    val value = valueAnimator.animatedValue as Int
-                                    floatingSheetContainer.layoutParams =
-                                        floatingSheetContainer.layoutParams.apply { height = value }
-                                    currentContent.alpha = getAlpha(fromHeight, toHeight, value)
+                            val fromHeight = floatingSheetContainer.height
+                            val toHeight =
+                                when (selectedTab) {
+                                    Tab.STYLE ->
+                                        if (shouldShowPresetSlider) clockStyleContentHeight
+                                        else clockStyleContentHeight - axisPresetSliderHeight
+                                    Tab.COLOR -> clockColorContentHeight
+                                    Tab.SIZE -> clockSizeContentHeight
                                 }
-                                duration = ANIMATION_DURATION
-                                addListener(
-                                    object : AnimatorListenerAdapter() {
-                                        override fun onAnimationEnd(animation: Animator) {
-                                            clockStyleContent.isVisible = selectedTab == Tab.STYLE
-                                            clockStyleContent.alpha = 1f
-                                            clockColorContent.isVisible = selectedTab == Tab.COLOR
-                                            clockColorContent.alpha = 1f
-                                            clockSizeContent.isVisible = selectedTab == Tab.SIZE
-                                            clockSizeContent.alpha = 1f
-                                            currentContent =
-                                                when (selectedTab) {
-                                                    Tab.STYLE -> clockStyleContent
-                                                    Tab.COLOR -> clockColorContent
-                                                    Tab.SIZE -> clockSizeContent
-                                                }
+                            val currentContent: View =
+                                when (currentTab) {
+                                    Tab.STYLE -> clockStyleContent
+                                    Tab.COLOR -> clockColorContent
+                                    Tab.SIZE -> clockSizeContent
+                                }
+                            val shouldCurrentContentFadeOut = currentTab != selectedTab
+                            // Start to animate the content height
+                            ValueAnimator.ofInt(fromHeight, toHeight)
+                                .apply {
+                                    addUpdateListener { valueAnimator ->
+                                        val value = valueAnimator.animatedValue as Int
+                                        floatingSheetContainer.layoutParams =
+                                            floatingSheetContainer.layoutParams.apply {
+                                                height = value
+                                            }
+                                        if (shouldCurrentContentFadeOut) {
+                                            currentContent.alpha =
+                                                getAlpha(fromHeight, toHeight, value)
                                         }
                                     }
-                                )
-                            }
-                            .start()
-                    }
+                                    duration = ANIMATION_DURATION
+                                    addListener(
+                                        object : AnimatorListenerAdapter() {
+                                            override fun onAnimationEnd(animation: Animator) {
+                                                clockStyleContent.isVisible =
+                                                    selectedTab == Tab.STYLE
+                                                clockStyleContent.alpha = 1f
+                                                clockColorContent.isVisible =
+                                                    selectedTab == Tab.COLOR
+                                                clockColorContent.alpha = 1f
+                                                clockSizeContent.isVisible = selectedTab == Tab.SIZE
+                                                clockSizeContent.alpha = 1f
+                                            }
+                                        }
+                                    )
+                                }
+                                .start()
+                            currentTab = selectedTab
+                        }
+                }
+
+                launch {
+                    viewModel.shouldShowPresetSlider.collect { axisPresetSlider.isVisible = it }
                 }
 
                 launch {
@@ -440,10 +464,8 @@ object ClockFloatingSheetBinder {
             layoutResourceId = R.layout.color_option2,
             lifecycleOwner = lifecycleOwner,
             bindPayload = { itemView: View, colorIcon: ColorOptionIconViewModel ->
-                val colorOptionIconView =
-                    itemView.requireViewById<ColorOptionIconView2>(
-                        com.android.wallpaper.R.id.background
-                    )
+                val colorOptionIconView: ColorOptionIconView2 =
+                    itemView.requireViewById(com.android.wallpaper.R.id.background)
                 val night = uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
                 val binding =
                     ColorOptionIconBinder2.bind(

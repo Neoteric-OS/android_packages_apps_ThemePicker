@@ -156,7 +156,7 @@ constructor(
             .mapLatest { allClocks ->
                 // Delay to avoid the case that the full list of clocks is not initiated.
                 delay(CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
-                val allClockMap = allClocks.groupBy { it.fontAxes.isNotEmpty() }
+                val allClockMap = allClocks.groupBy { it.axisPresetConfig != null }
                 buildList {
                     allClockMap[true]?.map { add(it.toOption(resources)) }
                     allClockMap[false]?.map { add(it.toOption(resources)) }
@@ -167,6 +167,8 @@ constructor(
             // the flows run sequentially
             .flowOn(backgroundDispatcher.limitedParallelism(1))
             .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    val shouldShowPresetSlider: Flow<Boolean> = previewingClock.map { it.axisPresetConfig != null }
 
     private suspend fun ClockMetadataModel.toOption(
         resources: Resources

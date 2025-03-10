@@ -13,33 +13,56 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:paddingVertical="@dimen/floating_sheet_content_vertical_padding"
     android:clipToPadding="false"
     android:clipChildren="false">
 
-    <!--
-    This is an invisible placeholder put in place so that the parent keeps its height
-    stable as the RecyclerView updates from 0 items to N items. Keeping it stable allows
-    the layout logic to keep the size of the preview container stable as well, which
-    bodes well for setting up the SurfaceView for remote rendering without changing its
-    size after the content is loaded into the RecyclerView.
-
-    It's critical for any TextViews inside the included layout to have text.
-    -->
-    <include
-        layout="@layout/clock_style_option"
-        android:layout_width="@dimen/floating_sheet_clock_style_option_size"
-        android:layout_height="@dimen/floating_sheet_clock_style_option_size"
-        android:visibility="invisible" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/clock_style_list"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:clipToPadding="false"/>
-</FrameLayout>
+        android:clipToPadding="false"
+        android:clipChildren="false">
+
+        <!--
+        This is an invisible placeholder put in place so that the parent keeps its height
+        stable as the RecyclerView updates from 0 items to N items. Keeping it stable allows
+        the layout logic to keep the size of the preview container stable as well, which
+        bodes well for setting up the SurfaceView for remote rendering without changing its
+        size after the content is loaded into the RecyclerView.
+
+        It's critical for any TextViews inside the included layout to have text.
+        -->
+        <include
+            layout="@layout/clock_style_option"
+            android:layout_width="@dimen/floating_sheet_clock_style_option_size"
+            android:layout_height="@dimen/floating_sheet_clock_style_option_size"
+            android:visibility="invisible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/clock_style_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"/>
+    </FrameLayout>
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/clock_axis_preset_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/accessibility_min_height"
+        android:layout_marginTop="@dimen/clock_axis_control_slider_row_margin_vertical"
+        android:valueFrom="0.0"
+        android:valueTo="100.0"
+        android:stepSize="10.0"
+        app:trackHeight="@dimen/slider_track_height"
+        app:thumbHeight="@dimen/slider_thumb_height"
+        app:labelBehavior="gone"
+        android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
+</LinearLayout>
+

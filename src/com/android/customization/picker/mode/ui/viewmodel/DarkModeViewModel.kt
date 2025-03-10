@@ -44,14 +44,17 @@ constructor(private val interactor: DarkModeInteractor, private val logger: Them
     val toggleDarkMode =
         combine(overridingIsDarkMode, isDarkMode) { override, current ->
             // Only set override if its value is different from current, else set to null
-            { _overridingIsDarkMode.value = if (override == null) !current else null }
+            {
+                _overridingIsDarkMode.value =
+                    if (override == null || override == current) !current else null
+            }
         }
 
     val onApply: Flow<(suspend () -> Unit)?> =
         combine(overridingIsDarkMode, isDarkMode, isEnabled) { override, current, isEnabled ->
             if (override != null && override != current && isEnabled) {
                 {
-                    interactor.setDarkModeActivated(override)
+                    interactor.setIsDarkMode(override)
                     logger.logDarkThemeApplied(override)
                 }
             } else null

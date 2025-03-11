@@ -21,7 +21,7 @@ import android.text.TextUtils
 import android.util.Log
 import com.android.customization.picker.clock.data.repository.ClockPickerRepository
 import com.android.customization.picker.clock.shared.model.ClockSnapshotModel
-import com.android.systemui.plugins.clocks.ClockFontAxisSetting
+import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotStore
 import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot
@@ -60,7 +60,7 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
                 seedColor = repository.selectedClock.map { clock -> clock.seedColor }.firstOrNull(),
                 axisSettings =
                     repository.selectedClock
-                        .map { clock -> clock.fontAxes.map { it.toSetting() } }
+                        .map { clock -> ClockAxisStyle(clock.fontAxes) }
                         .firstOrNull(),
             )
         return snapshot(originalOption)
@@ -76,8 +76,8 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
                         snapshot.args[KEY_COLOR_TONE_PROGRESS] ||
                     optionToRestore.seedColor?.toString() != snapshot.args[KEY_SEED_COLOR] ||
                     optionToRestore.selectedColorId != snapshot.args[KEY_COLOR_ID] ||
-                    (optionToRestore.axisSettings ?: listOf()) !=
-                        ClockFontAxisSetting.fromJson(JSONArray(snapshot.args[KEY_FONT_AXES]))
+                    (optionToRestore.axisSettings ?: ClockAxisStyle()) !=
+                        ClockAxisStyle.fromJson(JSONArray(snapshot.args[KEY_FONT_AXES]))
             ) {
                 Log.wtf(
                     TAG,
@@ -118,7 +118,7 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
                     }
                     clockSnapshotModel.seedColor?.let { put(KEY_SEED_COLOR, it.toString()) }
                     clockSnapshotModel.axisSettings?.let {
-                        put(KEY_FONT_AXES, ClockFontAxisSetting.toJson(it).toString())
+                        put(KEY_FONT_AXES, ClockAxisStyle.toJson(it).toString())
                     }
                 }
             }

@@ -3,6 +3,7 @@ package com.android.customization.picker.clock.domain.interactor
 import androidx.test.filters.SmallTest
 import com.android.customization.picker.clock.data.repository.FakeClockPickerRepository
 import com.android.customization.picker.clock.shared.ClockSize
+import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.systemui.shared.customization.data.content.FakeCustomizationProviderClient
 import com.android.wallpaper.picker.customization.data.repository.CustomizationRuntimeValuesRepository
 import com.android.wallpaper.testing.FakeSnapshotStore
@@ -88,7 +89,7 @@ class ClockPickerInteractorTest {
     @Test
     fun setFontAxisSettings() = runTest {
         val axisSettings = collectLastValue(underTest.axisSettings)
-        val fakeSettings = listOf(FakeClockPickerRepository.buildFakeAxis(10).toSetting())
+        val fakeSettings = ClockAxisStyle(listOf(FakeClockPickerRepository.buildFakeAxis(10)))
 
         underTest.setClockFontAxes(fakeSettings)
 

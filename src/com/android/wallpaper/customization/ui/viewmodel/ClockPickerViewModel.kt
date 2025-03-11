@@ -28,7 +28,7 @@ import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.customization.picker.clock.ui.viewmodel.ClockColorViewModel
 import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
-import com.android.systemui.plugins.clocks.ClockFontAxisSetting
+import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
@@ -464,7 +464,7 @@ constructor(
                                     colorTone = it.getColorTone(previewProgress),
                                 )
                             },
-                        axisSettings = axisMap.map { ClockFontAxisSetting(it.key, it.value) },
+                        axisSettings = ClockAxisStyle(axisMap),
                     )
                 }
             } else {

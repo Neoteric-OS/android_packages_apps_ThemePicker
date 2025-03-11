@@ -23,7 +23,7 @@ import com.android.customization.picker.clock.data.repository.ClockPickerReposit
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.customization.picker.clock.shared.model.ClockSnapshotModel
-import com.android.systemui.plugins.clocks.ClockFontAxisSetting
+import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.wallpaper.picker.customization.data.repository.CustomizationRuntimeValuesRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -60,8 +60,10 @@ constructor(
 
     val seedColor: Flow<Int?> = repository.selectedClock.map { clock -> clock.seedColor }
 
-    val axisSettings: Flow<List<ClockFontAxisSetting>?> =
-        repository.selectedClock.map { clock -> clock.fontAxes.map { it.toSetting() } }
+    val axisSettings: Flow<ClockAxisStyle?> =
+        repository.selectedClock.map { clock ->
+            if (clock.fontAxes.isEmpty()) null else ClockAxisStyle(clock.fontAxes)
+        }
 
     val selectedClockSize: Flow<ClockSize> = repository.selectedClockSize
 
@@ -92,7 +94,7 @@ constructor(
         setClockOption(ClockSnapshotModel(clockSize = size))
     }
 
-    suspend fun setClockFontAxes(axisSettings: List<ClockFontAxisSetting>) {
+    suspend fun setClockFontAxes(axisSettings: ClockAxisStyle) {
         setClockOption(ClockSnapshotModel(axisSettings = axisSettings))
     }
 
@@ -102,7 +104,7 @@ constructor(
         selectedColorId: String?,
         @IntRange(from = 0, to = 100) colorToneProgress: Int?,
         @ColorInt seedColor: Int?,
-        axisSettings: List<ClockFontAxisSetting>,
+        axisSettings: ClockAxisStyle,
     ) {
         setClockOption(
             ClockSnapshotModel(

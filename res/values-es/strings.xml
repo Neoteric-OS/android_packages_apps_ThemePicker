@@ -147,7 +147,7 @@
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Notif. en la pantalla de bloqueo"</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Gestiona cómo aparecen las notificaciones y qué se muestra"</string>
     <string name="more_settings_section_title" msgid="6854797937797818510">"Más ajustes (pantalla de bloqueo)"</string>
-    <string name="more_settings_section_description" msgid="1860115709122398325">"Privacidad, Está Sonando y más"</string>
+    <string name="more_settings_section_description" msgid="1860115709122398325">"Privacidad, Está sonando y más"</string>
     <string name="more_colors" msgid="3191071655353004591">"Más colores"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Tema dinámico principal"</string>
     <string name="content_description_neutral_color_option" msgid="3385443834001275301">"Tema neutro principal"</string>

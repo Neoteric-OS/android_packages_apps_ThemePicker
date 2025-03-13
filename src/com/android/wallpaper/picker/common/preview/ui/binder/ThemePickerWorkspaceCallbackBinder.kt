@@ -146,14 +146,14 @@ constructor(
                             )
                             .collect { (previewingClock, previewingClockSize) ->
                                 val hideSmartspace =
-                                    clockViewFactory.getController(previewingClock.clockId).let {
+                                    clockViewFactory.getController(previewingClock.clockId)?.let {
                                         when (previewingClockSize) {
                                             ClockSize.DYNAMIC ->
                                                 it.largeClock.config.hasCustomWeatherDataDisplay
                                             ClockSize.SMALL ->
                                                 it.smallClock.config.hasCustomWeatherDataDisplay
                                         }
-                                    }
+                                    } ?: false
                                 workspaceCallback.sendMessage(
                                     MESSAGE_ID_HIDE_SMART_SPACE,
                                     Bundle().apply {

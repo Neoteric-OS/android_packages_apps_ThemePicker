@@ -42,6 +42,7 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewMo
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 object ColorsFloatingSheetBinder {
@@ -52,7 +53,8 @@ object ColorsFloatingSheetBinder {
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
     ) {
-        val viewModel = optionsViewModel.colorPickerViewModel2
+        val colorsViewModel = optionsViewModel.colorPickerViewModel2
+        val darkModeViewModel = optionsViewModel.darkModeViewModel
         val isFloatingSheetActive = { optionsViewModel.selectedOption.value == COLORS }
 
         ColorUpdateBinder.bind(
@@ -119,7 +121,7 @@ object ColorsFloatingSheetBinder {
 
         DarkModeBinder.bind(
             darkModeToggle = view.findViewById(R.id.dark_mode_toggle),
-            viewModel = optionsViewModel.darkModeViewModel,
+            viewModel = darkModeViewModel,
             colorUpdateViewModel = colorUpdateViewModel,
             shouldAnimateColor = isFloatingSheetActive,
             lifecycleOwner = lifecycleOwner,
@@ -127,12 +129,12 @@ object ColorsFloatingSheetBinder {
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.colorTypeTabs.collect { tabAdapter.submitList(it) } }
+                launch { colorsViewModel.colorTypeTabs.collect { tabAdapter.submitList(it) } }
 
-                launch { viewModel.colorTypeTabSubheader.collect { subhead.text = it } }
+                launch { colorsViewModel.colorTypeTabSubheader.collect { subhead.text = it } }
 
                 launch {
-                    viewModel.colorOptions.collect { colorOptions ->
+                    colorsViewModel.colorOptions.collect { colorOptions ->
                         colorsAdapter.setItems(colorOptions) {
                             var indexToFocus = colorOptions.indexOfFirst { it.isSelected.value }
                             indexToFocus = if (indexToFocus < 0) 0 else indexToFocus
@@ -143,14 +145,27 @@ object ColorsFloatingSheetBinder {
                 }
 
                 launch {
-                    viewModel.previewingColorOption.collect { colorOption ->
-                        if (colorOption != null) {
-                            colorUpdateViewModel.previewColors(
-                                colorOption.seedColor,
-                                colorOption.style,
-                            )
-                        } else colorUpdateViewModel.resetPreview()
-                    }
+                    combine(
+                            colorsViewModel.previewingColorOption,
+                            colorsViewModel.selectedColorOption,
+                            darkModeViewModel.overridingIsDarkMode,
+                            ::Triple,
+                        )
+                        .collect { (previewColor, selectedColor, overridingIsDarkMode) ->
+                            if (previewColor != null || overridingIsDarkMode != null) {
+                                val previewColorOption = previewColor ?: selectedColor
+                                val previewIsDarkMode =
+                                    overridingIsDarkMode
+                                        ?: view.resources.configuration.isNightModeActive
+                                previewColorOption?.let {
+                                    colorUpdateViewModel.previewColors(
+                                        previewColorOption.seedColor,
+                                        previewColorOption.style,
+                                        previewIsDarkMode,
+                                    )
+                                }
+                            } else colorUpdateViewModel.resetPreview()
+                        }
                 }
             }
         }

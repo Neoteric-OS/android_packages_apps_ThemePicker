@@ -122,7 +122,7 @@
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"वॉलपेपर में आइकॉन, टेक्स्ट वगैरह के लिए मिलते-जुलते रंग"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"वॉलपेपर का रंग"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"सामान्य रंग"</string>
-    <string name="preset_color_tab_2" msgid="1444107326712562538">"दूसरे रंग"</string>
+    <string name="preset_color_tab_2" msgid="1444107326712562538">"अन्य रंग"</string>
     <string name="preset_color_subheader" msgid="8230588536141279371">"डिवाइस के आइकॉन, घड़ी वगैरह के लिए रंग चुनें"</string>
     <string name="color_changed" msgid="7029571720331641235">"रंग बदल दिया गया है"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"डाइनैमिक"</string>

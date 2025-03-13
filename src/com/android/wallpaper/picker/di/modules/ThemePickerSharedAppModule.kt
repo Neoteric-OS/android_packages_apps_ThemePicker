@@ -30,9 +30,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class ThemePickerSharedAppModule {
 
+    @Binds @Singleton abstract fun bindDarkModeUtil(impl: DarkModeUtilImpl): DarkModeUtil
+
     @Binds
     @Singleton
-    abstract fun bindGridOptionsManager2(impl: DefaultShapeGridManager): ShapeGridManager
-
-    @Binds @Singleton abstract fun bindDarkModeUtil(impl: DarkModeUtilImpl): DarkModeUtil
+    abstract fun bindGridOptionsManager(impl: DefaultShapeGridManager): ShapeGridManager
 }

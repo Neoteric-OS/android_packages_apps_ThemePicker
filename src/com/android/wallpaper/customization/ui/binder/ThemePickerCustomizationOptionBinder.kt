@@ -175,6 +175,22 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToMoreLockScreenSettingsActivity.invoke()
         }
 
+        var optionPackThemeIconHome: ImageView? = null
+        var optionPackThemeIconLock: ImageView? = null
+
+        if (BaseFlags.get().isPackThemeEnabled()) {
+            val optionPackThemeHome: View =
+                homeScreenCustomizationOptionEntries
+                    .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
+                    .second
+            optionPackThemeIconHome = optionPackThemeHome.requireViewById(R.id.option_entry_icon)
+            val optionPackThemeLock: View =
+                homeScreenCustomizationOptionEntries
+                    .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
+                    .second
+            optionPackThemeIconLock = optionPackThemeLock.requireViewById(R.id.option_entry_icon)
+        }
+
         val optionColors: View =
             homeScreenCustomizationOptionEntries
                 .first { it.first == ThemePickerHomeCustomizationOption.COLORS }
@@ -209,6 +225,10 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 optionShortcutIcon1.setColorFilter(color)
                 optionShortcutIcon2.setColorFilter(color)
                 optionShapeGridIcon.setColorFilter(color)
+                if (BaseFlags.get().isPackThemeEnabled()) {
+                    optionPackThemeIconHome?.setColorFilter(color)
+                    optionPackThemeIconLock?.setColorFilter(color)
+                }
             },
             color = colorUpdateViewModel.colorOnSurfaceVariant,
             shouldAnimate = isOnMainScreen,

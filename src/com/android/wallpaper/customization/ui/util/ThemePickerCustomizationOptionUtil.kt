@@ -55,6 +55,7 @@ constructor(
     }
 
     enum class ThemePickerHomeCustomizationOption : CustomizationOptionUtil.CustomizationOption {
+        PACK_THEME,
         COLORS,
         THEMED_ICONS,
         APP_SHAPE_GRID,
@@ -72,6 +73,16 @@ constructor(
             LOCK_SCREEN ->
                 buildList {
                     addAll(defaultOptionEntries)
+                    if (BaseFlags.get().isPackThemeEnabled()) {
+                        add(
+                            ThemePickerHomeCustomizationOption.PACK_THEME to
+                                layoutInflater.inflate(
+                                    R.layout.customization_option_entry_pack_theme,
+                                    optionContainer,
+                                    false,
+                                )
+                        )
+                    }
                     add(
                         ThemePickerLockCustomizationOption.CLOCK to
                             layoutInflater.inflate(
@@ -108,6 +119,16 @@ constructor(
             HOME_SCREEN ->
                 buildList {
                     addAll(defaultOptionEntries)
+                    if (BaseFlags.get().isPackThemeEnabled()) {
+                        add(
+                            ThemePickerHomeCustomizationOption.PACK_THEME to
+                                layoutInflater.inflate(
+                                    R.layout.customization_option_entry_pack_theme,
+                                    optionContainer,
+                                    false,
+                                )
+                        )
+                    }
                     add(
                         ThemePickerHomeCustomizationOption.COLORS to
                             layoutInflater.inflate(

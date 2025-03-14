@@ -24,7 +24,6 @@ import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.systemui.plugins.clocks.AxisPresetConfig
 import com.android.systemui.plugins.clocks.ClockAxisStyle
-import com.android.systemui.plugins.clocks.ClockFontAxis
 import com.android.systemui.plugins.clocks.ClockId
 import com.android.systemui.plugins.clocks.ClockMetadata
 import com.android.systemui.shared.clocks.ClockRegistry
@@ -74,7 +73,6 @@ constructor(
                                     description = clockConfig.description,
                                     thumbnail = clockConfig.thumbnail,
                                     isReactiveToTone = clockConfig.isReactiveToTone,
-                                    fontAxes = clockConfig.axes,
                                     axisPresetConfig = clockConfig.presetConfig,
                                 )
                             } else {
@@ -125,7 +123,6 @@ constructor(
                                     description = it.description,
                                     thumbnail = it.thumbnail,
                                     isReactiveToTone = it.isReactiveToTone,
-                                    fontAxes = it.axes,
                                     axisPresetConfig = it.presetConfig,
                                     selectedColorId = metadata?.getSelectedColorId(),
                                     colorTone =
@@ -198,9 +195,9 @@ constructor(
         )
     }
 
-    override suspend fun setClockFontAxes(axisSettings: ClockAxisStyle) {
+    override suspend fun setClockAxisStyle(axisStyle: ClockAxisStyle) {
         registry.mutateSetting { oldSettings ->
-            val newSettings = oldSettings.copy(axes = axisSettings)
+            val newSettings = oldSettings.copy(axes = axisStyle)
             newSettings.metadata = oldSettings.metadata
             newSettings
         }
@@ -231,7 +228,6 @@ constructor(
         description: String,
         thumbnail: Drawable,
         isReactiveToTone: Boolean,
-        fontAxes: List<ClockFontAxis>,
         axisPresetConfig: AxisPresetConfig?,
         selectedColorId: String? = null,
         @IntRange(from = 0, to = 100) colorTone: Int = 0,
@@ -243,7 +239,6 @@ constructor(
             description = description,
             thumbnail = thumbnail,
             isReactiveToTone = isReactiveToTone,
-            fontAxes = fontAxes,
             axisPresetConfig = axisPresetConfig,
             selectedColorId = selectedColorId,
             colorToneProgress = colorTone,

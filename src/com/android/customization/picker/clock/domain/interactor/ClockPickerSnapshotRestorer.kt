@@ -60,7 +60,7 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
                 seedColor = repository.selectedClock.map { clock -> clock.seedColor }.firstOrNull(),
                 axisSettings =
                     repository.selectedClock
-                        .map { clock -> ClockAxisStyle(clock.fontAxes) }
+                        .map { clock -> clock.axisPresetConfig?.current?.style ?: ClockAxisStyle() }
                         .firstOrNull(),
             )
         return snapshot(originalOption)
@@ -97,7 +97,7 @@ constructor(private val repository: ClockPickerRepository) : SnapshotRestorer {
                 )
             }
             optionToRestore.clockId?.let { repository.setSelectedClock(it) }
-            optionToRestore.axisSettings?.let { repository.setClockFontAxes(it) }
+            optionToRestore.axisSettings?.let { repository.setClockAxisStyle(it) }
         }
     }
 

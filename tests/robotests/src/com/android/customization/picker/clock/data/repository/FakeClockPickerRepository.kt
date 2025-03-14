@@ -22,10 +22,11 @@ import androidx.annotation.IntRange
 import com.android.customization.picker.clock.data.repository.FakeClockPickerRepository.Companion.fakeClocks
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
+import com.android.systemui.plugins.clocks.AxisPresetConfig
+import com.android.systemui.plugins.clocks.AxisPresetConfig.Group
 import com.android.systemui.plugins.clocks.AxisType
 import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.systemui.plugins.clocks.ClockFontAxis
-import com.android.systemui.plugins.clocks.ClockFontAxis.Companion.merge
 import com.android.systemui.plugins.clocks.ClockId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,15 +44,14 @@ open class FakeClockPickerRepository(clocks: List<ClockMetadataModel> = fakeCloc
     private val colorTone: MutableStateFlow<Int> =
         MutableStateFlow(ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS)
     @ColorInt private val seedColor: MutableStateFlow<Int?> = MutableStateFlow(null)
-    private val fontAxes: MutableStateFlow<List<ClockFontAxis>> =
-        MutableStateFlow(listOf(buildFakeAxis(0)))
+    private val axisPresetConfig: MutableStateFlow<AxisPresetConfig?> = MutableStateFlow(null)
     override val selectedClock: Flow<ClockMetadataModel> =
-        combine(selectedClockId, selectedColorId, colorTone, seedColor, fontAxes) {
+        combine(selectedClockId, selectedColorId, colorTone, seedColor, axisPresetConfig) {
             selectedClockId,
             selectedColor,
             colorTone,
             seedColor,
-            fontAxes ->
+            axisPresetConfig ->
             val selectedClock = fakeClocks.find { clock -> clock.clockId == selectedClockId }
             checkNotNull(selectedClock)
             ClockMetadataModel(
@@ -60,8 +60,7 @@ open class FakeClockPickerRepository(clocks: List<ClockMetadataModel> = fakeCloc
                 description = "description",
                 thumbnail = ColorDrawable(0),
                 isReactiveToTone = selectedClock.isReactiveToTone,
-                fontAxes = fontAxes,
-                axisPresetConfig = null,
+                axisPresetConfig = axisPresetConfig,
                 selectedColorId = selectedColor,
                 colorToneProgress = colorTone,
                 seedColor = seedColor,
@@ -89,8 +88,22 @@ open class FakeClockPickerRepository(clocks: List<ClockMetadataModel> = fakeCloc
         _selectedClockSize.value = size
     }
 
-    override suspend fun setClockFontAxes(axisSettings: ClockAxisStyle) {
-        fontAxes.update { fontAxes -> fontAxes.merge(axisSettings) }
+    override suspend fun setClockAxisStyle(axisStyle: ClockAxisStyle) {
+        val config = axisPresetConfig.value
+        if (config == null) {
+            axisPresetConfig.value =
+                AxisPresetConfig(
+                    groups =
+                        listOf(
+                            Group(presets = listOf(axisStyle), icon = ColorDrawable(Color.YELLOW))
+                        ),
+                    current = AxisPresetConfig.IndexedStyle(0, 0, axisStyle),
+                )
+        } else {
+            axisPresetConfig.update { axisPresetConfig ->
+                axisPresetConfig?.let { it.copy(current = it.findStyle(axisStyle)) }
+            }
+        }
     }
 
     override fun isReactiveToTone(clockId: ClockId): Boolean? = true
@@ -120,7 +133,6 @@ open class FakeClockPickerRepository(clocks: List<ClockMetadataModel> = fakeCloc
                     "description0",
                     ColorDrawable(0),
                     true,
-                    listOf(buildFakeAxis(0)),
                     null,
                     null,
                     50,
@@ -132,7 +144,6 @@ open class FakeClockPickerRepository(clocks: List<ClockMetadataModel> = fakeCloc
                     "description1",
                     ColorDrawable(0),
                     true,
-                    listOf(buildFakeAxis(1)),
                     null,
                     null,
                     50,
@@ -144,7 +155,6 @@ open class FakeClockPickerRepository(clocks: List<ClockMetadataModel> = fakeCloc
                     "description2",
                     ColorDrawable(0),
                     true,
-                    listOf(buildFakeAxis(2)),
                     null,
                     null,
                     50,
@@ -156,7 +166,6 @@ open class FakeClockPickerRepository(clocks: List<ClockMetadataModel> = fakeCloc
                     "description3",
                     ColorDrawable(0),
                     false,
-                    listOf(buildFakeAxis(3)),
                     null,
                     null,
                     50,

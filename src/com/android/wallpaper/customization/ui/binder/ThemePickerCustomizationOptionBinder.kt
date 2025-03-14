@@ -486,14 +486,17 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     combine(
                             clockPickerViewModel.previewingSeedColor,
                             clockPickerViewModel.previewingClock,
-                            clockPickerViewModel.previewingClockFontAxisMap,
+                            clockPickerViewModel.previewingClockPresetIndexedStyle,
                             colorUpdateViewModel.systemColorsUpdated,
                             ::Quadruple,
                         )
                         .collect { quadruple ->
-                            val (color, clock, axisMap, _) = quadruple
+                            val (color, clock, clockPresetIndexedStyle, _) = quadruple
                             clockViewFactory.updateColor(clock.clockId, color)
-                            clockViewFactory.updateFontAxes(clock.clockId, ClockAxisStyle(axisMap))
+                            clockViewFactory.updateFontAxes(
+                                clock.clockId,
+                                clockPresetIndexedStyle?.style ?: ClockAxisStyle(),
+                            )
                         }
                 }
 

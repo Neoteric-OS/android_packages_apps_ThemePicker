@@ -87,6 +87,10 @@ constructor(
 
                 val listener =
                     object : ClockRegistry.ClockChangeListener {
+                        override fun onCurrentClockChanged() {
+                            send()
+                        }
+
                         override fun onAvailableClocksChanged() {
                             send()
                         }

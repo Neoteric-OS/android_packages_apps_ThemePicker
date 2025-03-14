@@ -55,6 +55,7 @@ import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.slider.LabelFormatter
 import com.google.android.material.slider.Slider
+import com.google.android.material.slider.Slider.OnSliderTouchListener
 import java.lang.ref.WeakReference
 import kotlin.math.roundToInt
 import kotlinx.coroutines.DisposableHandle
@@ -413,6 +414,31 @@ object ClockFloatingSheetBinder {
                             onCheckedChange.invoke()
                         }
                     }
+                }
+
+                launch {
+                    viewModel.axisPresetsSliderViewModel.collect {
+                        val axisPresetsSliderViewModel = it ?: return@collect
+                        axisPresetSlider.valueFrom = axisPresetsSliderViewModel.valueFrom
+                        axisPresetSlider.valueTo = axisPresetsSliderViewModel.valueTo
+                        axisPresetSlider.stepSize = axisPresetsSliderViewModel.stepSize
+                        axisPresetSlider.clearOnSliderTouchListeners()
+                        axisPresetSlider.addOnSliderTouchListener(
+                            object : OnSliderTouchListener {
+                                override fun onStartTrackingTouch(slider: Slider) {}
+
+                                override fun onStopTrackingTouch(slider: Slider) {
+                                    axisPresetsSliderViewModel.onSliderStopTrackingTouch(
+                                        slider.value
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
+
+                launch {
+                    viewModel.axisPresetsSliderSelectedValue.collect { axisPresetSlider.value = it }
                 }
             }
         }

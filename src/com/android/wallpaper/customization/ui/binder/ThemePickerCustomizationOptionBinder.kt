@@ -416,6 +416,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
     override fun bindClockPreview(
         context: Context,
         clockHostView: View,
+        clockFaceClickDelegateView: View,
         viewModel: CustomizationPickerViewModel2,
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
@@ -502,6 +503,21 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
                 launch {
                     viewModel.lockPreviewAnimateToAlpha.collect { clockHostView.animateToAlpha(it) }
+                }
+
+                launch {
+                    combine(
+                            viewModel.customizationOptionsViewModel.selectedOption,
+                            clockPickerViewModel.onClockFaceClicked,
+                            ::Pair,
+                        )
+                        .collect { (selectedOption, onClockFaceClicked) ->
+                            clockFaceClickDelegateView.isVisible =
+                                selectedOption == ThemePickerLockCustomizationOption.CLOCK
+                            clockFaceClickDelegateView.setOnClickListener {
+                                onClockFaceClicked.invoke()
+                            }
+                        }
                 }
             }
         }

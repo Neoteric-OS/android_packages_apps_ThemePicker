@@ -349,6 +349,26 @@ class ClockPickerViewModelTest {
         assertThat(axisPresetsSliderSelectedValue()).isEqualTo(1F)
     }
 
+    @Test
+    fun previewingClockPresetIndexedStyle_whenOnClockFaceClicked() = runTest {
+        val previewingClockPresetIndexedStyle =
+            collectLastValue(underTest.previewingClockPresetIndexedStyle)
+        val onClockFaceClicked = collectLastValue(underTest.onClockFaceClicked)
+
+        onClockFaceClicked()?.invoke()
+
+        val expectedResult =
+            FakeClockPickerRepository.fakeClocks[0]
+                .axisPresetConfig
+                ?.groups
+                ?.get(1)
+                ?.presets
+                ?.get(0)
+        checkNotNull(expectedResult)
+        assertThat(previewingClockPresetIndexedStyle())
+            .isEqualTo(IndexedStyle(groupIndex = 1, presetIndex = 0, style = expectedResult))
+    }
+
     //// Clock size
     @Test
     fun previewingClockSize_whenCallingOnClockSizeSwitchChecked() = runTest {

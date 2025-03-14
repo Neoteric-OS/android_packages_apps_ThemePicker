@@ -33,7 +33,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 // TODO (b/262924623): refactor to remove dependency on ColorCustomizationManager & ColorOption
@@ -58,68 +57,61 @@ constructor(
 
     override val colorOptions: Flow<Map<ColorType, List<ColorOptionModel>>> =
         combine(homeWallpaperColors, lockWallpaperColors) { homeColors, lockColors ->
-                homeColors to lockColors
-            }
-            .map { (homeColors, lockColors) ->
-                suspendCancellableCoroutine { continuation ->
-                    if (
-                        homeColors is WallpaperColorsModel.Loading ||
-                            lockColors is WallpaperColorsModel.Loading
-                    ) {
-                        continuation.resumeWith(
-                            Result.success(
-                                mapOf(
-                                    ColorType.WALLPAPER_COLOR to listOf(),
-                                    ColorType.PRESET_COLOR to listOf(),
-                                )
+            suspendCancellableCoroutine { continuation ->
+                if (
+                    homeColors is WallpaperColorsModel.Loading ||
+                        lockColors is WallpaperColorsModel.Loading
+                ) {
+                    continuation.resumeWith(
+                        Result.success(
+                            mapOf(
+                                ColorType.WALLPAPER_COLOR to listOf(),
+                                ColorType.PRESET_COLOR to listOf(),
                             )
                         )
-                        return@suspendCancellableCoroutine
-                    }
-                    val homeColorsLoaded = homeColors as WallpaperColorsModel.Loaded
-                    val lockColorsLoaded = lockColors as WallpaperColorsModel.Loaded
-                    colorManager.setWallpaperColors(
-                        homeColorsLoaded.colors,
-                        lockColorsLoaded.colors,
                     )
-                    colorManager.fetchOptions(
-                        object : CustomizationManager.OptionsFetchedListener<ColorOption?> {
-                            override fun onOptionsLoaded(options: MutableList<ColorOption?>?) {
-                                val wallpaperColorOptions: MutableList<ColorOptionModel> =
-                                    mutableListOf()
-                                val presetColorOptions: MutableList<ColorOptionModel> =
-                                    mutableListOf()
-                                options?.forEach { option ->
-                                    when ((option as ColorOptionImpl).type) {
-                                        ColorType.WALLPAPER_COLOR ->
-                                            wallpaperColorOptions.add(option.toModel())
-                                        ColorType.PRESET_COLOR ->
-                                            presetColorOptions.add(option.toModel())
-                                    }
-                                }
-                                continuation.resumeWith(
-                                    Result.success(
-                                        mapOf(
-                                            ColorType.WALLPAPER_COLOR to wallpaperColorOptions,
-                                            ColorType.PRESET_COLOR to presetColorOptions,
-                                        )
-                                    )
-                                )
-                            }
-
-                            override fun onError(throwable: Throwable?) {
-                                Log.e(TAG, "Error loading theme bundles", throwable)
-                                continuation.resumeWith(
-                                    Result.failure(
-                                        throwable ?: Throwable("Error loading theme bundles")
-                                    )
-                                )
-                            }
-                        },
-                        /* reload= */ false,
-                    )
+                    return@suspendCancellableCoroutine
                 }
+                val homeColorsLoaded = homeColors as WallpaperColorsModel.Loaded
+                val lockColorsLoaded = lockColors as WallpaperColorsModel.Loaded
+                colorManager.setWallpaperColors(homeColorsLoaded.colors, lockColorsLoaded.colors)
+                colorManager.fetchOptions(
+                    object : CustomizationManager.OptionsFetchedListener<ColorOption?> {
+                        override fun onOptionsLoaded(options: MutableList<ColorOption?>?) {
+                            val wallpaperColorOptions: MutableList<ColorOptionModel> =
+                                mutableListOf()
+                            val presetColorOptions: MutableList<ColorOptionModel> = mutableListOf()
+                            options?.forEach { option ->
+                                when ((option as ColorOptionImpl).type) {
+                                    ColorType.WALLPAPER_COLOR ->
+                                        wallpaperColorOptions.add(option.toModel())
+                                    ColorType.PRESET_COLOR ->
+                                        presetColorOptions.add(option.toModel())
+                                }
+                            }
+                            continuation.resumeWith(
+                                Result.success(
+                                    mapOf(
+                                        ColorType.WALLPAPER_COLOR to wallpaperColorOptions,
+                                        ColorType.PRESET_COLOR to presetColorOptions,
+                                    )
+                                )
+                            )
+                        }
+
+                        override fun onError(throwable: Throwable?) {
+                            Log.e(TAG, "Error loading theme bundles", throwable)
+                            continuation.resumeWith(
+                                Result.failure(
+                                    throwable ?: Throwable("Error loading theme bundles")
+                                )
+                            )
+                        }
+                    },
+                    /* reload= */ false,
+                )
             }
+        }
 
     override suspend fun select(colorOptionModel: ColorOptionModel) {
         _isApplyingSystemColor.value = true

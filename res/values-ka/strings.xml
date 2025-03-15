@@ -56,6 +56,8 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"ამჟამინდელი ფონის შენარჩუნება"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"სტილის გადახედვა"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"ბადის გადახედვა"</string>
+    <!-- no translation found for pack_theme_preview_card_content_description (2964867375123559641) -->
+    <skip />
     <string name="font_preview_content_description" msgid="128230439293337891">"შრიფტის გადახედვა"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"ხატულის გადახედვა"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"ფერის გადახედვა"</string>
@@ -116,7 +118,12 @@
     <string name="mode_title" msgid="2394873501427436055">"მუქი თემა"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ბატარეის დამზოგის გამო დროებით გათიშულია"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"თემატური ხატულები"</string>
+    <!-- no translation found for pack_theme_title (3052703041673623611) -->
+    <!-- no translation found for pack_theme_title (4305612684940220645) -->
+    <skip />
     <string name="beta_title" msgid="8703819523760746458">"ბეტა"</string>
+    <!-- no translation found for theme_packs_description (4647233199054882039) -->
+    <skip />
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"აპების ბადის შეცვლა"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"ფონის ფერები"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"ხატულები, ტექსტი და სხვა ემთხვევა ფერებს თქვენს ფონზე"</string>

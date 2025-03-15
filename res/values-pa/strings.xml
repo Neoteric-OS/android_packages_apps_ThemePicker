@@ -56,6 +56,8 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"ਮੌਜੂਦਾ ਵਾਲਪੇਪਰ ਬਰਕਰਾਰ ਰੱਖੋ"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"ਸਟਾਈਲ ਦੀ ਪੂਰਵ-ਝਲਕ"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"ਗ੍ਰਿਡ ਪੂਰਵ-ਝਲਕ"</string>
+    <!-- no translation found for pack_theme_preview_card_content_description (2964867375123559641) -->
+    <skip />
     <string name="font_preview_content_description" msgid="128230439293337891">"ਫ਼ੌਂਟ ਦੀ ਪੂਰਵ-ਝਲਕ"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"ਪ੍ਰਤੀਕ ਦੀ ਪੂਰਵ-ਝਲਕ"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"ਰੰਗ ਦੀ ਪੂਰਵ-ਝਲਕ"</string>
@@ -116,7 +118,12 @@
     <string name="mode_title" msgid="2394873501427436055">"ਗੂੜ੍ਹਾ ਥੀਮ"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ਬੈਟਰੀ ਸੇਵਰ ਕਰਕੇ ਕੁਝ ਸਮੇਂ ਲਈ ਬੰਦ ਕੀਤਾ ਗਿਆ"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"ਥੀਮ ਵਾਲੇ ਪ੍ਰਤੀਕ"</string>
+    <!-- no translation found for pack_theme_title (3052703041673623611) -->
+    <!-- no translation found for pack_theme_title (4305612684940220645) -->
+    <skip />
     <string name="beta_title" msgid="8703819523760746458">"ਬੀਟਾ"</string>
+    <!-- no translation found for theme_packs_description (4647233199054882039) -->
+    <skip />
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"ਐਪ ਗ੍ਰਿਡ ਬਦਲੋ"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"ਵਾਲਪੇਪਰ ਦੇ ਰੰਗ"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"ਵਾਲਪੇਪਰ ਵਿੱਚ ਪ੍ਰਤੀਕਾਂ, ਲਿਖਤ ਅਤੇ ਹੋਰ ਚੀਜ਼ਾਂ ਦੇ ਮੇਲ ਖਾਂਦੇ ਰੰਗ"</string>

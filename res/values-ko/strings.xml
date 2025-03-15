@@ -147,7 +147,7 @@
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"잠금 화면에 표시할 알림"</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"알림 표시 방식 및 표시할 항목 관리"</string>
     <string name="more_settings_section_title" msgid="6854797937797818510">"잠금 화면 설정 더보기"</string>
-    <string name="more_settings_section_description" msgid="1860115709122398325">"개인 정보 보호, Now Playing 등"</string>
+    <string name="more_settings_section_description" msgid="1860115709122398325">"개인 정보 보호, 나우 플레잉 등"</string>
     <string name="more_colors" msgid="3191071655353004591">"색상 더보기"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"기본 동적 테마"</string>
     <string name="content_description_neutral_color_option" msgid="3385443834001275301">"기본 보통 테마"</string>

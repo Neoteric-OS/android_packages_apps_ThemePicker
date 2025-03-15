@@ -32,6 +32,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -57,14 +58,22 @@ class ClockCarouselViewModel(
             .mapLatest { allClocks ->
                 // Delay to avoid the case that the full list of clocks is not initiated.
                 delay(CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
-                allClocks.map {
-                    val contentDescription =
-                        resources.getString(
-                            R.string.select_clock_action_description,
-                            clockViewFactory.getController(it.clockId).config.description
-                        )
-                    ClockCarouselItemViewModel(it.clockId, it.isSelected, contentDescription)
-                }
+                allClocks
+                    .map { model ->
+                        clockViewFactory.getController(model.clockId)?.let { clock ->
+                            val contentDescription =
+                                resources.getString(
+                                    R.string.select_clock_action_description,
+                                    clock.config.description,
+                                )
+                            ClockCarouselItemViewModel(
+                                model.clockId,
+                                model.isSelected,
+                                contentDescription,
+                            )
+                        }
+                    }
+                    .filterNotNull()
             }
             // makes sure that the operations above this statement are executed on I/O dispatcher
             // while parallelism limits the number of threads this can run on which makes sure that
@@ -126,6 +135,7 @@ class ClockCarouselViewModel(
             .mapNotNull { it }
 
     private var setSelectedClockJob: Job? = null
+
     fun setSelectedClock(clockId: String) {
         setSelectedClockJob?.cancel()
         setSelectedClockJob =

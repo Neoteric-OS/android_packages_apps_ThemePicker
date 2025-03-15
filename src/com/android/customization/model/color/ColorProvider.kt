@@ -117,16 +117,19 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
         }
 
         scope.launch {
+            // Wait for the previous preset color loading job to finish before evaluating whether to
+            // start a new one
             loaderJob?.join()
             if (presetColorBundles == null || reload) {
-                try {
-                    loaderJob = launch { loadPreset(isNewPickerUi) }
-                } catch (e: Throwable) {
-                    colorsAvailable = false
-                    callback?.onError(e)
-                    return@launch
+                loaderJob = launch {
+                    try {
+                        loadPreset(isNewPickerUi)
+                        callback?.onOptionsLoaded(buildFinalList(isNewPickerUi))
+                    } catch (e: Throwable) {
+                        colorsAvailable = false
+                        callback?.onError(e)
+                    }
                 }
-                callback?.onOptionsLoaded(buildFinalList(isNewPickerUi))
             } else {
                 callback?.onOptionsLoaded(buildFinalList(isNewPickerUi))
             }

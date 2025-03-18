@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 The Android Open Source Project
+ * Copyright (C) 2025 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
 
 package com.android.wallpaper.customization.ui.viewmodel
 
-data class ClockFloatingSheetHeightsViewModel(
-    val clockStyleContentHeight: Int? = null,
-    val clockColorContentHeight: Int? = null,
-    val clockSizeContentHeight: Int? = null,
-    val axisPresetSliderHeight: Int? = null,
+/** Data class representing [com.google.android.material.slider]'s configuration. */
+data class ClockAxisPresetSliderViewModel(
+    val valueFrom: Float,
+    val valueTo: Float,
+    val stepSize: Float,
+    val onSliderStopTrackingTouch: (value: Float) -> Unit,
 )

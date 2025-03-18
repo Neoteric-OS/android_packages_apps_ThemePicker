@@ -61,9 +61,7 @@ constructor(
     val seedColor: Flow<Int?> = repository.selectedClock.map { clock -> clock.seedColor }
 
     val axisSettings: Flow<ClockAxisStyle?> =
-        repository.selectedClock.map { clock ->
-            if (clock.fontAxes.isEmpty()) null else ClockAxisStyle(clock.fontAxes)
-        }
+        repository.selectedClock.map { it.axisPresetConfig?.current?.style }
 
     val selectedClockSize: Flow<ClockSize> = repository.selectedClockSize
 
@@ -136,7 +134,7 @@ constructor(
             )
         }
         clockSnapshotModel.clockId?.let { repository.setSelectedClock(it) }
-        clockSnapshotModel.axisSettings?.let { repository.setClockFontAxes(it) }
+        clockSnapshotModel.axisSettings?.let { repository.setClockAxisStyle(it) }
     }
 
     private suspend fun storeCurrentClockOption(clockSnapshotModel: ClockSnapshotModel) {

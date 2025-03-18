@@ -421,6 +421,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
     override fun bindClockPreview(
         context: Context,
         clockHostView: View,
+        clockFaceClickDelegateView: View,
         viewModel: CustomizationPickerViewModel2,
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
@@ -491,19 +492,37 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     combine(
                             clockPickerViewModel.previewingSeedColor,
                             clockPickerViewModel.previewingClock,
-                            clockPickerViewModel.previewingClockFontAxisMap,
+                            clockPickerViewModel.previewingClockPresetIndexedStyle,
                             colorUpdateViewModel.systemColorsUpdated,
                             ::Quadruple,
                         )
                         .collect { quadruple ->
-                            val (color, clock, axisMap, _) = quadruple
+                            val (color, clock, clockPresetIndexedStyle, _) = quadruple
                             clockViewFactory.updateColor(clock.clockId, color)
-                            clockViewFactory.updateFontAxes(clock.clockId, ClockAxisStyle(axisMap))
+                            clockViewFactory.updateFontAxes(
+                                clock.clockId,
+                                clockPresetIndexedStyle?.style ?: ClockAxisStyle(),
+                            )
                         }
                 }
 
                 launch {
                     viewModel.lockPreviewAnimateToAlpha.collect { clockHostView.animateToAlpha(it) }
+                }
+
+                launch {
+                    combine(
+                            viewModel.customizationOptionsViewModel.selectedOption,
+                            clockPickerViewModel.onClockFaceClicked,
+                            ::Pair,
+                        )
+                        .collect { (selectedOption, onClockFaceClicked) ->
+                            clockFaceClickDelegateView.isVisible =
+                                selectedOption == ThemePickerLockCustomizationOption.CLOCK
+                            clockFaceClickDelegateView.setOnClickListener {
+                                onClockFaceClicked.invoke()
+                            }
+                        }
                 }
             }
         }

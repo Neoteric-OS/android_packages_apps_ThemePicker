@@ -52,7 +52,7 @@ interface ClockPickerRepository {
 
     suspend fun setClockSize(size: ClockSize)
 
-    suspend fun setClockFontAxes(axisSettings: ClockAxisStyle)
+    suspend fun setClockAxisStyle(axisStyle: ClockAxisStyle)
 
     fun isReactiveToTone(clockId: ClockId): Boolean?
 }

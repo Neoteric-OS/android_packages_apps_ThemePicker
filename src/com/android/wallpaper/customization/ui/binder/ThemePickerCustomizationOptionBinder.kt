@@ -81,6 +81,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
+        navigateToPackThemeActivity: () -> Unit,
     ) {
         defaultCustomizationOptionsBinder.bind(
             view,
@@ -93,6 +94,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToMoreLockScreenSettingsActivity,
             navigateToColorContrastSettingsActivity,
             navigateToLockScreenNotificationsSettingsActivity,
+            navigateToPackThemeActivity,
         )
 
         val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
@@ -179,15 +181,18 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         var optionPackThemeIconLock: ImageView? = null
 
         if (BaseFlags.get().isPackThemeEnabled()) {
-            val optionPackThemeHome: View =
+            val optionPackThemeHome =
                 homeScreenCustomizationOptionEntries
                     .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
                     .second
+            optionPackThemeHome.setOnClickListener { navigateToPackThemeActivity.invoke() }
             optionPackThemeIconHome = optionPackThemeHome.requireViewById(R.id.option_entry_icon)
-            val optionPackThemeLock: View =
-                homeScreenCustomizationOptionEntries
+
+            val optionPackThemeLock =
+                lockScreenCustomizationOptionEntries
                     .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
                     .second
+            optionPackThemeLock.setOnClickListener { navigateToPackThemeActivity.invoke() }
             optionPackThemeIconLock = optionPackThemeLock.requireViewById(R.id.option_entry_icon)
         }
 

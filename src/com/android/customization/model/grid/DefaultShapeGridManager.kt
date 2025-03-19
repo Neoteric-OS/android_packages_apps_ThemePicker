@@ -18,6 +18,10 @@ package com.android.customization.model.grid
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
+import android.util.Log
+import androidx.core.content.res.ResourcesCompat
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.util.PreviewUtils
@@ -46,30 +50,50 @@ constructor(
                     .query(previewUtils.getUri(GRID_OPTIONS), null, null, null, null)
                     ?.use { cursor ->
                         buildList {
-                            while (cursor.moveToNext()) {
-                                val rows = cursor.getInt(cursor.getColumnIndex(COL_ROWS))
-                                val cols = cursor.getInt(cursor.getColumnIndex(COL_COLS))
-                                val title =
-                                    cursor.getString(cursor.getColumnIndex(COL_GRID_TITLE))
-                                        ?: context.getString(
-                                            com.android.themepicker.R.string.grid_title_pattern,
-                                            cols,
-                                            rows,
+                                while (cursor.moveToNext()) {
+                                    val rows = cursor.getInt(cursor.getColumnIndex(COL_ROWS))
+                                    val cols = cursor.getInt(cursor.getColumnIndex(COL_COLS))
+                                    val title =
+                                        cursor.getString(cursor.getColumnIndex(COL_GRID_TITLE))
+                                            ?: context.getString(
+                                                com.android.themepicker.R.string.grid_title_pattern,
+                                                cols,
+                                                rows,
+                                            )
+                                    add(
+                                        GridOptionModel(
+                                            key =
+                                                cursor.getString(
+                                                    cursor.getColumnIndex(COL_GRID_KEY)
+                                                ),
+                                            title = title,
+                                            isCurrent =
+                                                cursor
+                                                    .getString(
+                                                        cursor.getColumnIndex(COL_IS_DEFAULT)
+                                                    )
+                                                    .toBoolean(),
+                                            rows = rows,
+                                            cols = cols,
+                                            iconId =
+                                                cursor.getInt(
+                                                    cursor.getColumnIndex(KEY_GRID_ICON_ID)
+                                                ),
                                         )
-                                add(
-                                    GridOptionModel(
-                                        key = cursor.getString(cursor.getColumnIndex(COL_GRID_KEY)),
-                                        title = title,
-                                        isCurrent =
-                                            cursor
-                                                .getString(cursor.getColumnIndex(COL_IS_DEFAULT))
-                                                .toBoolean(),
-                                        rows = rows,
-                                        cols = cols,
                                     )
-                                )
+                                }
                             }
-                        }
+                            .let { list ->
+                                // In this list, exactly one item should have isCurrent true.
+                                val isCurrentCount = list.count { it.isCurrent }
+                                if (isCurrentCount != 1) {
+                                    throw IllegalStateException(
+                                        "Exactly one grid option should have isCurrent = true. Found $isCurrentCount."
+                                    )
+                                }
+                                list
+                            }
+                            .sortedByDescending { it.rows * it.cols }
                     }
             } else {
                 null
@@ -83,24 +107,39 @@ constructor(
                     .query(previewUtils.getUri(SHAPE_OPTIONS), null, null, null, null)
                     ?.use { cursor ->
                         buildList {
-                            while (cursor.moveToNext()) {
-                                add(
-                                    ShapeOptionModel(
-                                        key =
-                                            cursor.getString(cursor.getColumnIndex(COL_SHAPE_KEY)),
-                                        title =
-                                            cursor.getString(
-                                                cursor.getColumnIndex(COL_SHAPE_TITLE)
-                                            ),
-                                        path = cursor.getString(cursor.getColumnIndex(COL_PATH)),
-                                        isCurrent =
-                                            cursor
-                                                .getString(cursor.getColumnIndex(COL_IS_DEFAULT))
-                                                .toBoolean(),
+                                while (cursor.moveToNext()) {
+                                    add(
+                                        ShapeOptionModel(
+                                            key =
+                                                cursor.getString(
+                                                    cursor.getColumnIndex(COL_SHAPE_KEY)
+                                                ),
+                                            title =
+                                                cursor.getString(
+                                                    cursor.getColumnIndex(COL_SHAPE_TITLE)
+                                                ),
+                                            path =
+                                                cursor.getString(cursor.getColumnIndex(COL_PATH)),
+                                            isCurrent =
+                                                cursor
+                                                    .getString(
+                                                        cursor.getColumnIndex(COL_IS_DEFAULT)
+                                                    )
+                                                    .toBoolean(),
+                                        )
                                     )
-                                )
+                                }
                             }
-                        }
+                            .let { list ->
+                                // In this list, exactly one item should have isCurrent true.
+                                val isCurrentCount = list.count { it.isCurrent }
+                                if (isCurrentCount != 1) {
+                                    throw IllegalStateException(
+                                        "Exactly one shape option should have isCurrent = true. Found $isCurrentCount."
+                                    )
+                                }
+                                list
+                            }
                     }
             } else {
                 null
@@ -119,7 +158,26 @@ constructor(
         )
     }
 
+    override fun getGridOptionDrawable(iconId: Int): Drawable? {
+        try {
+            val drawable =
+                ResourcesCompat.getDrawable(
+                    context.packageManager.getResourcesForApplication(APP_RESOURCES_PACKAGE_NAME),
+                    iconId,
+                    /* theme = */ null,
+                )
+            return drawable
+        } catch (exception: Resources.NotFoundException) {
+            Log.w(
+                TAG,
+                "Unable to find drawable resource from package $APP_RESOURCES_PACKAGE_NAME with resource ID $iconId",
+            )
+            return null
+        }
+    }
+
     companion object {
+        const val TAG = "DefaultShapeGridManager"
         const val SHAPE_OPTIONS: String = "shape_options"
         const val GRID_OPTIONS: String = "list_options"
         const val SHAPE_GRID: String = "default_grid"
@@ -132,5 +190,8 @@ constructor(
         const val COL_COLS: String = "cols"
         const val COL_IS_DEFAULT: String = "is_default"
         const val COL_PATH: String = "path"
+        const val KEY_GRID_ICON_ID: String = "grid_icon_id"
+        private const val APP_RESOURCES_PACKAGE_NAME: String =
+            "com.google.android.apps.nexuslauncher"
     }
 }

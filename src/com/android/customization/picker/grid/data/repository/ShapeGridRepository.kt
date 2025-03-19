@@ -17,6 +17,7 @@
 
 package com.android.customization.picker.grid.data.repository
 
+import android.graphics.drawable.Drawable
 import com.android.customization.model.grid.GridOptionModel
 import com.android.customization.model.grid.ShapeGridManager
 import com.android.customization.model.grid.ShapeOptionModel
@@ -69,4 +70,8 @@ constructor(
             _gridOptions.value = manager.getGridOptions()
             _shapeOptions.value = manager.getShapeOptions()
         }
+
+    fun getGridOptionDrawable(iconId: Int): Drawable? {
+        return manager.getGridOptionDrawable(iconId)
+    }
 }

@@ -56,8 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Учурдагы тушкагаз калсын"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Стилди алдын ала көрүү"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Торчону алдын ала көрүү"</string>
-    <!-- no translation found for pack_theme_preview_card_content_description (2964867375123559641) -->
-    <skip />
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Темаларды алдын ала көрүү"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Арипти алдын ала көрүү"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Сүрөтчөнү алдын ала көрүү"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Түстү алдын ала көрүү"</string>
@@ -118,12 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"Караңгы тема"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Батареяны үнөмдөөчү режимде убактылуу өчүрүлдү"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Тематикалык сүрөтчөлөр"</string>
-    <!-- no translation found for pack_theme_title (3052703041673623611) -->
-    <!-- no translation found for pack_theme_title (4305612684940220645) -->
-    <skip />
+    <string name="pack_theme_title" msgid="3052703041673623611">"Темалар"</string>
     <string name="beta_title" msgid="8703819523760746458">"Бета"</string>
-    <!-- no translation found for theme_packs_description (4647233199054882039) -->
-    <skip />
+    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel темаларын карап чыгуу"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Колдонмонун торчосун өзгөртүү"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Тушкагаздын түстөрү"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Сүрөтчөлөр, текст ж.б. тушкагаздын түсүнө айкалышат"</string>

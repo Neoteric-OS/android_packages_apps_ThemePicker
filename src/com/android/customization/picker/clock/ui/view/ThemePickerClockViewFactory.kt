@@ -137,7 +137,10 @@ constructor(
     }
 
     override fun updateFontAxes(clockId: String, settings: ClockAxisStyle) {
-        getController(clockId)?.let { it.events.onFontAxesChanged(settings) }
+        getController(clockId)?.let {
+            it.largeClock.animations.onFontAxesChanged(settings)
+            it.smallClock.animations.onFontAxesChanged(settings)
+        }
     }
 
     override fun updateRegionDarkness() {

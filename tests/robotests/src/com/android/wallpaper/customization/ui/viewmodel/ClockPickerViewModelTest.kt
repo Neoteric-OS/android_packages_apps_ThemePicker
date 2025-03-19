@@ -28,6 +28,7 @@ import com.android.customization.picker.clock.ui.viewmodel.ClockColorViewModel
 import com.android.customization.picker.clock.ui.viewmodel.ClockSettingsViewModel
 import com.android.customization.picker.color.data.repository.FakeColorPickerRepository2
 import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor2
+import com.android.systemui.plugins.clocks.AxisPresetConfig.IndexedStyle
 import com.android.systemui.shared.customization.data.content.FakeCustomizationProviderClient
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.Tab
@@ -114,48 +115,13 @@ class ClockPickerViewModelTest {
         Dispatchers.resetMain()
     }
 
-    @Test
-    fun selectedTab_whenClickOnTabStyle() = runTest {
-        val tabs = collectLastValue(underTest.tabs)
-        val selectedTab = collectLastValue(underTest.selectedTab)
-
-        tabs()?.get(0)?.onClick?.invoke()
-
-        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
-    }
-
-    @Test
-    fun selectedTab_whenClickOnTabColor() = runTest {
-        val tabs = collectLastValue(underTest.tabs)
-        val selectedTab = collectLastValue(underTest.selectedTab)
-
-        tabs()?.get(1)?.onClick?.invoke()
-
-        assertThat(selectedTab()).isEqualTo(Tab.COLOR)
-    }
-
-    @Test
-    fun selectedTab_fontEditorWhenClickSelectedClock() = runTest {
-        val clockStyleOptions = collectLastValue(underTest.clockStyleOptions)
-        val selectedTab = collectLastValue(underTest.selectedTab)
-        // Advance CLOCKS_EVENT_UPDATE_DELAY_MILLIS since there is a delay from clockStyleOptions
-        advanceTimeBy(ClockPickerViewModel.CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
-        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
-
-        val firstClock = clockStyleOptions()!![0]
-        val onClicked = collectLastValue(firstClock.onClicked)
-        if (!firstClock.isSelected.value) onClicked()?.invoke()
-        onClicked()?.invoke()
-
-        assertThat(selectedTab()).isEqualTo(Tab.FONT)
-    }
-
+    //// Tabs
     @Test
     fun tabs_whenInitialState() = runTest {
         val tabs = collectLastValue(underTest.tabs)
 
         val resultTabs = checkNotNull(tabs())
-        assertThat(resultTabs).hasSize(2)
+        assertThat(resultTabs).hasSize(3)
         resultTabs.forEachIndexed { index, floatingToolbarTabViewModel ->
             when (index) {
                 0 -> {
@@ -184,6 +150,19 @@ class ClockPickerViewModelTest {
                         isOnClickNull = false,
                     )
                 }
+                2 -> {
+                    assertFloatingToolbarTabViewModel(
+                        viewModel = floatingToolbarTabViewModel,
+                        icon =
+                            Icon.Resource(
+                                res = R.drawable.ic_font_size_filled_24px,
+                                contentDescription = Text.Resource(R.string.clock_size),
+                            ),
+                        text = context.getString(R.string.clock_size),
+                        isSelected = false,
+                        isOnClickNull = false,
+                    )
+                }
             }
         }
     }
@@ -206,6 +185,37 @@ class ClockPickerViewModelTest {
         }
     }
 
+    @Test
+    fun selectedTab_whenClickOnTabStyle() = runTest {
+        val tabs = collectLastValue(underTest.tabs)
+        val selectedTab = collectLastValue(underTest.selectedTab)
+
+        tabs()?.get(0)?.onClick?.invoke()
+
+        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
+    }
+
+    @Test
+    fun selectedTab_whenClickOnTabColor() = runTest {
+        val tabs = collectLastValue(underTest.tabs)
+        val selectedTab = collectLastValue(underTest.selectedTab)
+
+        tabs()?.get(1)?.onClick?.invoke()
+
+        assertThat(selectedTab()).isEqualTo(Tab.COLOR)
+    }
+
+    @Test
+    fun selectedTab_whenClickOnTabSize() = runTest {
+        val tabs = collectLastValue(underTest.tabs)
+        val selectedTab = collectLastValue(underTest.selectedTab)
+
+        tabs()?.get(2)?.onClick?.invoke()
+
+        assertThat(selectedTab()).isEqualTo(Tab.SIZE)
+    }
+
+    //// Clock style
     @Test
     fun selectedClock_whenClickOnStyleOptions() = runTest {
         val selectedClock = collectLastValue(underTest.selectedClock)
@@ -241,7 +251,7 @@ class ClockPickerViewModelTest {
         val option1OnClicked = collectLastValue(clockStyleOptions()!![1].onClicked)
 
         assertThat(option0IsSelected()).isTrue()
-        assertThat(option0OnClicked()).isNotNull()
+        assertThat(option0OnClicked()).isNull()
 
         option1OnClicked()?.invoke()
         // Advance CLOCKS_EVENT_UPDATE_DELAY_MILLIS since there is a delay from clockColorOptions
@@ -249,9 +259,117 @@ class ClockPickerViewModelTest {
 
         assertThat(option0IsSelected()).isFalse()
         assertThat(option1IsSelected()).isTrue()
-        assertThat(option1OnClicked()).isNotNull()
+        assertThat(option1OnClicked()).isNull()
     }
 
+    //// Clock font
+    @Test
+    fun previewingClockPresetIndexedStyle_whenInitialState() = runTest {
+        val previewingClockPresetIndexedStyle =
+            collectLastValue(underTest.previewingClockPresetIndexedStyle)
+
+        assertThat(previewingClockPresetIndexedStyle())
+            .isEqualTo(FakeClockPickerRepository.fakeClocks[0].axisPresetConfig?.current)
+    }
+
+    @Test
+    fun previewingClockPresetIndexedStyle_whenClickOnSliderStep() = runTest {
+        val previewingClockPresetIndexedStyle =
+            collectLastValue(underTest.previewingClockPresetIndexedStyle)
+        val axisPresetsSliderViewModel = collectLastValue(underTest.axisPresetsSliderViewModel)
+        val onSlierStopTrackingTouch = axisPresetsSliderViewModel()?.onSliderStopTrackingTouch
+        checkNotNull(onSlierStopTrackingTouch)
+
+        onSlierStopTrackingTouch.invoke(1F)
+
+        assertThat(previewingClockPresetIndexedStyle())
+            .isEqualTo(
+                IndexedStyle(
+                    groupIndex = 0,
+                    presetIndex = 1,
+                    style = FakeClockPickerRepository.fakeClockAxisStyle1,
+                )
+            )
+    }
+
+    @Test
+    fun shouldShowPresetSlider_true_whenDefault() = runTest {
+        val shouldShowPresetSlider = collectLastValue(underTest.shouldShowPresetSlider)
+
+        assertThat(shouldShowPresetSlider()).isTrue()
+    }
+
+    @Test
+    fun shouldShowPresetSlider_false_whenSelectClockWithNullAxisPresetConfig() = runTest {
+        val shouldShowPresetSlider = collectLastValue(underTest.shouldShowPresetSlider)
+        val clockStyleOptions = collectLastValue(underTest.clockStyleOptions)
+        // Advance CLOCKS_EVENT_UPDATE_DELAY_MILLIS since there is a delay from clockStyleOptions
+        advanceTimeBy(ClockPickerViewModel.CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
+        val onClockOption1Clicked =
+            clockStyleOptions()?.get(1)?.onClicked?.let { collectLastValue(it) }
+        checkNotNull(onClockOption1Clicked)
+
+        onClockOption1Clicked()?.invoke()
+
+        assertThat(shouldShowPresetSlider()).isFalse()
+    }
+
+    @Test
+    fun axisPresetsSliderViewModel_initialState() = runTest {
+        val axisPresetsSliderViewModel = collectLastValue(underTest.axisPresetsSliderViewModel)
+
+        val expectedPresetSize =
+            FakeClockPickerRepository.fakeClocks[0].axisPresetConfig?.groups?.get(0)?.presets?.size
+        checkNotNull(expectedPresetSize)
+        val resultAxisPresetsSliderViewModel = axisPresetsSliderViewModel()
+        assertThat(resultAxisPresetsSliderViewModel?.valueFrom).isEqualTo(0F)
+        assertThat(resultAxisPresetsSliderViewModel?.valueTo)
+            .isEqualTo((expectedPresetSize - 1).toFloat())
+        assertThat(resultAxisPresetsSliderViewModel?.stepSize).isEqualTo(1F)
+    }
+
+    @Test
+    fun axisPresetsSliderSelectedValue_update_whenClickOnSliderStep() = runTest {
+        val axisPresetsSliderSelectedValue =
+            collectLastValue(underTest.axisPresetsSliderSelectedValue)
+        val axisPresetsSliderViewModel = collectLastValue(underTest.axisPresetsSliderViewModel)
+        val onSlierStopTrackingTouch = axisPresetsSliderViewModel()?.onSliderStopTrackingTouch
+        checkNotNull(onSlierStopTrackingTouch)
+
+        onSlierStopTrackingTouch.invoke(1F)
+
+        val expectedResult =
+            FakeClockPickerRepository.fakeClocks[0]
+                .axisPresetConfig
+                ?.groups
+                ?.get(0)
+                ?.presets
+                ?.get(1)
+        checkNotNull(expectedResult)
+        assertThat(axisPresetsSliderSelectedValue()).isEqualTo(1F)
+    }
+
+    @Test
+    fun previewingClockPresetIndexedStyle_whenOnClockFaceClicked() = runTest {
+        val previewingClockPresetIndexedStyle =
+            collectLastValue(underTest.previewingClockPresetIndexedStyle)
+        val onClockFaceClicked = collectLastValue(underTest.onClockFaceClicked)
+
+        onClockFaceClicked()?.invoke()
+
+        val expectedResult =
+            FakeClockPickerRepository.fakeClocks[0]
+                .axisPresetConfig
+                ?.groups
+                ?.get(1)
+                ?.presets
+                ?.get(0)
+        checkNotNull(expectedResult)
+        assertThat(previewingClockPresetIndexedStyle())
+            .isEqualTo(IndexedStyle(groupIndex = 1, presetIndex = 0, style = expectedResult))
+    }
+
+    //// Clock size
     @Test
     fun previewingClockSize_whenCallingOnClockSizeSwitchChecked() = runTest {
         val previewingClockSize = collectLastValue(underTest.previewingClockSize)
@@ -265,76 +383,7 @@ class ClockPickerViewModelTest {
         assertThat(previewingClockSize()).isEqualTo(ClockSize.SMALL)
     }
 
-    @Test
-    fun previewingFontAxes_defaultWhenNoOverrides() = runTest {
-        val previewingFontAxes = collectLastValue(underTest.previewingClockFontAxisMap)
-        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
-    }
-
-    @Test
-    fun previewingFontAxes_updateAxisChangesSetting() = runTest {
-        val previewingFontAxes = collectLastValue(underTest.previewingClockFontAxisMap)
-        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
-
-        underTest.updatePreviewFontAxis("key", 100f)
-        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f))
-
-        underTest.updatePreviewFontAxis("extra", 10f)
-        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f, "extra" to 10f))
-    }
-
-    @Test
-    fun previewingFontAxes_applyFontEditorExitsTab_keepsPreviewAxis() = runTest {
-        val previewingFontAxes = collectLastValue(underTest.previewingClockFontAxisMap)
-        val clockStyleOptions = collectLastValue(underTest.clockStyleOptions)
-        val selectedTab = collectLastValue(underTest.selectedTab)
-        // Advance CLOCKS_EVENT_UPDATE_DELAY_MILLIS since there is a delay from clockStyleOptions
-        advanceTimeBy(ClockPickerViewModel.CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
-
-        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
-        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
-
-        val firstClock = clockStyleOptions()!![0]
-        val onClicked = collectLastValue(firstClock.onClicked)
-        if (!firstClock.isSelected.value) onClicked()?.invoke()
-        onClicked()?.invoke()
-        underTest.updatePreviewFontAxis("key", 100f)
-
-        assertThat(selectedTab()).isEqualTo(Tab.FONT)
-        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f))
-
-        underTest.confirmFontAxes()
-
-        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
-        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f))
-    }
-
-    @Test
-    fun previewingFontAxes_revertFontEditorExitsTab_revertsPreviewAxis() = runTest {
-        val previewingFontAxes = collectLastValue(underTest.previewingClockFontAxisMap)
-        val clockStyleOptions = collectLastValue(underTest.clockStyleOptions)
-        val selectedTab = collectLastValue(underTest.selectedTab)
-        // Advance CLOCKS_EVENT_UPDATE_DELAY_MILLIS since there is a delay from clockStyleOptions
-        advanceTimeBy(ClockPickerViewModel.CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
-
-        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
-        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
-
-        val firstClock = clockStyleOptions()!![0]
-        val onClicked = collectLastValue(firstClock.onClicked)
-        if (!firstClock.isSelected.value) onClicked()?.invoke()
-        onClicked()?.invoke()
-        underTest.updatePreviewFontAxis("key", 100f)
-
-        assertThat(selectedTab()).isEqualTo(Tab.FONT)
-        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 100f))
-
-        underTest.cancelFontAxes()
-
-        assertThat(selectedTab()).isEqualTo(Tab.STYLE)
-        assertThat(previewingFontAxes()).isEqualTo(mapOf("key" to 50f))
-    }
-
+    //// Clock color
     @Test
     fun sliderProgress_whenOnSliderProgressChanged() = runTest {
         val sliderProgress = collectLastValue(underTest.previewingSliderProgress)
@@ -482,25 +531,6 @@ class ClockPickerViewModelTest {
 
         val option1OnClicked = collectLastValue(clockStyleOptions()!![1].onClicked)
         option1OnClicked()?.invoke()
-        onApply()?.invoke()
-
-        assertThat(onApply()).isNull()
-    }
-
-    @Test
-    fun apply_notNullWhenFontAxisChanged() = runTest {
-        val onApply = collectLastValue(underTest.onApply)
-
-        underTest.updatePreviewFontAxis("key", 100f)
-
-        assertThat(onApply()).isNotNull()
-    }
-
-    @Test
-    fun apply_nullAfterApplyingFontAxis() = runTest {
-        val onApply = collectLastValue(underTest.onApply)
-
-        underTest.updatePreviewFontAxis("key", 100f)
         onApply()?.invoke()
 
         assertThat(onApply()).isNull()

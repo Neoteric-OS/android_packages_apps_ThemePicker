@@ -81,6 +81,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
+        navigateToPackThemeActivity: () -> Unit,
     ) {
         defaultCustomizationOptionsBinder.bind(
             view,
@@ -93,6 +94,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToMoreLockScreenSettingsActivity,
             navigateToColorContrastSettingsActivity,
             navigateToLockScreenNotificationsSettingsActivity,
+            navigateToPackThemeActivity,
         )
 
         val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
@@ -179,15 +181,18 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         var optionPackThemeIconLock: ImageView? = null
 
         if (BaseFlags.get().isPackThemeEnabled()) {
-            val optionPackThemeHome: View =
+            val optionPackThemeHome =
                 homeScreenCustomizationOptionEntries
                     .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
                     .second
+            optionPackThemeHome.setOnClickListener { navigateToPackThemeActivity.invoke() }
             optionPackThemeIconHome = optionPackThemeHome.requireViewById(R.id.option_entry_icon)
-            val optionPackThemeLock: View =
-                homeScreenCustomizationOptionEntries
+
+            val optionPackThemeLock =
+                lockScreenCustomizationOptionEntries
                     .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
                     .second
+            optionPackThemeLock.setOnClickListener { navigateToPackThemeActivity.invoke() }
             optionPackThemeIconLock = optionPackThemeLock.requireViewById(R.id.option_entry_icon)
         }
 
@@ -416,6 +421,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
     override fun bindClockPreview(
         context: Context,
         clockHostView: View,
+        clockFaceClickDelegateView: View,
         viewModel: CustomizationPickerViewModel2,
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
@@ -486,19 +492,37 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     combine(
                             clockPickerViewModel.previewingSeedColor,
                             clockPickerViewModel.previewingClock,
-                            clockPickerViewModel.previewingClockFontAxisMap,
+                            clockPickerViewModel.previewingClockPresetIndexedStyle,
                             colorUpdateViewModel.systemColorsUpdated,
                             ::Quadruple,
                         )
                         .collect { quadruple ->
-                            val (color, clock, axisMap, _) = quadruple
+                            val (color, clock, clockPresetIndexedStyle, _) = quadruple
                             clockViewFactory.updateColor(clock.clockId, color)
-                            clockViewFactory.updateFontAxes(clock.clockId, ClockAxisStyle(axisMap))
+                            clockViewFactory.updateFontAxes(
+                                clock.clockId,
+                                clockPresetIndexedStyle?.style ?: ClockAxisStyle(),
+                            )
                         }
                 }
 
                 launch {
                     viewModel.lockPreviewAnimateToAlpha.collect { clockHostView.animateToAlpha(it) }
+                }
+
+                launch {
+                    combine(
+                            viewModel.customizationOptionsViewModel.selectedOption,
+                            clockPickerViewModel.onClockFaceClicked,
+                            ::Pair,
+                        )
+                        .collect { (selectedOption, onClockFaceClicked) ->
+                            clockFaceClickDelegateView.isVisible =
+                                selectedOption == ThemePickerLockCustomizationOption.CLOCK
+                            clockFaceClickDelegateView.setOnClickListener {
+                                onClockFaceClicked.invoke()
+                            }
+                        }
                 }
             }
         }

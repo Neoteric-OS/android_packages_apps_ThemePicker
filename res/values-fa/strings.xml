@@ -56,8 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"حفظ کاغذدیواری فعلی"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"پیش‌نمایش سبک"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"پیش‌نمایش جدول"</string>
-    <!-- no translation found for pack_theme_preview_card_content_description (2964867375123559641) -->
-    <skip />
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"پیش‌نمایش زمینه"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"پیش‌نمایش قلم"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"پیش‌نمایش نماد"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"پیش‌نمایش رنگ"</string>
@@ -118,12 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"زمینه تاریک"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"به‌دلیل روشن بودن «بهینه‌سازی باتری» موقتاً غیرفعال شده است"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"نمادهای موضوعی"</string>
-    <!-- no translation found for pack_theme_title (3052703041673623611) -->
-    <!-- no translation found for pack_theme_title (4305612684940220645) -->
-    <skip />
+    <string name="pack_theme_title" msgid="3052703041673623611">"زمینه‌ها"</string>
     <string name="beta_title" msgid="8703819523760746458">"بتا"</string>
-    <!-- no translation found for theme_packs_description (4647233199054882039) -->
-    <skip />
+    <string name="theme_packs_description" msgid="4647233199054882039">"کاوش زمینه‌های Pixel"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"تغییر جدول برنامه"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"رنگ‌های کاغذدیواری"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"نمادها، نوشتار، و موارد دیگر با رنگ کاغذدیواری هماهنگ می‌شود"</string>

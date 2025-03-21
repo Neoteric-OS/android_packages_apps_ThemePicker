@@ -56,8 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"繼續使用目前的桌布"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"樣式預覽"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"網格預覽"</string>
-    <!-- no translation found for pack_theme_preview_card_content_description (2964867375123559641) -->
-    <skip />
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"主題預覽"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"字型預覽"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"圖示預覽"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"顏色預覽"</string>
@@ -118,12 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"深色主題"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"因省電模式而暫時停用"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"圖示套用主題色"</string>
-    <!-- no translation found for pack_theme_title (3052703041673623611) -->
-    <!-- no translation found for pack_theme_title (4305612684940220645) -->
-    <skip />
+    <string name="pack_theme_title" msgid="3052703041673623611">"主題"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta 版"</string>
-    <!-- no translation found for theme_packs_description (4647233199054882039) -->
-    <skip />
+    <string name="theme_packs_description" msgid="4647233199054882039">"探索 Pixel 主題"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"變更應用程式排列顯示"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"桌布顏色"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"為圖示、文字和其他項目選擇與桌布相襯的顏色"</string>

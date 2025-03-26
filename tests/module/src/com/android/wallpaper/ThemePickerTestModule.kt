@@ -51,6 +51,7 @@ import com.android.wallpaper.modules.ThemePickerAppModule
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.category.domain.interactor.CategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CuratedPhotosInteractor
+import com.android.wallpaper.picker.category.domain.interactor.OnDeviceWallpapersInteractor
 import com.android.wallpaper.picker.category.domain.interactor.ThirdPartyCategoryInteractor
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.category.ui.view.providers.implementation.DefaultIndividualPickerFactory
@@ -67,6 +68,7 @@ import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
 import com.android.wallpaper.testing.FakeCategoryInteractor
 import com.android.wallpaper.testing.FakeCuratedPhotosInteractorImpl
 import com.android.wallpaper.testing.FakeDefaultRequester
+import com.android.wallpaper.testing.FakeOnDeviceWallpapersInteractor
 import com.android.wallpaper.testing.FakeThirdPartyCategoryInteractor
 import com.android.wallpaper.testing.FakeWallpaperCategoryWrapper
 import com.android.wallpaper.testing.TestPartnerProvider
@@ -153,6 +155,12 @@ abstract class ThemePickerTestModule {
     ): CuratedPhotosInteractor
 
     @Binds @Singleton abstract fun bindInjector(impl: TestCustomizationInjector): Injector
+
+    @Binds
+    @Singleton
+    abstract fun bindOnDeviceWallpapersInteractor(
+        impl: FakeOnDeviceWallpapersInteractor
+    ): OnDeviceWallpapersInteractor
 
     @Binds
     @Singleton

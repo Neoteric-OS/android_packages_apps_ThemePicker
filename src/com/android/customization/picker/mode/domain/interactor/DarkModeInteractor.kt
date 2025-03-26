@@ -25,5 +25,5 @@ class DarkModeInteractor @Inject constructor(private val repository: DarkModeRep
     val isEnabled = repository.isEnabled
     val isDarkMode = repository.isDarkMode
 
-    fun setDarkModeActivated(isActive: Boolean) = repository.setDarkModeActivated(isActive)
+    fun setIsDarkMode(isActive: Boolean) = repository.setIsDarkMode(isActive)
 }

@@ -54,7 +54,11 @@ object DarkModeBinder {
                 }
                 launch {
                     viewModel.toggleDarkMode.collect {
-                        darkModeToggle.setOnCheckedChangeListener { _, _ -> it.invoke() }
+                        // Use onClickListener instead of onCheckedChangeListener to avoid the
+                        // potential cycle of: system value changes->the toggle isChecked value is
+                        // updated->the onCheckedChangeListener is called->the overriding value is
+                        // set. The overriding value should not be set by the system, only by user.
+                        darkModeToggle.setOnClickListener { _ -> it.invoke() }
                     }
                 }
             }

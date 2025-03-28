@@ -49,7 +49,7 @@ class DarkModeViewModelTest {
     @Inject lateinit var darkModeRepository: DarkModeRepository
     @Inject lateinit var darkModeInteractor: DarkModeInteractor
     @Inject lateinit var logger: TestThemesUserEventLogger
-    lateinit var darkModeViewModel: DarkModeViewModel
+    private lateinit var darkModeViewModel: DarkModeViewModel
 
     @Inject lateinit var testDispatcher: TestDispatcher
     @Inject lateinit var testScope: TestScope
@@ -90,10 +90,11 @@ class DarkModeViewModelTest {
     fun toggleDarkMode() {
         testScope.runTest {
             uiModeManager.setNightModeActivated(false)
-            darkModeRepository.refreshIsDarkModeActivated()
+            darkModeRepository.refreshIsDarkMode()
             val getOverridingIsDarkMode = collectLastValue(darkModeViewModel.overridingIsDarkMode)
             val getPreviewingIsDarkMode = collectLastValue(darkModeViewModel.previewingIsDarkMode)
             val getToggleDarkMode = collectLastValue(darkModeViewModel.toggleDarkMode)
+            assertThat(getOverridingIsDarkMode()).isNull()
             assertThat(getPreviewingIsDarkMode()).isFalse()
 
             getToggleDarkMode()?.invoke()
@@ -109,10 +110,36 @@ class DarkModeViewModelTest {
     }
 
     @Test
+    fun previewingIsDarkMode_systemChanges() {
+        testScope.runTest {
+            uiModeManager.setNightModeActivated(false)
+            darkModeRepository.refreshIsDarkMode()
+            val getOverridingIsDarkMode = collectLastValue(darkModeViewModel.overridingIsDarkMode)
+            val getPreviewingIsDarkMode = collectLastValue(darkModeViewModel.previewingIsDarkMode)
+            assertThat(getOverridingIsDarkMode()).isNull()
+            assertThat(getPreviewingIsDarkMode()).isFalse()
+
+            // Turn on dark mode
+            uiModeManager.setNightModeActivated(true)
+            darkModeRepository.refreshIsDarkMode()
+
+            assertThat(getOverridingIsDarkMode()).isNull()
+            assertThat(getPreviewingIsDarkMode()).isTrue()
+
+            // Turn off dark mode
+            uiModeManager.setNightModeActivated(false)
+            darkModeRepository.refreshIsDarkMode()
+
+            assertThat(getOverridingIsDarkMode()).isNull()
+            assertThat(getPreviewingIsDarkMode()).isFalse()
+        }
+    }
+
+    @Test
     fun onApply_shouldLogDarkTheme() {
         testScope.runTest {
             uiModeManager.setNightModeActivated(false)
-            darkModeRepository.refreshIsDarkModeActivated()
+            darkModeRepository.refreshIsDarkMode()
             val getToggleDarkMode = collectLastValue(darkModeViewModel.toggleDarkMode)
             val onApply = collectLastValue(darkModeViewModel.onApply)
 
@@ -127,7 +154,7 @@ class DarkModeViewModelTest {
     fun onApply_shouldApplyDarkTheme() {
         testScope.runTest {
             uiModeManager.setNightModeActivated(false)
-            darkModeRepository.refreshIsDarkModeActivated()
+            darkModeRepository.refreshIsDarkMode()
             val getToggleDarkMode = collectLastValue(darkModeViewModel.toggleDarkMode)
             val onApply = collectLastValue(darkModeViewModel.onApply)
 

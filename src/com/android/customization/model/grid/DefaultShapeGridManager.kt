@@ -181,6 +181,7 @@ constructor(
         const val SHAPE_OPTIONS: String = "shape_options"
         const val GRID_OPTIONS: String = "list_options"
         const val SHAPE_GRID: String = "default_grid"
+        const val SET_SHAPE: String = "set_shape"
         const val COL_SHAPE_KEY: String = "shape_key"
         const val COL_GRID_KEY: String = "name"
         const val COL_GRID_NAME: String = "grid_name"

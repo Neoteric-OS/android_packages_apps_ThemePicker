@@ -88,7 +88,7 @@
             android:screenOrientation="portrait"
             android:resizeableActivity="false"
             android:theme="@style/WallpaperTheme"
-            android:configChanges="assetsPaths"
+            android:configChanges="assetsPaths|uiMode"
             android:exported="false"/>
 
         <activity

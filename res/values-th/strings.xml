@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"ใช้วอลเปเปอร์ปัจจุบัน"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"พรีวิวรูปแบบ"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"พรีวิวตารางกริด"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"ตัวอย่างธีม"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"พรีวิวแบบอักษร"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"พรีวิวไอคอน"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"พรีวิวสี"</string>
@@ -116,7 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"ธีมมืด"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ปิดใช้ชั่วคราวเนื่องจากอยู่ในโหมดประหยัดแบตเตอรี่"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"ไอคอนตามธีม"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"ธีม"</string>
     <string name="beta_title" msgid="8703819523760746458">"เบต้า"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"ธีม Discover Pixel"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"เปลี่ยนแปลงตารางกริดสำหรับแอป"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"สีวอลเปเปอร์"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"ไอคอน ข้อความ และอื่นๆ จะมีสีที่เข้ากับวอลเปเปอร์"</string>

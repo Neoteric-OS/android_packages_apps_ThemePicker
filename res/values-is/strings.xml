@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Halda núverandi veggfóðri"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Forskoðun stíls"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Forskoðun hnitanets"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Forskoðun þema"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Forskoðun leturgerðar"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Forskoðun tákns"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Forskoðun litar"</string>
@@ -116,7 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"Dökkt þema"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Slökkt tímabundið vegna rafhlöðusparnaðar"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Þematákn"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"Þemu"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Uppgötvaðu Pixel-þemu"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Breyta forritatöflu"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Veggfóðurslitir"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Tákn, texti og fleira passar við liti veggfóðursins"</string>

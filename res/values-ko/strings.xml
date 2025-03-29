@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"현재 배경화면 유지"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"스타일 미리보기"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"그리드 미리보기"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"테마 미리보기"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"글꼴 미리보기"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"아이콘 미리보기"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"색상 미리보기"</string>
@@ -116,7 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"어두운 테마"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"절전 모드로 인해 일시적으로 사용 중지됨"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"테마 아이콘"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"테마"</string>
     <string name="beta_title" msgid="8703819523760746458">"베타"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel 테마 둘러보기"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"앱 그리드 변경"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"배경화면 색상"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"아이콘, 텍스트 등의 색상이 배경화면과 일치합니다"</string>

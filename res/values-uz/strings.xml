@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Joriy fon rasmini saqlab qolish"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Dizaynga razm solish"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Kataklarga razm solish"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Mavzularga razm solish"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Shriftga nazar solish"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Belgiga razm solish"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Ranglarga razm solish"</string>
@@ -116,7 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"Tungi mavzu"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Quvvat tejash maqsadida vaqtinchalik faolsizlantirilgan"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Mavzuga oid ikonkalar"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"Mavzular"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel mavzularini kashf eting"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Ilovalar jadvalini oʻzgartirish"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Fon ranglari"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Belgilar, matn va boshqalar rangi fon rasmiga moslanadi"</string>

@@ -18,17 +18,26 @@ package com.android.customization.picker.mode.ui.viewmodel
 
 import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.mode.domain.interactor.DarkModeInteractor
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 
 @ViewModelScoped
 class DarkModeViewModel
 @Inject
-constructor(private val interactor: DarkModeInteractor, private val logger: ThemesUserEventLogger) {
+constructor(
+    private val colorUpdateViewModel: ColorUpdateViewModel,
+    private val interactor: DarkModeInteractor,
+    private val logger: ThemesUserEventLogger,
+) {
     private val isDarkMode = interactor.isDarkMode
     val isEnabled = interactor.isEnabled
 
@@ -54,8 +63,21 @@ constructor(private val interactor: DarkModeInteractor, private val logger: Them
         combine(overridingIsDarkMode, isDarkMode, isEnabled) { override, current, isEnabled ->
             if (override != null && override != current && isEnabled) {
                 {
-                    interactor.setIsDarkMode(override)
-                    logger.logDarkThemeApplied(override)
+                    coroutineScope {
+                        launch { interactor.setIsDarkMode(override) }
+                        // Dark mode change also invokes a color update. Suspend until both dark
+                        // mode and color are updated.
+                        combine(
+                                // Omit the first value which is emitted on subscribe.
+                                isDarkMode.drop(1).take(1),
+                                colorUpdateViewModel.systemColorsUpdatedNoReplay.take(1),
+                                ::Pair,
+                            )
+                            .collect { (_, _) ->
+                                return@collect
+                            }
+                        logger.logDarkThemeApplied(override)
+                    }
                 }
             } else null
         }

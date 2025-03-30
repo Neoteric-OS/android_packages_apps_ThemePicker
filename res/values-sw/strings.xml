@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Tumia mandhari ya sasa"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Onyesho la kukagua muundo"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Onyesho la kukagua gridi"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Toleo la kukagua la mandhari"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Onyesho la kukagua fonti"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Onyesho la kukagua aikoni"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Onyesho la kukagua rangi"</string>
@@ -116,7 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"Mandhari meusi"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Imezimwa kwa muda kwa sababu ya Kiokoa Betri"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Aikoni zenye mitindo"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"Mandhari"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Gundua mandhari ya Pixel"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Badilisha gridi ya programu"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Rangi za mandhari"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Aikoni, maandishi na rangi zaidi zinazolingana kwenye mandhari yako"</string>

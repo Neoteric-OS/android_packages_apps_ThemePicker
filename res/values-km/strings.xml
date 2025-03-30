@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"រក្សាទុក​ផ្ទាំងរូបភាព​បច្ចុប្បន្ន"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"ការមើល​រចនាប័ទ្មសាកល្បង"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"ការមើល​ក្រឡាសាកល្បង"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"ការមើលទម្រង់រចនាសាកល្បង"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"ការមើលពុម្ព​អក្សរសាកល្បង"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"ការមើលរូបតំណាង​សាកល្បង"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"ការមើល​ពណ៌សាកល្បង"</string>
@@ -116,7 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"ទម្រង់រចនាងងឹត"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"បានបិទ​ជា​បណ្តោះអាសន្ន ដោយសារ​មុខងារ​សន្សំ​ថ្ម"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"រូបតំណាងប្ដូរតាមទម្រង់រចនា"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"ទម្រង់រចនា"</string>
     <string name="beta_title" msgid="8703819523760746458">"បេតា"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"ស្វែងយល់អំពីទម្រង់រចនា Pixel"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"ប្ដូរ​ក្រឡា​កម្មវិធី"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"ពណ៌ផ្ទាំងរូបភាព"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"រូបតំណាង អក្សរ និងពណ៌ដែលត្រូវគ្នាជាច្រើនទៀតក្នុងផ្ទាំងរូបភាពរបស់អ្នក"</string>

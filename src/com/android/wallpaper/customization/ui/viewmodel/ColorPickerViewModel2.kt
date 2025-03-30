@@ -35,6 +35,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -169,16 +170,18 @@ constructor(
                     null
                 } else {
                     {
-                        interactor.select(it)
-                        // Suspend until first color update
-                        colorUpdateViewModel.systemColorsUpdatedNoReplay.take(1).collect {
-                            return@collect
+                        coroutineScope {
+                            launch { interactor.select(it) }
+                            // Suspend until first color update
+                            colorUpdateViewModel.systemColorsUpdatedNoReplay.take(1).collect {
+                                return@collect
+                            }
+                            logger.logThemeColorApplied(
+                                it.sourceForLogging,
+                                it.styleForLogging,
+                                it.seedColor,
+                            )
                         }
-                        logger.logThemeColorApplied(
-                            it.sourceForLogging,
-                            it.styleForLogging,
-                            it.seedColor,
-                        )
                     }
                 }
             }

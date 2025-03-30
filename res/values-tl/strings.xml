@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Gamitin ang kasalukuyang wallpaper"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Preview ng istilo"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Preview ng grid"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Preview ng mga tema"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Preview ng font"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Preview ng icon"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Preview ng kulay"</string>
@@ -116,7 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"Madilim na tema"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Pansamantalang na-disable dahil sa Pantipid ng Baterya"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Mga may temang icon"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"Mga Tema"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Tuklasin ang mga tema ng Pixel"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Baguhin ang grid ng app"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Kulay ng wallpaper"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Icon, text, higit pang tumutugmang kulay sa wallpaper"</string>

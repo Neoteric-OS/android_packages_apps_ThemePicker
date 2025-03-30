@@ -34,9 +34,9 @@ import javax.inject.Singleton
 )
 abstract class ThemePickerSharedAppTestModule {
 
+    @Binds @Singleton abstract fun bindDarkModeUtil(impl: FakeDarkModeUtil): DarkModeUtil
+
     @Binds
     @Singleton
-    abstract fun bindGridOptionsManager2(impl: FakeShapeGridManager): ShapeGridManager
-
-    @Binds @Singleton abstract fun bindDarkModeUtil(impl: FakeDarkModeUtil): DarkModeUtil
+    abstract fun bindGridOptionsManager(impl: FakeShapeGridManager): ShapeGridManager
 }

@@ -207,10 +207,14 @@ object ClockSettingsBinder {
                                     ClockSize.DYNAMIC -> clockViewFactory.getLargeView(clockId)
                                     ClockSize.SMALL -> clockViewFactory.getSmallView(clockId)
                                 }
-                            // The clock view might still be attached to an existing parent.
-                            // Detach before adding to another parent.
-                            (clockView.parent as? ViewGroup)?.removeView(clockView)
-                            clockHostView.addView(clockView)
+
+                            // Wait for previous removeAllViews to finish, and add the clockView
+                            clockHostView.post {
+                                // The clock view might still be attached to an existing parent.
+                                // Detach before adding to another parent.
+                                (clockView.parent as? ViewGroup)?.removeView(clockView)
+                                clockHostView.addView(clockView)
+                            }
 
                             when (size) {
                                 ClockSize.DYNAMIC -> {

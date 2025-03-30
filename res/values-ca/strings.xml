@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Mantén el fons de pantalla actual"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Previsualització de l\'estil"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Previsualització de quadrícula"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Previsualització dels temes"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Previsualització de la lletra"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Previsualització de la icona"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Previsualització del color"</string>
@@ -116,7 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"Tema fosc"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Desactivat temporalment per Estalvi de bateria"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Icones temàtiques"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"Temes"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Descobreix els temes de Pixel"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Canvia la quadrícula d\'aplicacions"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Colors del fons"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Combina el color d\'icones, text i més amb el fons"</string>

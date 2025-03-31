@@ -44,7 +44,9 @@ import com.android.wallpaper.customization.ui.binder.ThemePickerToolbarBinder
 import com.android.wallpaper.effects.DefaultEffectsController
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.module.DefaultPartnerProvider
+import com.android.wallpaper.module.DefaultRecentWallpaperManager
 import com.android.wallpaper.module.PartnerProvider
+import com.android.wallpaper.module.RecentWallpaperManager
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.category.domain.interactor.CategoriesLoadingStatusInteractor
@@ -59,6 +61,8 @@ import com.android.wallpaper.picker.category.domain.interactor.implementations.D
 import com.android.wallpaper.picker.category.domain.interactor.implementations.DefaultCuratedPhotosInteractorImpl
 import com.android.wallpaper.picker.category.domain.interactor.implementations.DefaultOnDeviceWallpapersInteractor
 import com.android.wallpaper.picker.category.domain.interactor.implementations.ThirdPartyCategoryInteractorImpl
+import com.android.wallpaper.picker.category.ui.binder.BannerProvider
+import com.android.wallpaper.picker.category.ui.binder.DefaultBannerProvider
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.category.ui.view.providers.implementation.DefaultIndividualPickerFactory
 import com.android.wallpaper.picker.category.wrapper.DefaultWallpaperCategoryWrapper
@@ -86,6 +90,8 @@ import kotlinx.coroutines.CoroutineScope
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class ThemePickerAppModule {
+
+    @Binds @Singleton abstract fun bindBannerProvider(impl: DefaultBannerProvider): BannerProvider
 
     @Binds
     @Singleton
@@ -202,6 +208,12 @@ abstract class ThemePickerAppModule {
     abstract fun bindWorkspaceCallbackBinder(
         impl: ThemePickerWorkspaceCallbackBinder
     ): WorkspaceCallbackBinder
+
+    @Binds
+    @Singleton
+    abstract fun bindRecentWallpaperManager(
+        impl: DefaultRecentWallpaperManager
+    ): RecentWallpaperManager
 
     companion object {
 

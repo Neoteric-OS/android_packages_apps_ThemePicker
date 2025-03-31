@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Huidige achtergrond behouden"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Stijlvoorbeeld"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Rastervoorbeeld"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Voorbeeld van thema\'s"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Lettertypevoorbeeld"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Icoonvoorbeeld"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Kleurvoorbeeld"</string>
@@ -116,7 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"Donker thema"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Tijdelijk uit vanwege Batterijbesparing"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Thema-iconen"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"Thema\'s"</string>
     <string name="beta_title" msgid="8703819523760746458">"Bèta"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel-thema\'s ontdekken"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"App-raster wijzigen"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Achtergrondkleuren"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Iconen, tekst en meer matchen je achtergrondkleur"</string>

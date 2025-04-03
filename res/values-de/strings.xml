@@ -43,7 +43,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Dynamisch"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"Die Größe der Uhr ändert sich je nach Inhalt auf dem Sperrbildschirm"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"Groß"</string>
-    <string name="clock_size_large_description" msgid="1171001745473029918">"Wird angezeigt, wenn keine Benachrichtigungen vorhanden sind"</string>
+    <string name="clock_size_large_description" msgid="1171001745473029918">"Darstellung, wenn es keine anzuzeigenden Benachrichtigungen gibt"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Klein"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Eine kleine Uhr wird in der Ecke des Displays angezeigt"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Uhr-Schriftart ändern"</string>
@@ -131,8 +131,8 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dynamisch"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Systemfarben"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Farben"</string>
-    <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Linke Verknüpf."</string>
-    <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Rechte Verknüpf."</string>
+    <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Linke Seite"</string>
+    <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Rechte Seite"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Keine"</string>
     <string name="keyguard_affordance_enablement_dialog_headline" msgid="365379085932610314">"Verknüpfung kann nicht hinzugefügt werden"</string>
     <string name="keyguard_affordance_enablement_dialog_action_template" msgid="8117011931337357438">"<xliff:g id="APPNAME">%1$s</xliff:g> öffnen"</string>

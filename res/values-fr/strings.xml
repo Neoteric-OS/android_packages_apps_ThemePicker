@@ -148,7 +148,7 @@
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Aucun"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Afficher les notifications sur l\'écran de verrouillage"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Sur l\'écran de verrouillage"</string>
-    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Gérer l\'affichage des notifications et leur contenu"</string>
+    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Gérez l\'affichage des notifications et leur contenu"</string>
     <string name="more_settings_section_title" msgid="6854797937797818510">"Autres param. écran verrouillage"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Confidentialité, En écoute et plus"</string>
     <string name="more_colors" msgid="3191071655353004591">"Autres couleurs"</string>

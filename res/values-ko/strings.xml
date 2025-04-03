@@ -122,7 +122,7 @@
     <string name="theme_packs_description" msgid="4647233199054882039">"Pixel 테마 둘러보기"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"앱 그리드 변경"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"배경화면 색상"</string>
-    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"아이콘, 텍스트 등의 색상이 배경화면과 일치합니다"</string>
+    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"아이콘, 텍스트 등의 색상이 배경화면 색상과 매치됩니다"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"배경화면 색상"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"기본 색상"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"기타 색상"</string>

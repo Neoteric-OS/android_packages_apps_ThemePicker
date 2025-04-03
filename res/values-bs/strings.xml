@@ -148,7 +148,7 @@
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Ništa"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Prikaz obavještenja na zaključanom ekranu"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Obavještenja na zaključanom ekranu"</string>
-    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Upravljajte prikazivanjem obavještenja i podacima koja prikazuju"</string>
+    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Upravljajte prikazivanjem obavještenja i podacima koje prikazuju"</string>
     <string name="more_settings_section_title" msgid="6854797937797818510">"Više postavki zaključanog ekrana"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Privatnost, Trenutno se reproducira i drugo"</string>
     <string name="more_colors" msgid="3191071655353004591">"Više boja"</string>

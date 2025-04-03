@@ -43,7 +43,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Динамикалык"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"Сааттын өлчөмү кулпуланган экрандагы нерселерге ылайык өзгөрөт"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"Чоң"</string>
-    <string name="clock_size_large_description" msgid="1171001745473029918">"Билдирмелер көрүнбөгөндө көрсөтүлөт"</string>
+    <string name="clock_size_large_description" msgid="1171001745473029918">"Билдирмелер көрүнбөсө, саат көрүнөт"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Кичине"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Кичинекей саат экрандын бурчунда көрүнүп турат"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Саат арибине өзгөртүү киргизүү"</string>
@@ -148,7 +148,7 @@
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Жок"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Билдирмелерди кулпуланган экранда көрсөтүү"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Кулпу экранындагы билдирмелер"</string>
-    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Билдирмелердин көрүнүшүн жана эмнелерди көрсөтүүнү тескеңиз"</string>
+    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Билдирмелердин көрүнүшүн жана мазмунун тескейсиз"</string>
     <string name="more_settings_section_title" msgid="6854797937797818510">"Дагы кулпу экран параметрлери"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Купуялык, Эмне ойноп жатат? жана башкалар"</string>
     <string name="more_colors" msgid="3191071655353004591">"Дагы түстөр"</string>

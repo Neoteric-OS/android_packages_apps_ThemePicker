@@ -43,7 +43,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Dynamické"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"Veľkosť hodín sa mení podľa obsahu na uzamknutej obrazovke"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"Veľké"</string>
-    <string name="clock_size_large_description" msgid="1171001745473029918">"Zobrazujú sa, keď nie sú viditeľné upozornenia"</string>
+    <string name="clock_size_large_description" msgid="1171001745473029918">"Zobrazujú sa, keď nie sú vidieť upozornenia"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Malé"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"V rohu obrazovky sa zobrazujú malé hodiny"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Použiť zmeny písma ciferníka"</string>
@@ -131,15 +131,15 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dynamické"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Farby systému"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Farby"</string>
-    <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Skratka vľavo"</string>
-    <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Skratka vpravo"</string>
+    <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Odkaz vľavo"</string>
+    <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Odkaz vpravo"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Žiadne"</string>
     <string name="keyguard_affordance_enablement_dialog_headline" msgid="365379085932610314">"Odkaz sa nedá pridať"</string>
     <string name="keyguard_affordance_enablement_dialog_action_template" msgid="8117011931337357438">"Otvoriť <xliff:g id="APPNAME">%1$s</xliff:g>"</string>
     <string name="keyguard_affordance_enablement_dialog_message" msgid="6136286758939253570">"Ak chcete aplikáciu <xliff:g id="APPNAME">%1$s</xliff:g> pridať ako odkaz, uistite sa, že"</string>
     <string name="keyguard_affordance_enablement_dialog_dismiss_button" msgid="629754625264422508">"Hotovo"</string>
-    <string name="keyguard_quick_affordance_title" msgid="4242813186995735584">"Skratky"</string>
-    <string name="keyguard_quick_affordance_section_title" msgid="2806304242671717309">"Skratky"</string>
+    <string name="keyguard_quick_affordance_title" msgid="4242813186995735584">"Odkazy"</string>
+    <string name="keyguard_quick_affordance_section_title" msgid="2806304242671717309">"Odkazy"</string>
     <string name="color_contrast_section_title" msgid="7194809124718896091">"Farebný kontrast"</string>
     <string name="color_contrast_default_title" msgid="7954235103549276978">"Predvolený"</string>
     <string name="color_contrast_medium_title" msgid="8071574793250090215">"Stredný"</string>

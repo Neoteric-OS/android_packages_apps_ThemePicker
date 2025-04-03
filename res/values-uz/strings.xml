@@ -126,7 +126,7 @@
     <string name="wallpaper_color_title" msgid="5687965239180986458">"Fon rasmi rangi"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"Asosiy ranglar"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"Boshqa ranglar"</string>
-    <string name="preset_color_subheader" msgid="8230588536141279371">"Belgilar, soat va boshqa elementlar rangini tanllang."</string>
+    <string name="preset_color_subheader" msgid="8230588536141279371">"Belgilar, soat va boshqa elementlar rangini tanlang."</string>
     <string name="color_changed" msgid="7029571720331641235">"Rang oʻzgartirildi"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dinamik"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Tizim ranglari"</string>
@@ -158,7 +158,7 @@
     <string name="content_description_expressive_color_option" msgid="6081295313456341282">"Asosiy ifodali mavzu"</string>
     <string name="content_description_default_color_option" msgid="7011899327541080695">"Asosiy rang varianti"</string>
     <string name="content_description_color_option" msgid="4169813692012119578">"<xliff:g id="ID_1">%1$d</xliff:g> rangi varianti"</string>
-    <string name="scroll_forward_and_select" msgid="6156132388656395769">"Boshqa soat yuzini tanlash uhcun chapga suring"</string>
+    <string name="scroll_forward_and_select" msgid="6156132388656395769">"Boshqa soat yuzini tanlash uchun chapga suring"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Boshqa soat yuzini tanlash uhcun oʻngga suring"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Maxsus soatlar"</string>
 </resources>

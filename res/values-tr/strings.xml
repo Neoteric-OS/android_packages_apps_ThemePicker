@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Geçerli duvar kağıdını sakla"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Stil önizleme"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Izgara önizleme"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Tema önizlemesi"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Yazı tipi önizleme"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Simge önizleme"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Renk önizleme"</string>
@@ -115,15 +116,17 @@
     <string name="accessibility_clock_slider_description" msgid="8374135133110681332">"Renk yoğunluğu"</string>
     <string name="mode_title" msgid="2394873501427436055">"Koyu tema"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Pil Tasarrufu nedeniyle geçici olarak devre dışı bırakıldı"</string>
-    <string name="themed_icon_title" msgid="7312460430471956558">"Tema simgeleri"</string>
+    <string name="themed_icon_title" msgid="7312460430471956558">"Temalı simgeler"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"Temalar"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel temalarını keşfedin"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Uygulama ızgarasını değiştirin"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Duvar kağıdı renkleri"</string>
-    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Simge, metin ve diğerleri için duvar kağıdınızla eşleşen renkler"</string>
+    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Simge ve metinler gibi öğelerin renkleri, duvar kağıdınızla eşleşir"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"Duvar kağıdı rengi"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"Temel renkler"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"Diğer renkler"</string>
-    <string name="preset_color_subheader" msgid="8230588536141279371">"Simge, saat ve diğerleri için istediğiniz rengi seçin"</string>
+    <string name="preset_color_subheader" msgid="8230588536141279371">"Simgeler ve saat gibi öğeler için istediğiniz rengi seçin"</string>
     <string name="color_changed" msgid="7029571720331641235">"Renk değişti"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dinamik"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Sistem renkleri"</string>
@@ -148,7 +151,7 @@
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Bildirimlerin nasıl görüneceğini ve nelerin gösterileceğini yönetin"</string>
     <string name="more_settings_section_title" msgid="6854797937797818510">"Diğer kilit ekranı ayarları"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Gizlilik, Ne Çalıyor? ve daha fazlası"</string>
-    <string name="more_colors" msgid="3191071655353004591">"Diğer Renkler"</string>
+    <string name="more_colors" msgid="3191071655353004591">"Diğer renkler"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Birincil dinamik tema"</string>
     <string name="content_description_neutral_color_option" msgid="3385443834001275301">"Birincil nötr tema"</string>
     <string name="content_description_vibrant_color_option" msgid="2230249305878632821">"Birincil canlı tema"</string>

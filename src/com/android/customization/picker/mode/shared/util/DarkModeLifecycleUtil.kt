@@ -59,7 +59,6 @@ constructor(
             @Synchronized
             override fun onStart(owner: LifecycleOwner) {
                 super.onStart(owner)
-                darkModeRepository.refreshIsDarkModeActivated()
                 darkModeRepository.refreshIsPowerSaveModeActivated()
                 if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
                     activityContext.registerReceiver(

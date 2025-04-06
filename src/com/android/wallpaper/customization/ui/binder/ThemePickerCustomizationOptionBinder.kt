@@ -38,7 +38,7 @@ import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder2
 import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.settings.ui.binder.ColorContrastSectionViewBinder2
-import com.android.systemui.plugins.clocks.ClockFontAxisSetting
+import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.systemui.plugins.clocks.ClockPreviewConfig
 import com.android.systemui.shared.Flags
 import com.android.themepicker.R
@@ -52,6 +52,7 @@ import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
+import com.android.wallpaper.picker.customization.ui.util.ViewAlphaAnimator.animateToAlpha
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
@@ -80,6 +81,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
+        navigateToPackThemeActivity: () -> Unit,
     ) {
         defaultCustomizationOptionsBinder.bind(
             view,
@@ -92,6 +94,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToMoreLockScreenSettingsActivity,
             navigateToColorContrastSettingsActivity,
             navigateToLockScreenNotificationsSettingsActivity,
+            navigateToPackThemeActivity,
         )
 
         val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
@@ -174,6 +177,25 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToMoreLockScreenSettingsActivity.invoke()
         }
 
+        var optionPackThemeIconHome: ImageView? = null
+        var optionPackThemeIconLock: ImageView? = null
+
+        if (BaseFlags.get().isPackThemeEnabled()) {
+            val optionPackThemeHome =
+                homeScreenCustomizationOptionEntries
+                    .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
+                    .second
+            optionPackThemeHome.setOnClickListener { navigateToPackThemeActivity.invoke() }
+            optionPackThemeIconHome = optionPackThemeHome.requireViewById(R.id.option_entry_icon)
+
+            val optionPackThemeLock =
+                lockScreenCustomizationOptionEntries
+                    .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
+                    .second
+            optionPackThemeLock.setOnClickListener { navigateToPackThemeActivity.invoke() }
+            optionPackThemeIconLock = optionPackThemeLock.requireViewById(R.id.option_entry_icon)
+        }
+
         val optionColors: View =
             homeScreenCustomizationOptionEntries
                 .first { it.first == ThemePickerHomeCustomizationOption.COLORS }
@@ -208,6 +230,10 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 optionShortcutIcon1.setColorFilter(color)
                 optionShortcutIcon2.setColorFilter(color)
                 optionShapeGridIcon.setColorFilter(color)
+                if (BaseFlags.get().isPackThemeEnabled()) {
+                    optionPackThemeIconHome?.setColorFilter(color)
+                    optionPackThemeIconLock?.setColorFilter(color)
+                }
             },
             color = colorUpdateViewModel.colorOnSurfaceVariant,
             shouldAnimate = isOnMainScreen,
@@ -395,6 +421,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
     override fun bindClockPreview(
         context: Context,
         clockHostView: View,
+        clockFaceClickDelegateView: View,
         viewModel: CustomizationPickerViewModel2,
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
@@ -418,7 +445,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                             clockHostView.removeAllViews()
                             // For new customization picker, we should get views from clocklayout
                             if (Flags.newCustomizationPickerUi()) {
-                                clockViewFactory.getController(clock.clockId).let { clockController
+                                clockViewFactory.getController(clock.clockId)?.let { clockController
                                     ->
                                     val udfpsTop =
                                         clockPickerViewModel.getUdfpsLocation()?.let {
@@ -465,15 +492,36 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     combine(
                             clockPickerViewModel.previewingSeedColor,
                             clockPickerViewModel.previewingClock,
-                            clockPickerViewModel.previewingClockFontAxisMap,
+                            clockPickerViewModel.previewingClockPresetIndexedStyle,
                             colorUpdateViewModel.systemColorsUpdated,
                             ::Quadruple,
                         )
                         .collect { quadruple ->
-                            val (color, clock, axisMap, _) = quadruple
+                            val (color, clock, clockPresetIndexedStyle, _) = quadruple
                             clockViewFactory.updateColor(clock.clockId, color)
-                            val axisList = axisMap.map { ClockFontAxisSetting(it.key, it.value) }
-                            clockViewFactory.updateFontAxes(clock.clockId, axisList)
+                            clockViewFactory.updateFontAxes(
+                                clock.clockId,
+                                clockPresetIndexedStyle?.style ?: ClockAxisStyle(),
+                            )
+                        }
+                }
+
+                launch {
+                    viewModel.lockPreviewAnimateToAlpha.collect { clockHostView.animateToAlpha(it) }
+                }
+
+                launch {
+                    combine(
+                            viewModel.customizationOptionsViewModel.selectedOption,
+                            clockPickerViewModel.onClockFaceClicked,
+                            ::Pair,
+                        )
+                        .collect { (selectedOption, onClockFaceClicked) ->
+                            clockFaceClickDelegateView.isVisible =
+                                selectedOption == ThemePickerLockCustomizationOption.CLOCK
+                            clockFaceClickDelegateView.setOnClickListener {
+                                onClockFaceClicked.invoke()
+                            }
                         }
                 }
             }

@@ -19,5 +19,6 @@ package com.android.wallpaper.customization.ui.viewmodel
 data class ClockFloatingSheetHeightsViewModel(
     val clockStyleContentHeight: Int? = null,
     val clockColorContentHeight: Int? = null,
-    val clockFontContentHeight: Int? = null,
+    val clockSizeContentHeight: Int? = null,
+    val axisPresetSliderHeight: Int? = null,
 )

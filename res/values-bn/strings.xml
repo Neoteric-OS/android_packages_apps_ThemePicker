@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"এখন যে ওয়ালপেপার আছে সেটি রাখুন"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"স্টাইল প্রিভিউ করুন"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"গ্রিড প্রিভিউ করুন"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"থিমের প্রিভিউ"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"ফন্ট প্রিভিউ করুন"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"আইকন প্রিভিউ করুন"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"রঙ প্রিভিউ করুন"</string>
@@ -116,10 +117,12 @@
     <string name="mode_title" msgid="2394873501427436055">"ডার্ক থিম"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ব্যাটারি সেভারের কারণে সাময়িকভাবে বন্ধ করা আছে"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"থিমযুক্ত আইকন"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"থিম"</string>
     <string name="beta_title" msgid="8703819523760746458">"বিটা"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel থিম খুঁজে নিন"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"অ্যাপ গ্রিড পরিবর্তন করুন"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"ওয়ালপেপারের রঙ"</string>
-    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"ওয়ালপেপারে আইকন, টেক্সট ও আরও কিছু রঙের সাথে মিলে যায়"</string>
+    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"ওয়ালপেপারে আইকন, টেক্সট ও এগুলির সাথে মানানসই আরও রঙ"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"ওয়ালপেপারের রঙ"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"প্রাথমিক রঙ"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"অন্য রঙ"</string>

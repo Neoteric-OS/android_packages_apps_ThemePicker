@@ -78,8 +78,7 @@ constructor(
             .map { (_, colors) -> colors }
 
     override val colorOptions: Flow<Map<ColorType, List<ColorOption>>> =
-        combine(homeWallpaperColors, lockWallpaperColors, ::Pair)
-            .map { (homeColors, lockColors) ->
+        combine(homeWallpaperColors, lockWallpaperColors) { homeColors, lockColors ->
                 suspendCancellableCoroutine { continuation ->
                     colorManager.setWallpaperColors(homeColors, lockColors)
                     colorManager.fetchOptions(

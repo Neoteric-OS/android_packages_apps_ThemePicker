@@ -146,14 +146,14 @@ constructor(
                             )
                             .collect { (previewingClock, previewingClockSize) ->
                                 val hideSmartspace =
-                                    clockViewFactory.getController(previewingClock.clockId).let {
+                                    clockViewFactory.getController(previewingClock.clockId)?.let {
                                         when (previewingClockSize) {
                                             ClockSize.DYNAMIC ->
                                                 it.largeClock.config.hasCustomWeatherDataDisplay
                                             ClockSize.SMALL ->
                                                 it.smallClock.config.hasCustomWeatherDataDisplay
                                         }
-                                    }
+                                    } ?: false
                                 workspaceCallback.sendMessage(
                                     MESSAGE_ID_HIDE_SMART_SPACE,
                                     Bundle().apply {
@@ -228,6 +228,15 @@ constructor(
                             workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, Bundle.EMPTY)
                         }
                     }
+
+                    launch {
+                        viewModel.appIconPickerViewModel.previewingIsThemeIconEnabled.collect {
+                            workspaceCallback.sendMessage(
+                                MESSAGE_ID_UPDATE_ICON_THEMED,
+                                Bundle().apply { putBoolean(KEY_BOOLEAN_VALUE, it) },
+                            )
+                        }
+                    }
                 }
         }
     }
@@ -235,10 +244,11 @@ constructor(
     companion object {
         const val MESSAGE_ID_UPDATE_SHAPE = 2586
         const val MESSAGE_ID_UPDATE_GRID = 7414
-
         const val MESSAGE_ID_UPDATE_COLOR = 856
+        const val MESSAGE_ID_UPDATE_ICON_THEMED = 311
         const val KEY_COLOR_RESOURCE_IDS: String = "color_resource_ids"
         const val KEY_COLOR_VALUES: String = "color_values"
         const val KEY_DARK_MODE: String = "use_dark_mode"
+        const val KEY_BOOLEAN_VALUE: String = "boolean_value"
     }
 }

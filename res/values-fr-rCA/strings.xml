@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Garder le fond d\'écran actuel"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Aperçu du style"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Aperçu de la grille"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Aperçu des thèmes"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Aperçu de la police"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Aperçu de l\'icône"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Aperçu de la couleur"</string>
@@ -116,9 +117,11 @@
     <string name="mode_title" msgid="2394873501427436055">"Thème sombre"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Temporairement désactivé par l\'économiseur de pile"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Icônes du thème"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"Thèmes"</string>
     <string name="beta_title" msgid="8703819523760746458">"Bêta"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Découvrez les thèmes Pixel"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Modifiez la grille d\'applis"</string>
-    <string name="wallpaper_color_tab" msgid="1447926591721403840">"Couleurs fond d\'écran"</string>
+    <string name="wallpaper_color_tab" msgid="1447926591721403840">"Couleurs de fond d\'écran"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Icônes, texte, etc., assortis aux couleurs du fond d\'écran"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"Couleur du fond d\'écran"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"Couleurs de base"</string>
@@ -126,7 +129,7 @@
     <string name="preset_color_subheader" msgid="8230588536141279371">"Choisissez une couleur (pour icônes, horloge, etc.)"</string>
     <string name="color_changed" msgid="7029571720331641235">"Couleur changée"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dynamique"</string>
-    <string name="color_picker_title" msgid="6666830057938082864">"Couleurs système"</string>
+    <string name="color_picker_title" msgid="6666830057938082864">"Couleurs du système"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Couleurs"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Raccourci gauche"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Raccourci droit"</string>
@@ -146,7 +149,7 @@
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Afficher les notifications sur l\'écran de verrouillage"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Notif. sur l\'écran de verrouil."</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Gérez comment les notifications apparaissent et quoi afficher"</string>
-    <string name="more_settings_section_title" msgid="6854797937797818510">"Paramètres écran de verrouillage"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"Autres paramètres de l\'écran de verrouillage"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Confidentialité, En cours de lecture, etc."</string>
     <string name="more_colors" msgid="3191071655353004591">"Plus de couleurs"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Thème dynamique principal"</string>

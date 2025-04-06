@@ -467,15 +467,16 @@ class ClockCarouselView(context: Context, attrs: AttributeSet) : FrameLayout(con
                 it.pivotY = it.height / 2F
             }
 
-            val controller = clockViewFactory.getController(clockId)
-            if (isMiddleView) {
-                clockScaleView.scaleX = 1f
-                clockScaleView.scaleY = 1f
-                controller.largeClock.animations.onPickerCarouselSwiping(1F)
-            } else {
-                clockScaleView.scaleX = clockViewScale
-                clockScaleView.scaleY = clockViewScale
-                controller.largeClock.animations.onPickerCarouselSwiping(0F)
+            clockViewFactory.getController(clockId)?.let { controller ->
+                if (isMiddleView) {
+                    clockScaleView.scaleX = 1f
+                    clockScaleView.scaleY = 1f
+                    controller.largeClock.animations.onPickerCarouselSwiping(1F)
+                } else {
+                    clockScaleView.scaleX = clockViewScale
+                    clockScaleView.scaleY = clockViewScale
+                    controller.largeClock.animations.onPickerCarouselSwiping(0F)
+                }
             }
         }
 

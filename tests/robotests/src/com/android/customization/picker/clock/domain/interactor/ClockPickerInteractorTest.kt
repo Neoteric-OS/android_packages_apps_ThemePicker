@@ -88,7 +88,7 @@ class ClockPickerInteractorTest {
     @Test
     fun setFontAxisSettings() = runTest {
         val axisSettings = collectLastValue(underTest.axisSettings)
-        val fakeSettings = listOf(FakeClockPickerRepository.buildFakeAxis(10).toSetting())
+        val fakeSettings = FakeClockPickerRepository.fakeClockAxisStyle1
 
         underTest.setClockFontAxes(fakeSettings)
 

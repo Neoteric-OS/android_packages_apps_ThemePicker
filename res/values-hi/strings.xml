@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"मौजूदा वॉलपेपर बनाए रखें"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"थीम की झलक देखें"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"ग्रिड की झलक देखें"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"थीम की झलक"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"फ़ॉन्ट की झलक देखें"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"आइकॉन की झलक देखें"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"रंग की झलक देखें"</string>
@@ -116,13 +117,15 @@
     <string name="mode_title" msgid="2394873501427436055">"गहरे रंग वाली थीम"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"बैटरी सेवर मोड चालू होने की वजह से, इस सुविधा को कुछ समय के लिए बंद कर दिया गया है"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"थीम वाले आइकॉन"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"थीम"</string>
     <string name="beta_title" msgid="8703819523760746458">"बीटा"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel थीम के बारे में जानें"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"ऐप्लिकेशन ग्रिड बदलें"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"वॉलपेपर के रंग"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"वॉलपेपर में आइकॉन, टेक्स्ट वगैरह के लिए मिलते-जुलते रंग"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"वॉलपेपर का रंग"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"सामान्य रंग"</string>
-    <string name="preset_color_tab_2" msgid="1444107326712562538">"दूसरे रंग"</string>
+    <string name="preset_color_tab_2" msgid="1444107326712562538">"अन्य रंग"</string>
     <string name="preset_color_subheader" msgid="8230588536141279371">"डिवाइस के आइकॉन, घड़ी वगैरह के लिए रंग चुनें"</string>
     <string name="color_changed" msgid="7029571720331641235">"रंग बदल दिया गया है"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"डाइनैमिक"</string>

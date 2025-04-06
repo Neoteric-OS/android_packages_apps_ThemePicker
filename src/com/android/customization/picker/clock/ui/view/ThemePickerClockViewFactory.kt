@@ -25,8 +25,8 @@ import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.lifecycle.LifecycleOwner
 import com.android.internal.policy.SystemBarUtils
+import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.systemui.plugins.clocks.ClockController
-import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 import com.android.systemui.plugins.clocks.WeatherData
 import com.android.systemui.shared.Flags
 import com.android.systemui.shared.clocks.ClockRegistry
@@ -43,7 +43,7 @@ import javax.inject.Inject
 class ThemePickerClockViewFactory
 @Inject
 constructor(
-    activity: Activity,
+    private val activity: Activity,
     private val wallpaperManager: WallpaperManager,
     private val registry: ClockRegistry,
 ) : ClockViewFactory {
@@ -55,9 +55,9 @@ constructor(
     private val clockControllers: ConcurrentHashMap<String, ClockController> = ConcurrentHashMap()
     private val smallClockFrames: HashMap<String, FrameLayout> = HashMap()
 
-    override fun getController(clockId: String): ClockController {
+    override fun getController(clockId: String): ClockController? {
         return clockControllers[clockId]
-            ?: initClockController(clockId).also { clockControllers[clockId] = it }
+            ?: initClockController(clockId)?.also { clockControllers[clockId] = it }
     }
 
     /**
@@ -66,10 +66,10 @@ constructor(
      */
     override fun getLargeView(clockId: String): View {
         assert(!Flags.newCustomizationPickerUi())
-        return getController(clockId).largeClock.let {
+        return getController(clockId)?.largeClock?.let {
             it.animations.onPickerCarouselSwiping(1F)
             it.view
-        }
+        } ?: FrameLayout(activity)
     }
 
     /**
@@ -83,9 +83,9 @@ constructor(
                 (layoutParams as FrameLayout.LayoutParams).topMargin = getSmallClockTopMargin()
                 (layoutParams as FrameLayout.LayoutParams).marginStart = getSmallClockStartPadding()
             }
-                ?: createSmallClockFrame().also {
-                    it.addView(getController(clockId).smallClock.view)
-                    smallClockFrames[clockId] = it
+                ?: createSmallClockFrame().also { frame ->
+                    getController(clockId)?.let { frame.addView(it.smallClock.view) }
+                    smallClockFrames[clockId] = frame
                 }
         smallClockFrame.translationX = 0F
         smallClockFrame.translationY = 0F
@@ -130,14 +130,17 @@ constructor(
     }
 
     override fun updateColor(clockId: String, @ColorInt seedColor: Int?) {
-        getController(clockId).let {
+        getController(clockId)?.let {
             it.largeClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
             it.smallClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
         }
     }
 
-    override fun updateFontAxes(clockId: String, settings: List<ClockFontAxisSetting>) {
-        getController(clockId).let { it.events.onFontAxesChanged(settings) }
+    override fun updateFontAxes(clockId: String, settings: ClockAxisStyle) {
+        getController(clockId)?.let {
+            it.largeClock.animations.onFontAxesChanged(settings)
+            it.smallClock.animations.onFontAxesChanged(settings)
+        }
     }
 
     override fun updateRegionDarkness() {
@@ -155,8 +158,8 @@ constructor(
 
     override fun updateTimeFormat(clockId: String) {
         getController(clockId)
-            .events
-            .onTimeFormatChanged(android.text.format.DateFormat.is24HourFormat(appContext))
+            ?.events
+            ?.onTimeFormatChanged(android.text.format.DateFormat.is24HourFormat(appContext))
     }
 
     override fun registerTimeTicker(owner: LifecycleOwner) {
@@ -190,33 +193,32 @@ constructor(
         }
     }
 
-    private fun initClockController(clockId: String): ClockController {
+    private fun initClockController(clockId: String): ClockController? {
         val isWallpaperDark = isLockscreenWallpaperDark()
-        val controller =
-            registry.createExampleClock(clockId).also { it?.initialize(isWallpaperDark, 0f, 0f) }
-        checkNotNull(controller)
+        return registry.createExampleClock(clockId)?.also { controller ->
+            controller.initialize(isWallpaperDark, 0f, 0f, null)
 
-        // Initialize large clock
-        controller.largeClock.events.onFontSettingChanged(
-            resources
-                .getDimensionPixelSize(
-                    com.android.systemui.customization.R.dimen.large_clock_text_size
-                )
-                .toFloat()
-        )
-        controller.largeClock.events.onTargetRegionChanged(getLargeClockRegion())
+            // Initialize large clock
+            controller.largeClock.events.onFontSettingChanged(
+                resources
+                    .getDimensionPixelSize(
+                        com.android.systemui.customization.R.dimen.large_clock_text_size
+                    )
+                    .toFloat()
+            )
+            controller.largeClock.events.onTargetRegionChanged(getLargeClockRegion())
 
-        // Initialize small clock
-        controller.smallClock.events.onFontSettingChanged(
-            resources
-                .getDimensionPixelSize(
-                    com.android.systemui.customization.R.dimen.small_clock_text_size
-                )
-                .toFloat()
-        )
-        controller.smallClock.events.onTargetRegionChanged(getSmallClockRegion())
-        controller.events.onWeatherDataChanged(WeatherData.getPlaceholderWeatherData())
-        return controller
+            // Initialize small clock
+            controller.smallClock.events.onFontSettingChanged(
+                resources
+                    .getDimensionPixelSize(
+                        com.android.systemui.customization.R.dimen.small_clock_text_size
+                    )
+                    .toFloat()
+            )
+            controller.smallClock.events.onTargetRegionChanged(getSmallClockRegion())
+            controller.events.onWeatherDataChanged(WeatherData.getPlaceholderWeatherData())
+        }
     }
 
     /**

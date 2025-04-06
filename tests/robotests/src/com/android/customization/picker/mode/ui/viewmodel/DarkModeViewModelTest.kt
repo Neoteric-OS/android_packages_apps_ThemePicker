@@ -16,20 +16,27 @@
 
 package com.android.customization.picker.mode.ui.viewmodel
 
+import android.content.Context
+import androidx.test.platform.app.InstrumentationRegistry
 import com.android.customization.module.logging.TestThemesUserEventLogger
 import com.android.customization.picker.mode.data.repository.DarkModeRepository
+import com.android.customization.picker.mode.data.repository.DarkModeStateRepository
 import com.android.customization.picker.mode.domain.interactor.DarkModeInteractor
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.testing.FakePowerManager
 import com.android.wallpaper.testing.FakeUiModeManager
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.internal.lifecycle.RetainedLifecycleImpl
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
@@ -46,20 +53,26 @@ class DarkModeViewModelTest {
 
     @Inject lateinit var uiModeManager: FakeUiModeManager
     @Inject lateinit var powerManager: FakePowerManager
+    @Inject lateinit var darkModeStateRepository: DarkModeStateRepository
     @Inject lateinit var darkModeRepository: DarkModeRepository
     @Inject lateinit var darkModeInteractor: DarkModeInteractor
     @Inject lateinit var logger: TestThemesUserEventLogger
-    lateinit var darkModeViewModel: DarkModeViewModel
-
     @Inject lateinit var testDispatcher: TestDispatcher
     @Inject lateinit var testScope: TestScope
+
+    private lateinit var context: Context
+    private lateinit var colorUpdateViewModel: ColorUpdateViewModel
+    private lateinit var darkModeViewModel: DarkModeViewModel
 
     @Before
     fun setUp() {
         hiltRule.inject()
         Dispatchers.setMain(testDispatcher)
 
-        darkModeViewModel = DarkModeViewModel(darkModeInteractor, logger)
+        context = InstrumentationRegistry.getInstrumentation().targetContext
+        colorUpdateViewModel =
+            ColorUpdateViewModel(context, RetainedLifecycleImpl(), darkModeStateRepository)
+        darkModeViewModel = DarkModeViewModel(colorUpdateViewModel, darkModeInteractor, logger)
     }
 
     @Test
@@ -90,10 +103,11 @@ class DarkModeViewModelTest {
     fun toggleDarkMode() {
         testScope.runTest {
             uiModeManager.setNightModeActivated(false)
-            darkModeRepository.refreshIsDarkModeActivated()
+            darkModeRepository.refreshIsDarkMode()
             val getOverridingIsDarkMode = collectLastValue(darkModeViewModel.overridingIsDarkMode)
             val getPreviewingIsDarkMode = collectLastValue(darkModeViewModel.previewingIsDarkMode)
             val getToggleDarkMode = collectLastValue(darkModeViewModel.toggleDarkMode)
+            assertThat(getOverridingIsDarkMode()).isNull()
             assertThat(getPreviewingIsDarkMode()).isFalse()
 
             getToggleDarkMode()?.invoke()
@@ -109,15 +123,40 @@ class DarkModeViewModelTest {
     }
 
     @Test
+    fun previewingIsDarkMode_systemChanges() {
+        testScope.runTest {
+            uiModeManager.setNightModeActivated(false)
+            darkModeRepository.refreshIsDarkMode()
+            val getOverridingIsDarkMode = collectLastValue(darkModeViewModel.overridingIsDarkMode)
+            val getPreviewingIsDarkMode = collectLastValue(darkModeViewModel.previewingIsDarkMode)
+            assertThat(getOverridingIsDarkMode()).isNull()
+            assertThat(getPreviewingIsDarkMode()).isFalse()
+
+            // Turn on dark mode
+            uiModeManager.setNightModeActivated(true)
+            darkModeRepository.refreshIsDarkMode()
+
+            assertThat(getOverridingIsDarkMode()).isNull()
+            assertThat(getPreviewingIsDarkMode()).isTrue()
+
+            // Turn off dark mode
+            uiModeManager.setNightModeActivated(false)
+            darkModeRepository.refreshIsDarkMode()
+
+            assertThat(getOverridingIsDarkMode()).isNull()
+            assertThat(getPreviewingIsDarkMode()).isFalse()
+        }
+    }
+
+    @Test
     fun onApply_shouldLogDarkTheme() {
         testScope.runTest {
             uiModeManager.setNightModeActivated(false)
-            darkModeRepository.refreshIsDarkModeActivated()
+            darkModeRepository.refreshIsDarkMode()
             val getToggleDarkMode = collectLastValue(darkModeViewModel.toggleDarkMode)
-            val onApply = collectLastValue(darkModeViewModel.onApply)
 
             getToggleDarkMode()?.invoke()
-            onApply()?.invoke()
+            applyDarkMode()
 
             assertThat(logger.useDarkTheme).isTrue()
         }
@@ -127,14 +166,25 @@ class DarkModeViewModelTest {
     fun onApply_shouldApplyDarkTheme() {
         testScope.runTest {
             uiModeManager.setNightModeActivated(false)
-            darkModeRepository.refreshIsDarkModeActivated()
+            darkModeRepository.refreshIsDarkMode()
             val getToggleDarkMode = collectLastValue(darkModeViewModel.toggleDarkMode)
-            val onApply = collectLastValue(darkModeViewModel.onApply)
 
             getToggleDarkMode()?.invoke()
-            onApply()?.invoke()
+            applyDarkMode()
 
             assertThat(uiModeManager.getIsNightModeActivated()).isTrue()
         }
+    }
+
+    /** Simulates a user applying the previewing dark mode, and the apply completes. */
+    private fun TestScope.applyDarkMode() {
+        val onApply = collectLastValue(darkModeViewModel.onApply)()
+        testScope.launch { onApply?.invoke() }
+        // Run coroutine launched in DarkModeViewModel#onApply
+        runCurrent()
+        // Simulate dark mode and color update config change
+        colorUpdateViewModel.updateDarkModeAndColors()
+        // Run coroutine launched in colorUpdateViewModel#updateColors
+        runCurrent()
     }
 }

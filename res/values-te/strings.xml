@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"ప్రస్తుత వాల్‌పేపర్‌ను అలాగే ఉంచండి"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"స్టైల్ ప్రివ్యూ"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"గ్రిడ్ ప్రివ్యూ"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"థీమ్‌ల ప్రివ్యూ"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"ఫాంట్ ప్రివ్యూ"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"చిహ్నం ప్రివ్యూ"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"రంగు ప్రివ్యూ"</string>
@@ -115,18 +116,20 @@
     <string name="accessibility_clock_slider_description" msgid="8374135133110681332">"రంగు తీవ్రత"</string>
     <string name="mode_title" msgid="2394873501427436055">"డార్క్ థీమ్‌"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"బ్యాటరీ సేవర్ కారణంగా తాత్కాలికంగా డిజేబుల్‌ చేయబడింది"</string>
-    <string name="themed_icon_title" msgid="7312460430471956558">"రూపానికి తగిన చిహ్నాలు"</string>
+    <string name="themed_icon_title" msgid="7312460430471956558">"థీమ్‌కు తగిన చిహ్నాలు"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"థీమ్‌లు"</string>
     <string name="beta_title" msgid="8703819523760746458">"బీటా"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel థీమ్‌లను కనుగొనండి"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"యాప్ గ్రిడ్‌ను మార్చండి"</string>
-    <string name="wallpaper_color_tab" msgid="1447926591721403840">"వాల్‌పేపర్ రంగులు"</string>
-    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"మీ వాల్‌పేపర్‌లో చిహ్నాలు, టెక్స్ట్, అలాగే మరిన్ని మ్యాచ్ అయ్యే రంగులు ఉన్నాయి"</string>
+    <string name="wallpaper_color_tab" msgid="1447926591721403840">"వాల్‌పేపర్ కలర్స్‌"</string>
+    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"ఐకాన్స్, టెక్స్ట్&amp;మరిన్ని వాల్‌పేపర్ రంగులకు సరిపోతాయి."</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"వాల్‌పేపర్ రంగు"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"ప్రాథమిక రంగులు"</string>
-    <string name="preset_color_tab_2" msgid="1444107326712562538">"ఇతర రంగులు"</string>
+    <string name="preset_color_tab_2" msgid="1444107326712562538">"ఇతర కలర్స్‌"</string>
     <string name="preset_color_subheader" msgid="8230588536141279371">"మీ చిహ్నాలు, గడియారం, మరిన్నింటి కోసం రంగును ఎంచుకోండి"</string>
     <string name="color_changed" msgid="7029571720331641235">"రంగు మార్చబడింది"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"డైనమిక్"</string>
-    <string name="color_picker_title" msgid="6666830057938082864">"సిస్టమ్ రంగులు"</string>
+    <string name="color_picker_title" msgid="6666830057938082864">"సిస్టమ్ కలర్స్‌"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"రంగులు"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"ఎడమ షార్ట్‌కట్"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"కుడి షార్ట్‌కట్"</string>
@@ -137,7 +140,7 @@
     <string name="keyguard_affordance_enablement_dialog_dismiss_button" msgid="629754625264422508">"పూర్తయింది"</string>
     <string name="keyguard_quick_affordance_title" msgid="4242813186995735584">"షార్ట్‌కట్‌లు"</string>
     <string name="keyguard_quick_affordance_section_title" msgid="2806304242671717309">"షార్ట్‌కట్‌లు"</string>
-    <string name="color_contrast_section_title" msgid="7194809124718896091">"రంగు కాంట్రాస్ట్"</string>
+    <string name="color_contrast_section_title" msgid="7194809124718896091">"కలర్ కాంట్రాస్ట్"</string>
     <string name="color_contrast_default_title" msgid="7954235103549276978">"డిఫాల్ట్"</string>
     <string name="color_contrast_medium_title" msgid="8071574793250090215">"మధ్యస్థం"</string>
     <string name="color_contrast_high_title" msgid="5554685752479470200">"ఎక్కువ"</string>
@@ -148,7 +151,7 @@
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"నోటిఫికేషన్‌లు ఎలా కనిపించాలి, ఎలాంటివి చూపాలో మేనేజ్ చేయండి"</string>
     <string name="more_settings_section_title" msgid="6854797937797818510">"మరిన్ని లాక్ స్క్రీన్ సెట్టింగ్‌లు"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"గోప్యత, Now Playing, ఇంకా మరిన్ని"</string>
-    <string name="more_colors" msgid="3191071655353004591">"మరిన్ని రంగులు"</string>
+    <string name="more_colors" msgid="3191071655353004591">"మరిన్ని కలర్స్"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"ప్రాథమిక డైనమిక్ రూపం"</string>
     <string name="content_description_neutral_color_option" msgid="3385443834001275301">"ప్రాథమిక న్యూట్రల్ రూపం"</string>
     <string name="content_description_vibrant_color_option" msgid="2230249305878632821">"ప్రాథమిక వైబ్రెంట్ రూపం"</string>

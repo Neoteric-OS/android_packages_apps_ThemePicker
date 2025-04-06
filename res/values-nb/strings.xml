@@ -56,6 +56,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Behold den nåværende bakgrunnen"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Forhåndsvisning av stil"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Forhåndsvisning av rutenett"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Forhåndsvisning av temaer"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Forhåndsvisning av skrifttype"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Forhåndsvisning av ikon"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Forhåndsvisning av farge"</string>
@@ -116,7 +117,9 @@
     <string name="mode_title" msgid="2394873501427436055">"Mørkt tema"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Midlertidig slått av på grunn av Batterisparing"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Temaikoner"</string>
+    <string name="pack_theme_title" msgid="3052703041673623611">"Temaer"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
+    <string name="theme_packs_description" msgid="4647233199054882039">"Oppdag Pixel-temaer"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Endre apprutenett"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Bakgrunnsfarger"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Ikoner, tekst og annet matcher fargene i bakgrunnen"</string>

@@ -117,16 +117,19 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
         }
 
         scope.launch {
+            // Wait for the previous preset color loading job to finish before evaluating whether to
+            // start a new one
             loaderJob?.join()
             if (presetColorBundles == null || reload) {
-                try {
-                    loaderJob = launch { loadPreset(isNewPickerUi) }
-                } catch (e: Throwable) {
-                    colorsAvailable = false
-                    callback?.onError(e)
-                    return@launch
+                loaderJob = launch {
+                    try {
+                        loadPreset(isNewPickerUi)
+                        callback?.onOptionsLoaded(buildFinalList(isNewPickerUi))
+                    } catch (e: Throwable) {
+                        colorsAvailable = false
+                        callback?.onError(e)
+                    }
                 }
-                callback?.onOptionsLoaded(buildFinalList(isNewPickerUi))
             } else {
                 callback?.onOptionsLoaded(buildFinalList(isNewPickerUi))
             }
@@ -304,23 +307,35 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
     }
 
     /**
-     * Returns the preview of a preset ColorScheme based on this order: top left, top right, bottom
-     * left, bottom right
+     * Returns the light theme contrast-adjusted preview of a preset ColorScheme, based on this
+     * order: top left, top right, bottom left, bottom right
      */
-    private fun getFixedPresetColorPreview(colorScheme: ColorScheme): IntArray {
+    private fun getDarkPresetColorPreview(colorScheme: ColorScheme): IntArray {
         val colors =
             when (colorScheme.style) {
                 Style.FRUIT_SALAD -> intArrayOf(colorScheme.accent3.s100, colorScheme.accent1.s200)
-                Style.TONAL_SPOT -> intArrayOf(colorScheme.accentColor, colorScheme.accentColor)
-                Style.RAINBOW -> intArrayOf(colorScheme.accent1.s200, colorScheme.accent1.s200)
-                else -> intArrayOf(colorScheme.accent1.s100, colorScheme.accent1.s100)
+                else -> intArrayOf(colorScheme.accent1.s200, colorScheme.accent1.s200)
             }
         return intArrayOf(colors[0], colors[1], colors[0], colors[1])
     }
 
     /**
-     * Returns the light theme contrast-adjusted preview of a preset ColorScheme, specifically for
-     * Revamped UI, based on this order: top left, top right, bottom left, bottom right
+     * Returns the preview of a preset ColorScheme based on this order: top left, top right, bottom
+     * left, bottom right
+     */
+    private fun getFixedPresetColorPreview(colorScheme: ColorScheme, seed: Int): IntArray {
+        val colors =
+            when (colorScheme.style) {
+                Style.FRUIT_SALAD -> intArrayOf(colorScheme.accent3.s100, colorScheme.accent1.s200)
+                Style.RAINBOW -> intArrayOf(colorScheme.accent1.s200, colorScheme.accent1.s200)
+                else -> intArrayOf(seed, seed)
+            }
+        return intArrayOf(colors[0], colors[1], colors[0], colors[1])
+    }
+
+    /**
+     * Returns the light theme contrast-adjusted preview of a preset ColorScheme, based on this
+     * order: top left, top right, bottom left, bottom right
      */
     private fun getLightPresetColorPreview(colorScheme: ColorScheme): IntArray {
         val colors =
@@ -330,13 +345,11 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                         colorScheme.accent3.getAtTone(450f),
                         colorScheme.accent1.getAtTone(550f),
                     )
-                Style.TONAL_SPOT -> intArrayOf(colorScheme.accentColor, colorScheme.accentColor)
-                Style.RAINBOW ->
+                else ->
                     intArrayOf(
                         colorScheme.accent1.getAtTone(450f),
                         colorScheme.accent1.getAtTone(450f),
                     )
-                else -> intArrayOf(colorScheme.accent1.s100, colorScheme.accent1.s100)
             }
         return intArrayOf(colors[0], colors[1], colors[0], colors[1])
     }
@@ -444,10 +457,15 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                     lightColors = getLightMonochromePreview(lightColorScheme)
                 }
                 else -> {
-                    darkColors = getFixedPresetColorPreview(darkColorScheme)
+                    darkColors =
+                        if (isNewPickerUi) {
+                            getFixedPresetColorPreview(darkColorScheme, colorFromStub)
+                        } else {
+                            getDarkPresetColorPreview(darkColorScheme)
+                        }
                     lightColors =
                         if (isNewPickerUi) {
-                            getFixedPresetColorPreview(lightColorScheme)
+                            getFixedPresetColorPreview(lightColorScheme, colorFromStub)
                         } else {
                             getLightPresetColorPreview(lightColorScheme)
                         }

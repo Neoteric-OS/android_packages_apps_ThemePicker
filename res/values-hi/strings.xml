@@ -43,7 +43,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"डाइनैमिक"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"लॉक स्क्रीन के कॉन्टेंट के हिसाब से घड़ी का साइज़ बदलता है"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"बड़ा"</string>
-    <string name="clock_size_large_description" msgid="1171001745473029918">"ऐसा तब होगा, जब सूचनाएं नहीं दिखेंगी"</string>
+    <string name="clock_size_large_description" msgid="1171001745473029918">"यह तब दिखेगी, जब स्क्रीन पर सूचनाएं न हों"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"छोटा"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"आपके डिवाइस की स्क्रीन के कोने में एक छोटी घड़ी दिखती है"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"घड़ी के फ़ॉन्ट में किए गए बदलावों को लागू करें"</string>

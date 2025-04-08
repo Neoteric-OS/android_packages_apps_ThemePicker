@@ -39,7 +39,7 @@
     <string name="clock_color_violet" msgid="3454503847169375826">"Виолетова"</string>
     <string name="clock_color_gray" msgid="9221530636948859231">"Сива"</string>
     <string name="clock_color_teal" msgid="7499223425741344251">"Сино-зелена"</string>
-    <string name="clock_size" msgid="5028923902364418263">"Димензија"</string>
+    <string name="clock_size" msgid="5028923902364418263">"Големина"</string>
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Динамичнa"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"Големината на часовникот се променува според содржините на заклучен екран"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"Голема"</string>
@@ -148,7 +148,7 @@
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Нема"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Прикажувај известувања на заклучен екран"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Известувања на заклучен екран"</string>
-    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Управувајте со тоа како и кои известувања се појавуваат"</string>
+    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Управувајте со прикажувањето и содржините на известувањата"</string>
     <string name="more_settings_section_title" msgid="6854797937797818510">"Уште поставки за заклучен екран"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Приватност, Now Playing и друго"</string>
     <string name="more_colors" msgid="3191071655353004591">"Повеќе бои"</string>

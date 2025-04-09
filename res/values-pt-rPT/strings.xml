@@ -149,7 +149,7 @@
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Mostrar as notificações no ecrã de bloqueio"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Notificações no ecrã de bloqueio"</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Faça a gestão do conteúdo e da apresentação das notificações"</string>
-    <string name="more_settings_section_title" msgid="6854797937797818510">"Mais defin. do ecrã de bloqueio"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"Mais definições do ecrã de bloqueio"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Privacidade, A reproduzir e muito mais"</string>
     <string name="more_colors" msgid="3191071655353004591">"Mais cores"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Tema dinâmico principal"</string>

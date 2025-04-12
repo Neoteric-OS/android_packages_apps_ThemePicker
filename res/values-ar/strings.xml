@@ -126,7 +126,7 @@
     <string name="wallpaper_color_title" msgid="5687965239180986458">"لون الخلفية"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"الألوان الأساسية"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"ألوان أخرى"</string>
-    <string name="preset_color_subheader" msgid="8230588536141279371">"اختَر أي لون للرموز والساعة وغير ذلك"</string>
+    <string name="preset_color_subheader" msgid="8230588536141279371">"يمكنك اختيار أي لون للرموز والساعة وغير ذلك"</string>
     <string name="color_changed" msgid="7029571720331641235">"تم تغيير اللون."</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"ألوان ديناميكية"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"ألوان النظام"</string>

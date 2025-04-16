@@ -43,7 +43,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"ডায়নামিক"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"লক স্ক্রিনের কন্টেন্ট অনুযায়ী ঘড়ির সাইজ পরিবর্তন হয়"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"বড়"</string>
-    <string name="clock_size_large_description" msgid="1171001745473029918">"বিজ্ঞপ্তি দেখা না গেলে এটি হবে"</string>
+    <string name="clock_size_large_description" msgid="1171001745473029918">"বিজ্ঞপ্তি দেখা না গেলে এটি দেখানো হবে"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"ছোট করুন"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"স্ক্রিনের কোনায় একটি ছোট ঘড়ি দেখানো হয়"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"ঘড়ির ফন্ট পরিবর্তন প্রয়োগ করুন"</string>

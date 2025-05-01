@@ -121,7 +121,7 @@
     <string name="beta_title" msgid="8703819523760746458">"Бета"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Огляд тем Pixel"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Змінити сітку додатків"</string>
-    <string name="wallpaper_color_tab" msgid="1447926591721403840">"Кольори фону"</string>
+    <string name="wallpaper_color_tab" msgid="1447926591721403840">"Кольори шпалер"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Значки, текст тощо під кольори фонового малюнка"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"Колір фонового малюнка"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"Основні кольори"</string>
